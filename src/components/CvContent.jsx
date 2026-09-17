@@ -1,103 +1,22 @@
-import { useEffect, useRef } from 'react'
+import { memo } from 'react'
 import { SKILLS } from '../lib/portfolio.js'
 
-// Contenido del CV (presentacional) + efecto de pixelado/dither del avatar.
-// No conoce el marco ni el chat: solo renderiza el resumen.
-export default function CvContent() {
-  const pfpRef = useRef(null)
-
-  useEffect(() => {
-    const img = pfpRef.current
-    if (!img) return
-    let cancelled = false
-    const run = () => {
-      const source = new Image()
-      source.decoding = 'async'
-      source.src = '/pfp.jpg'
-      source.onload = () => {
-        if (cancelled) return
-        try {
-          const S = 220
-          const canvas = document.createElement('canvas')
-          canvas.width = S
-          canvas.height = S
-          const ctx = canvas.getContext('2d', { willReadFrequently: true })
-          if (!ctx) return
-          const { naturalWidth: nw, naturalHeight: nh } = source
-          if (!nw || !nh) return
-          const scale = Math.max(S / nw, S / nh) * 1.17
-          const dw = nw * scale
-          const dh = nh * scale
-          const ox = (S - dw) * 0.1
-          const oy = (S - dh) * 0.1
-          ctx.drawImage(source, ox, oy, dw, dh)
-          const frame = ctx.getImageData(0, 0, S, S)
-          const px = frame.data
-          const bayer = [
-            [0, 8, 2, 10],
-            [12, 4, 14, 6],
-            [3, 11, 1, 9],
-            [15, 7, 13, 5],
-          ]
-          const levels = 6
-          const spread = 52
-          const contrast = 1.20
-          const exposure = 12
-          const gamma = 0.92
-          for (let y = 0; y < S; y += 1) {
-            for (let x = 0; x < S; x += 1) {
-              const i = (y * S + x) * 4
-              const gray =
-                px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114
-              const graded = (gray - 128) * contrast + 128 + exposure
-              const clamped = Math.min(255, Math.max(0, graded))
-              const lifted = Math.pow(clamped / 255, gamma) * 255
-              const t = (bayer[y % 4][x % 4] / 16 - 0.5) * spread
-              const q =
-                Math.round(((lifted + t) / 255) * (levels - 1)) / (levels - 1)
-              const v = Math.min(255, Math.max(0, Math.round(q * 255)))
-              px[i] = v
-              px[i + 1] = v
-              px[i + 2] = v
-            }
-          }
-          ctx.putImageData(frame, 0, 0)
-          if (!cancelled && pfpRef.current) {
-            pfpRef.current.src = canvas.toDataURL('image/png')
-          }
-        } catch {
-          /* deja la foto original */
-        }
-      }
-      source.onerror = () => {
-        /* deja la foto original / alt */
-      }
-    }
-    if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(run, { timeout: 2000 })
-      return () => {
-        cancelled = true
-        window.cancelIdleCallback?.(id)
-      }
-    }
-    const id = window.setTimeout(run, 0)
-    return () => {
-      cancelled = true
-      window.clearTimeout(id)
-    }
-  }, [])
-
+// Contenido del CV (presentacional). La foto llega ya ditherizada: el
+// efecto se aplicó offline desde la foto original con
+// scripts/prerender-pfp.py (misma tubería que antes corría aquí en
+// canvas), así que no hay procesado en runtime.
+function CvContent() {
   return (
     <div className="max-w-5xl text-left">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
         <div className="relative h-24 w-24 shrink-0 self-start aspect-square overflow-hidden bg-white sm:h-56 sm:w-auto lg:h-64">
           <img
-            ref={pfpRef}
-            src="/pfp.jpg"
+            src="/pfp-dither.png"
             alt="Foto de perfil de Jesús Jódar"
-            width={128}
-            height={128}
+            width={220}
+            height={220}
             decoding="async"
+            fetchPriority="high"
             className="h-full w-full object-cover grayscale"
             style={{ imageRendering: 'pixelated' }}
           />
@@ -110,16 +29,18 @@ export default function CvContent() {
           />
         </div>
         <div className="min-w-0 sm:flex sm:flex-1 sm:flex-col sm:justify-end sm:self-stretch">
-          <div
-            aria-hidden="true"
-            className="font-barcode text-4xl sm:text-5xl leading-none select-none mb-2"
-            style={{ color: 'var(--color-neon)' }}
-          >
-            *JJ26*
+          <div className="flex flex-wrap items-end gap-x-4">
+            <h1 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">
+              Jesús Jódar
+            </h1>
+            <div
+              aria-hidden="true"
+              className="font-barcode text-4xl sm:text-5xl leading-none select-none -mb-3.5"
+              style={{ color: 'var(--color-neon)' }}
+            >
+              *JJ26*
+            </div>
           </div>
-          <h1 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">
-            Jesús Jódar
-          </h1>
           <p className="mt-3 text-lg leading-relaxed text-white sm:text-xl">
             Apasionado de la informática y la tecnología: sistemas Windows y
             Linux, inteligencia artificial, automatización y software moderno.
@@ -212,3 +133,7 @@ export default function CvContent() {
     </div>
   )
 }
+
+// memo: App re-renderiza al cambiar chatOpen/introDone/umbrales; el CV es
+// estático y no necesita reconciliarse en esos cambios de estado.
+export default memo(CvContent)

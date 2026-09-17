@@ -1,6 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import CustomScrollbar from './CustomScrollbar.jsx'
-import BloubBot from './BloubBot.jsx'
 import { CHAT_SUGGESTIONS } from '../lib/portfolio.js'
 
 // Panel superior de preguntas (demo local sin backend). Autocontenido:
@@ -32,7 +31,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex min-h-0 flex-col overflow-hidden transition-opacity duration-300"
+      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex min-h-0 flex-col transition-opacity duration-300"
       style={{ opacity: chatOpen ? 1 : 0, pointerEvents: chatOpen ? 'auto' : 'none' }}
       aria-hidden={chatOpen ? undefined : true}
       inert={!chatOpen || !introDone}
@@ -55,7 +54,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               <ul aria-live="polite" className="space-y-3">
                 {history.map((m, i) => (
                   <Fragment key={`${i}-${m.q}`}>
-                    <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0b1c55]">
+                    <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
                       {m.q}
                     </li>
                     {m.a ? (
@@ -70,47 +69,33 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
           </div>
         ) : null}
         <div className="mt-auto shrink-0">
-          {/* Al enviar el primer mensaje, icono + título + chips se desvanecen
+          {/* Al enviar el primer mensaje, título + chips se desvanecen
               y colapsan (max-height, determinista en todos los motores)
               dejando sitio a la conversación. */}
           <div
             aria-hidden={history.length > 0}
-            className={`overflow-hidden transition-all duration-500 ${history.length > 0 ? 'max-h-0 opacity-0' : 'max-h-[40rem] opacity-100'}`}
+            className={`transition-all duration-500 ${history.length > 0 ? 'max-h-0 overflow-hidden opacity-0' : 'max-h-[40rem] overflow-visible opacity-100'}`}
           >
-              <div className="mb-8 pr-6">
-                <div className="flex shrink-0 flex-col items-start gap-3">
-                  <div className="relative shrink-0 overflow-visible">
-                    <BloubBot
-                      size={80}
-                      className="-ml-0.5 h-16 w-16 sm:h-20 sm:w-20 cursor-default"
-                      color="#fff700"
-                      paper="#0b1c55"
-                      follow={true}
-                      playing={false}
-                      tight={true}
-                      eyeShape="capsule"
-                      active={chatOpen}
-                    />
-                  </div>
-                  <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
-                    Pregunta lo que quieras saber sobre mí
-                  </h2>
-                </div>
-              </div>
-              <div className="mb-6 flex shrink-0 flex-row flex-wrap items-center gap-2 pr-6">
-                {CHAT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
-                  <span
-                    key={suggestion}
-                    onClick={() => setQuery(suggestion)}
-                    className="cursor-pointer border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95 squircle"
-                  >
-                    {suggestion}
-                  </span>
-                ))}
-              </div>
+            <div className="mb-8 pr-6">
+              <h2 className="font-display text-4xl leading-[0.92] tracking-tight text-white sm:text-6xl md:text-7xl">
+                Pregunta lo que quieras<br />
+                saber sobre mi
+              </h2>
+            </div>
+            <div className="mb-6 flex shrink-0 flex-row flex-wrap items-center gap-2.5 pr-6">
+              {CHAT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
+                <span
+                  key={suggestion}
+                  onClick={() => setQuery(suggestion)}
+                  className="cursor-pointer rounded-[10px] border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95"
+                >
+                  {suggestion}
+                </span>
+              ))}
+            </div>
           </div>
           <form
-            className="flex shrink-0 items-center gap-2 border-2 border-white py-2 pr-2 pl-5 transition-colors focus-within:border-white squircle"
+            className="flex shrink-0 items-center gap-2 rounded-[20px] border-2 border-white py-2 pr-2 pl-5 transition-colors focus-within:border-white"
             onSubmit={handleChatSubmit}
           >
             <input
@@ -124,7 +109,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             <button
               type="submit"
               aria-label="Enviar"
-              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center bg-white text-black transition-transform hover:scale-105 active:scale-95 squircle"
+              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-[12px] bg-white text-black transition-transform hover:scale-105 active:scale-95"
             >
               <svg
                 className="h-4 w-4"

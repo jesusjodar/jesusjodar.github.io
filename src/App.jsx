@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import ChatPanel from './components/ChatPanel.jsx'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import CvContent from './components/CvContent.jsx'
 import CustomScrollbar from './components/CustomScrollbar.jsx'
 import FolderFrame from './components/FolderFrame.jsx'
@@ -7,6 +6,10 @@ import Grainient from './components/Grainient.jsx'
 import SiteFooter from './components/SiteFooter.jsx'
 import { useFolderInset } from './hooks/useFolderInset.js'
 import { INTRO_MS } from './lib/portfolio.js'
+
+// El panel de chat está oculto hasta que se colapsa la carpeta: chunk
+// aparte + prefetch en tiempo libre.
+const ChatPanel = lazy(() => import('./components/ChatPanel.jsx'))
 
 // Orquestador del layout: posee intro + contenedor de scroll y compone
 // los independientes ChatPanel (preguntas), FolderFrame (outline),
@@ -25,6 +28,18 @@ function App() {
     const id = window.setTimeout(() => setIntroDone(true), INTRO_MS)
     return () => window.clearTimeout(id)
   }, [introDone])
+
+  // Precarga del chunk del chat en tiempo libre: invisible al usuario,
+  // listo para cuando colapse la carpeta.
+  useEffect(() => {
+    const prefetch = () => import('./components/ChatPanel.jsx')
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(prefetch, { timeout: 3000 })
+      return () => window.cancelIdleCallback?.(id)
+    }
+    const id = window.setTimeout(prefetch, 1500)
+    return () => window.clearTimeout(id)
+  }, [])
 
   const {
     frameRef,
@@ -45,8 +60,8 @@ function App() {
   } = useFolderInset({ introDone, scrollContainerRef })
 
   return (
-    <main className="h-screen supports-[height:100dvh]:h-dvh overflow-hidden bg-[#0b1c55] font-sans text-white antialiased">
-      {/* Fondo Grainient azul profundo con ajustes de brillo/contraste predefinidos.
+    <main className="h-screen supports-[height:100dvh]:h-dvh overflow-hidden bg-[#0e0a38] font-sans text-white antialiased">
+      {/* Fondo Grainient azul violáceo/magenta con ajustes de brillo/contraste predefinidos.
           El grano sale del shader y se pinta estático y nítido encima con .grain-overlay. */}
       <div
         aria-hidden="true"
@@ -56,25 +71,25 @@ function App() {
         className="fixed inset-0 z-0"
       >
         <Grainient
-          color1="#5e90c6"
-          color2="#2038c9"
-          color3="#0b1c55"
+          color1="#9f45e3"
+          color2="#3123b8"
+          color3="#0e0a38"
           colorBalance={-0.15}
           timeSpeed={0.3}
           warpStrength={1}
           warpFrequency={2}
           warpSpeed={2}
-          warpAmplitude={35}
-          blendSoftness={0.05}
+          warpAmplitude={45}
+          blendSoftness={0.25}
           rotationAmount={500}
-          noiseScale={6}
+          noiseScale={3}
           grainAmount={0}
           grainScale={4}
           grainAnimated={false}
           contrast={1.6}
           saturation={1.5}
           zoom={0.9}
-          renderScale={0.15}
+          renderScale={0.25}
           frameSkip={2}
         />
         <div aria-hidden="true" className="grain-overlay" />
@@ -86,10 +101,10 @@ function App() {
         <defs>
           <filter
             id="pixelate"
-            x="-20%"
-            y="-20%"
-            width="140%"
-            height="140%"
+            x="-8%"
+            y="-8%"
+            width="116%"
+            height="116%"
             colorInterpolationFilters="sRGB"
           >
             {/* Mosaico SIN blur: muestrea el original nítido y lo expande a
@@ -137,7 +152,9 @@ function App() {
           </filter>
         </defs>
       </svg>
-      <ChatPanel chatOpen={chatOpen} introDone={introDone} panelRef={chatPanelRef} />
+      <Suspense fallback={null}>
+        <ChatPanel chatOpen={chatOpen} introDone={introDone} panelRef={chatPanelRef} />
+      </Suspense>
       <FolderFrame
         frameRef={frameRef}
         frameLeftRef={frameLeftRef}

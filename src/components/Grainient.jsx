@@ -7,17 +7,26 @@ const hexToRgb = hex => {
   return [parseInt(result[1], 16) / 255, parseInt(result[2], 16) / 255, parseInt(result[3], 16) / 255];
 };
 
+// 1. Vertex Shader: calculamos vUv en hardware en vez de dividir gl_FragCoord en cada fragmento
 const vertex = `#version 300 es
 in vec2 position;
+out vec2 vUv;
 void main() {
+  vUv = position * 0.5 + 0.5;
   gl_Position = vec4(position, 0.0, 1.0);
 }
 `;
 
+// 2. Fragment Shader: vectorizado SIMD y libre de operaciones redundantes
 const fragment = `#version 300 es
 precision highp float;
-uniform vec2 iResolution;
+
+in vec2 vUv;
+out vec4 fragColor;
+
 uniform float iTime;
+uniform float uRatio;
+uniform float uInvRatio;
 uniform float uTimeSpeed;
 uniform float uColorBalance;
 uniform float uWarpStrength;
@@ -40,74 +49,105 @@ uniform vec3 uColor1;
 uniform vec3 uColor2;
 uniform vec3 uColor3;
 uniform float uLightMode;
-out vec4 fragColor;
+
 #define S(a,b,t) smoothstep(a,b,t)
-mat2 Rot(float a){float s=sin(a),c=cos(a);return mat2(c,-s,s,c);}
-vec2 hash(vec2 p){p=vec2(dot(p,vec2(2127.1,81.17)),dot(p,vec2(1269.5,283.37)));return fract(sin(p)*43758.5453);}
-float noise(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.0-2.0*f);float n=mix(mix(dot(-1.0+2.0*hash(i+vec2(0.0,0.0)),f-vec2(0.0,0.0)),dot(-1.0+2.0*hash(i+vec2(1.0,0.0)),f-vec2(1.0,0.0)),u.x),mix(dot(-1.0+2.0*hash(i+vec2(0.0,1.0)),f-vec2(0.0,1.0)),dot(-1.0+2.0*hash(i+vec2(1.0,1.0)),f-vec2(1.0,1.0)),u.x),u.y);return 0.5+0.5*n;}
-void mainImage(out vec4 o, vec2 C){
-  float t=iTime*uTimeSpeed;
-  vec2 uv=C/iResolution.xy;
-  float ratio=iResolution.x/iResolution.y;
-  vec2 tuv=uv-0.5+uCenterOffset;
-  tuv/=max(uZoom,0.001);
 
-  float degree=noise(vec2(t*0.1,tuv.x*tuv.y)*uNoiseScale);
-  tuv.y*=1.0/ratio;
-  tuv*=Rot(radians((degree-0.5)*uRotationAmount+180.0));
-  tuv.y*=ratio;
+mat2 Rot(float a) {
+  float s = sin(a), c = cos(a);
+  return mat2(c, -s, s, c);
+}
 
-  float frequency=uWarpFrequency;
-  float ws=max(uWarpStrength,0.001);
-  float amplitude=uWarpAmplitude/ws;
-  float warpTime=t*uWarpSpeed;
-  tuv.x+=sin(tuv.y*frequency+warpTime)/amplitude;
-  tuv.y+=sin(tuv.x*(frequency*1.5)+warpTime)/(amplitude*0.5);
+// SIMD Perlin Noise: 4 esquinas procesadas en paralelo con 2 vec4
+float noiseVectorized(vec2 p) {
+  vec2 i = floor(p);
+  vec2 f = fract(p);
+  vec2 u = f * f * (3.0 - 2.0 * f);
 
-  vec3 colLav=uColor1;
-  vec3 colOrg=uColor2;
-  vec3 colDark=uColor3;
-  float b=uColorBalance;
-  float s=max(uBlendSoftness,0.0);
-  mat2 blendRot=Rot(radians(uBlendAngle));
-  float blendX=(tuv*blendRot).x;
-  float edge0=-0.3-b-s;
-  float edge1=0.2-b+s;
-  float v0=0.5-b+s;
-  float v1=-0.3-b-s;
-  vec3 layer1=mix(colDark,colOrg,S(edge0,edge1,blendX));
-  vec3 layer2=mix(colOrg,colLav,S(edge0,edge1,blendX));
-  vec3 col=mix(layer1,layer2,S(v0,v1,tuv.y));
+  // Evaluamos el dot base de 'i' una sola vez
+  float dot0 = dot(i, vec2(2127.1, 81.17));
+  float dot1 = dot(i, vec2(1269.5, 283.37));
 
-  vec2 grainUv=uv*max(uGrainScale,0.001);
-  if(uGrainAnimated>0.5){grainUv+=vec2(iTime*0.05);}
-  float grain=fract(sin(dot(grainUv,vec2(12.9898,78.233)))*43758.5453);
-  col+=(grain-0.5)*uGrainAmount;
+  // Las 4 esquinas son sumas de constantes directas
+  vec4 pX = vec4(dot0, dot0 + 2127.1, dot0 + 81.17, dot0 + 2208.27);
+  vec4 pY = vec4(dot1, dot1 + 1269.5, dot1 + 283.37, dot1 + 1552.87);
 
-  col=(col-0.5)*uContrast+0.5;
-  float luma=dot(col,vec3(0.2126,0.7152,0.0722));
-  col=mix(vec3(luma),col,uSaturation);
-  col=pow(max(col,0.0),vec3(1.0/max(uGamma,0.001)));
-  col=clamp(col,0.0,1.0);
-  if(uLightMode>0.5){
-    float energy=max(max(col.r,col.g),col.b);
-    vec3 hue=col/max(energy,0.001);
-    float chroma=length(col-vec3(dot(col,vec3(0.333333))));
-    float coverage=clamp(0.12+chroma*1.15+energy*0.18,0.0,0.88);
-    col=mix(vec3(1.0),clamp(hue*0.58+col*0.18,0.0,1.0),coverage);
+  vec4 hX = -1.0 + 2.0 * fract(sin(pX) * 43758.5453);
+  vec4 hY = -1.0 + 2.0 * fract(sin(pY) * 43758.5453);
+
+  vec4 dx = vec4(f.x, f.x - 1.0, f.x, f.x - 1.0);
+  vec4 dy = vec4(f.y, f.y, f.y - 1.0, f.y - 1.0);
+  vec4 dots = hX * dx + hY * dy;
+
+  vec2 nX = mix(dots.xz, dots.yw, u.x);
+  float n = mix(nX.x, nX.y, u.y);
+  return 0.5 + 0.5 * n;
+}
+
+void main() {
+  float t = iTime * uTimeSpeed;
+  vec2 tuv = (vUv - 0.5 + uCenterOffset) / max(uZoom, 0.001);
+
+  // Mapeo suave curvado: evita singularidades rectilíneas a lo largo de los ejes ortogonales
+  float degree = noiseVectorized(vec2(t * 0.1, tuv.x * tuv.y + dot(tuv, tuv) * 0.2) * uNoiseScale);
+  tuv.y *= uInvRatio;
+  tuv *= Rot(radians((degree - 0.5) * uRotationAmount + 180.0));
+  tuv.y *= uRatio;
+
+  float frequency = uWarpFrequency;
+  float ws = max(uWarpStrength, 0.001);
+  float invAmp = ws / max(uWarpAmplitude, 0.001);
+  float warpTime = t * uWarpSpeed;
+
+  tuv.x += sin(tuv.y * frequency + warpTime) * invAmp;
+  tuv.y += sin(tuv.x * (frequency * 1.5) + warpTime) * (invAmp * 2.0);
+
+  float b = uColorBalance;
+  float s = max(uBlendSoftness, 0.0);
+  
+  float rad = radians(uBlendAngle);
+  float blendX = dot(tuv, vec2(cos(rad), -sin(rad)));
+
+  float edge0 = -0.3 - b - s;
+  float edge1 =  0.2 - b + s;
+  float v0    =  0.5 - b + s;
+  float v1    = -0.3 - b - s;
+
+  float blendFactor = S(edge0, edge1, blendX);
+  vec3 layer1 = mix(uColor3, uColor2, blendFactor);
+  vec3 layer2 = mix(uColor2, uColor1, blendFactor);
+  vec3 col = mix(layer1, layer2, S(v0, v1, tuv.y));
+
+  // Si el grano es 0 (como en App.jsx), omitimos sin coste GPU
+  if (uGrainAmount > 0.0001) {
+    vec2 grainUv = vUv * max(uGrainScale, 0.001);
+    if (uGrainAnimated > 0.5) grainUv += vec2(iTime * 0.05);
+    float grain = fract(sin(dot(grainUv, vec2(12.9898, 78.233))) * 43758.5453);
+    col += (grain - 0.5) * uGrainAmount;
   }
 
-  o=vec4(col,1.0);
-}
-void main(){
-  vec4 o=vec4(0.0);
-  mainImage(o,gl_FragCoord.xy);
-  fragColor=o;
+  col = (col - 0.5) * uContrast + 0.5;
+  float luma = dot(col, vec3(0.2126, 0.7152, 0.0722));
+  col = mix(vec3(luma), col, uSaturation);
+
+  // Omitimos pow() cuando gamma es 1.0 (evita exp2 y log2 trascendentes)
+  if (abs(uGamma - 1.0) > 0.001) {
+    col = pow(max(col, 0.0), vec3(1.0 / max(uGamma, 0.001)));
+  }
+  col = clamp(col, 0.0, 1.0);
+
+  if (uLightMode > 0.5) {
+    float energy = max(max(col.r, col.g), col.b);
+    vec3 hue = col / max(energy, 0.001);
+    float chroma = length(col - vec3(dot(col, vec3(0.333333))));
+    float coverage = clamp(0.12 + chroma * 1.15 + energy * 0.18, 0.0, 0.88);
+    col = mix(vec3(1.0), clamp(hue * 0.58 + col * 0.18, 0.0, 1.0), coverage);
+  }
+
+  fragColor = vec4(col, 1.0);
 }
 `;
 
-// Keep renderer/program alive across re-renders so Effect 2 can update
-// uniforms without ever rebuilding the WebGL context.
+// Mantiene renderer/program vivos entre re-renders sin reconstruir contexto WebGL
 const ctxMap = new WeakMap();
 
 const Grainient = ({
@@ -134,32 +174,33 @@ const Grainient = ({
   color2 = '#5227FF',
   color3 = '#B497CF',
   lightMode = false,
-  // Optimización de coste GPU (el gradiente es suave: escala sin pérdida
-  // visible). renderScale: multiplica la resolución de render (0.6 = 36%
-  // de píxeles; el canvas CSS sigue al 100% y el navegador reescala).
-  // frameSkip: renderiza 1 de cada N frames (2 ≈ 30fps); iTime sigue el
-  // reloj real, así que la velocidad de animación no cambia.
   renderScale = 1,
   frameSkip = 1,
   className = ''
 }) => {
   const containerRef = useRef(null);
-  // Effect 1 runs once: capture initial values for the GL setup.
   const renderScaleRef = useRef(renderScale);
   const frameSkipRef = useRef(frameSkip);
   const timeSpeedRef = useRef(timeSpeed);
   const grainAnimatedRef = useRef(grainAnimated);
 
-  // Effect 1: build WebGL context once, pause when offscreen / tab hidden
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    // Configuración óptima de WebGL:
+    // - alpha: false -> El compositor del SO no necesita mezclar el canvas con capas inferiores.
+    // - depth: false -> Ahorra un buffer de profundidad de 24-bit y su correspondiente clear.
+    // - powerPreference: 'low-power' -> Evita activar GPUs dedicadas en portátiles.
+    // - dpr: 1 si renderScale < 1 -> Evita cuadruplicar píxeles en pantallas Retina cuando el usuario pide downscaling.
     const renderer = new Renderer({
       webgl: 2,
-      alpha: true,
+      alpha: false,
+      depth: false,
+      stencil: false,
       antialias: false,
-      dpr: Math.min(window.devicePixelRatio || 1, 2)
+      powerPreference: 'low-power',
+      dpr: (renderScaleRef.current ?? 1) < 1 ? 1 : Math.min(window.devicePixelRatio || 1, 2)
     });
 
     const gl = renderer.gl;
@@ -175,7 +216,8 @@ const Grainient = ({
       fragment,
       uniforms: {
         iTime:           { value: 0 },
-        iResolution:     { value: new Float32Array([1, 1]) },
+        uRatio:          { value: 1.0 },
+        uInvRatio:       { value: 1.0 },
         uTimeSpeed:      { value: 0.25 },
         uColorBalance:   { value: 0.0 },
         uWarpStrength:   { value: 1.0 },
@@ -206,27 +248,30 @@ const Grainient = ({
 
     const scale = Math.min(1, Math.max(0.1, renderScaleRef.current ?? 1));
     const skip = Math.max(1, Math.floor(frameSkipRef.current ?? 1));
-    // Sin animación temporal (timeSpeed 0 + grano estático) un solo frame
-    // basta: no se programa ningún bucle (el resize repinta).
-    const staticMode =
-      (timeSpeedRef.current ?? 0) === 0 && !grainAnimatedRef.current;
+    // Intervalo de throttling independiente del refresco de pantalla (60/120/144Hz)
+    const minDelta = skip > 1 ? (1000 / (60 / skip)) - 4 : 0;
+    const staticMode = (timeSpeedRef.current ?? 0) === 0 && !grainAnimatedRef.current;
 
     const setSize = () => {
       const rect = container.getBoundingClientRect();
       const w = Math.max(1, Math.floor(rect.width));
       const h = Math.max(1, Math.floor(rect.height));
+
       renderer.setSize(
         Math.max(1, Math.round(w * scale)),
-        Math.max(1, Math.round(h * scale)),
+        Math.max(1, Math.round(h * scale))
       );
-      // setSize pisa el estilo del canvas: se reafirma el 100% CSS para
-      // que el navegador reescale el buffer pequeño (suave en gradientes).
+
       canvas.style.width = '100%';
       canvas.style.height = '100%';
-      const res = program.uniforms.iResolution.value;
-      res[0] = gl.drawingBufferWidth;
-      res[1] = gl.drawingBufferHeight;
-      renderer.render({ scene: mesh });
+
+      const bw = gl.drawingBufferWidth || w;
+      const bh = gl.drawingBufferHeight || h;
+      const ratio = bw / bh;
+      program.uniforms.uRatio.value = ratio;
+      program.uniforms.uInvRatio.value = 1.0 / ratio;
+
+      renderer.render({ scene: mesh, sort: false, frustumCull: false, update: false, clear: false });
     };
 
     const ro = new ResizeObserver(setSize);
@@ -237,20 +282,20 @@ const Grainient = ({
     let isVisible = true;
     let isPageVisible = !document.hidden;
     const t0 = performance.now();
+    let lastRender = 0;
 
-    let tick = 0;
     const loop = t => {
-      if (tick++ % skip !== 0) {
+      if (minDelta > 0 && t - lastRender < minDelta) {
         raf = requestAnimationFrame(loop);
         return;
       }
+      lastRender = t;
       program.uniforms.iTime.value = (t - t0) * 0.001;
-      renderer.render({ scene: mesh });
+      renderer.render({ scene: mesh, sort: false, frustumCull: false, update: false, clear: false });
       raf = requestAnimationFrame(loop);
     };
 
     const tryStart = () => {
-      // En modo estático basta el frame ya pintado por setSize.
       if (staticMode) return;
       if (isVisible && isPageVisible && raf === 0) raf = requestAnimationFrame(loop);
     };
@@ -283,11 +328,12 @@ const Grainient = ({
       io.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
       ctxMap.delete(container);
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
       try { container.removeChild(canvas); } catch { /* ignore */ }
     };
-  }, []); // renderer created once
+  }, []);
 
-  // Effect 2: sync props to uniforms — zero GPU cost, no teardown
+  // Sincronización de uniforms reactivos (coste GPU cero, sin reconstrucción de contexto)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -324,7 +370,6 @@ const Grainient = ({
     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
     centerX, centerY, zoom, color1, color2, color3, lightMode
   ]);
-
 
   return <div ref={containerRef} className={`relative h-full w-full overflow-hidden ${className}`.trim()} />;
 };

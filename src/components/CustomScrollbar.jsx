@@ -42,13 +42,20 @@ export default function CustomScrollbar({
     const container = scrollContainerRef.current
     if (!track || !thumb || !inner || !container) return
 
+    // Métricas cacheadas: scrollHeight/clientHeight solo cambian al
+    // redimensionar o crecer el contenido; leerlas cada frame durante el
+    // scroll intercalado con escrituras de estilo provoca layout thrash.
+    // `wake` (scroll/resize/visibilidad) invalida la caché.
+    let metricsCache = null
     const metrics = () => {
+      if (metricsCache) return metricsCache
       const scrollHeight = container.scrollHeight
       const viewport = container.clientHeight
       const trackH = track.clientHeight
       const maxScroll = Math.max(0, scrollHeight - viewport)
       const thumbH = maxScroll <= 0 ? trackH : 44
-      return { trackH, maxScroll, thumbH }
+      metricsCache = { trackH, maxScroll, thumbH }
+      return metricsCache
     }
 
     let prevY = container.scrollTop
@@ -157,6 +164,7 @@ export default function CustomScrollbar({
     }
 
     const wake = () => {
+      metricsCache = null
       if (!running) {
         running = true
         prevT = performance.now()

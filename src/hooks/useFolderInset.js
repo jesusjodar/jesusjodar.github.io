@@ -32,6 +32,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
   // El estado solo refleja umbrales (chat abierto / colapsado).
   const topInsetRef = useRef(0)
   const maxInsetRef = useRef(0)
+
   // Aplanado del chevron sin cambiar grosor (morph del path, como el original).
   // Se guarda en ref para usarlo dentro de applyFrame sin re-renders.
   const pressRef = useRef({ anim: false, zoom: false })
@@ -70,11 +71,11 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     if (w <= 0 || h <= 0) return
     const s = FRAME_STROKE
     const t = s + topInset
-    const r = Math.max(0, Math.min(28, w / 2 - s, h / 2 - s))
+    const r = Math.max(0, Math.min(32, w / 2 - s, h / 2 - s))
     const isWide = window.innerWidth >= SM_MIN
     const tabH = isWide ? TAB_H_DESKTOP : TAB_H_MOBILE
     const tTab = s + tabH + topInset
-    const R = isWide ? 12 : 10
+    const R = isWide ? 16 : 12
     const minTabW = isWide ? 90 : 60
     const maxTabW = Math.max(minTabW, w - s - r - R - 40)
     const tabW = Math.min(
@@ -82,6 +83,18 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       Math.min(maxTabW, Math.max(minTabW, Math.round(w * (isWide ? 0.125 : 0.19)))),
     )
     const f = (n) => n.toFixed(1)
+
+    // Curvas squircle / Bézier con hombros suaves (continuidad G1 orgánica,
+    // eliminando la arista visual de los arcos circulares rígidos).
+    const K = 0.60
+    const bez = (x0, y0, cx, cy, x1, y1) => {
+      const cp1x = x0 + (cx - x0) * K
+      const cp1y = y0 + (cy - y0) * K
+      const cp2x = x1 + (cx - x1) * K
+      const cp2y = y1 + (cy - y1) * K
+      return `C ${f(cp1x)} ${f(cp1y)}, ${f(cp2x)} ${f(cp2y)}, ${f(x1)} ${f(y1)}`
+    }
+
     const maxInsetNow = getMaxInset(h)
     maxInsetRef.current = maxInsetNow
     const chevW = isWide ? 28 : 22
@@ -110,22 +123,22 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       'd',
       `M ${f(w / 2)} ${f(h - s)} ` +
         `L ${f(s + r)} ${f(h - s)} ` +
-        `A ${f(r)} ${f(r)} 0 0 1 ${f(s)} ${f(h - s - r)} ` +
+        `${bez(s + r, h - s, s, h - s, s, h - s - r)} ` +
         `L ${f(s)} ${f(t + R)} ` +
-        `A ${f(R)} ${f(R)} 0 0 1 ${f(s + R)} ${f(t)} ` +
+        `${bez(s, t + R, s, t, s + R, t)} ` +
         `L ${f(tabW - R)} ${f(t)}`,
     )
     frameRightRef.current?.setAttribute(
       'd',
       `M ${f(w / 2)} ${f(h - s)} ` +
         `L ${f(w - s - r)} ${f(h - s)} ` +
-        `A ${f(r)} ${f(r)} 0 0 0 ${f(w - s)} ${f(h - s - r)} ` +
+        `${bez(w - s - r, h - s, w - s, h - s, w - s, h - s - r)} ` +
         `L ${f(w - s)} ${f(tTab + r)} ` +
-        `A ${f(r)} ${f(r)} 0 0 0 ${f(w - s - r)} ${f(tTab)} ` +
+        `${bez(w - s, tTab + r, w - s, tTab, w - s - r, tTab)} ` +
         `L ${f(tabW + R)} ${f(tTab)} ` +
-        `A ${f(R)} ${f(R)} 0 0 1 ${f(tabW)} ${f(tTab - R)} ` +
+        `${bez(tabW + R, tTab, tabW, tTab, tabW, tTab - R)} ` +
         `L ${f(tabW)} ${f(t + R)} ` +
-        `A ${f(R)} ${f(R)} 0 0 0 ${f(tabW - R)} ${f(t)}`,
+        `${bez(tabW, t + R, tabW, t, tabW - R, t)}`,
     )
     // Transición del morph vía propiedad CSS `d` (Chrome) + atributo `d`
     // (Firefox/Safari saltan al estado final). Sin scaleY para no afinar.
@@ -189,24 +202,28 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       const box = wrap.getBoundingClientRect()
       const px = (x) => f(x - box.left)
       const py = (y) => f(y - box.top)
+      const bezMask = (x0, y0, cx, cy, x1, y1) => {
+        const cp1x = x0 + (cx - x0) * K
+        const cp1y = y0 + (cy - y0) * K
+        const cp2x = x1 + (cx - x1) * K
+        const cp2y = y1 + (cy - y1) * K
+        return `C ${px(cp1x)} ${py(cp1y)}, ${px(cp2x)} ${py(cp2y)}, ${px(x1)} ${py(y1)}`
+      }
       const bi = 2 * s
-      const rib = Math.max(0, r - s)
-      const rit = Math.max(0, R - s)
-      const Rc = R + s
       const yB = mY + h
       const d =
         `M ${px(mX + bi)} ${py(mY + t + R)} ` +
-        `A ${f(rit)} ${f(rit)} 0 0 1 ${px(mX + s + R)} ${py(mY + t + s)} ` +
+        `${bezMask(mX + bi, mY + t + R, mX + bi, mY + t + s, mX + s + R, mY + t + s)} ` +
         `L ${px(mX + tabW - R)} ${py(mY + t + s)} ` +
-        `A ${f(rit)} ${f(rit)} 0 0 1 ${px(mX + tabW - s)} ${py(mY + t + R)} ` +
+        `${bezMask(mX + tabW - R, mY + t + s, mX + tabW - s, mY + t + s, mX + tabW - s, mY + t + R)} ` +
         `L ${px(mX + tabW - s)} ${py(mY + tTab - R)} ` +
-        `A ${f(Rc)} ${f(Rc)} 0 0 0 ${px(mX + tabW + R)} ${py(mY + tTab + s)} ` +
+        `${bezMask(mX + tabW - s, mY + tTab - R, mX + tabW - s, mY + tTab + s, mX + tabW + R, mY + tTab + s)} ` +
         `L ${px(mX + w - s - r)} ${py(mY + tTab + s)} ` +
-        `A ${f(rib)} ${f(rib)} 0 0 1 ${px(mX + w - bi)} ${py(mY + tTab + r)} ` +
+        `${bezMask(mX + w - s - r, mY + tTab + s, mX + w - bi, mY + tTab + s, mX + w - bi, mY + tTab + r)} ` +
         `L ${px(mX + w - bi)} ${py(mY + h - s - r)} ` +
-        `A ${f(rib)} ${f(rib)} 0 0 1 ${px(mX + w - s - r)} ${py(yB - bi)} ` +
+        `${bezMask(mX + w - bi, mY + h - s - r, mX + w - bi, yB - bi, mX + w - s - r, yB - bi)} ` +
         `L ${px(mX + s + r)} ${py(yB - bi)} ` +
-        `A ${f(rib)} ${f(rib)} 0 0 1 ${px(mX + bi)} ${py(mY + h - s - r)} ` +
+        `${bezMask(mX + s + r, yB - bi, mX + bi, yB - bi, mX + bi, mY + h - s - r)} ` +
         `Z`
       const bw = Math.max(1, Math.round(box.width))
       const bh = Math.max(1, Math.round(box.height))

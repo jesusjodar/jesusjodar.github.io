@@ -64,7 +64,7 @@ export default function SiteFooter() {
     const ampAt = (x) => h / 2 - 8.5 + ((x - pad) / span) * 4
     const yAt = (x, phase) =>
       h / 2 + ampAt(x) * Math.sin(((x - pad) / span) * n * Math.PI * 2 + phase)
-    const tAt = (x) => 4 + ((x - pad) / span) * 3
+    const tAt = (x) => 1 + ((x - pad) / span) * 6
     const ends = () => ({ x0: pad + 2.5, x1: w - pad - 4 })
 
     const placeStar = (phase) => {
@@ -79,11 +79,15 @@ export default function SiteFooter() {
       )
     }
 
+    // Muestreo reutilizado entre frames: la onda se reconstruye a 60fps y
+    // realojar el array cada frame genera basura constante para el GC.
+    const xs = []
+
     const buildD = (phase) => {
       if (span <= 0) return ''
       const { x0, x1 } = ends()
       if (x1 <= x0) return ''
-      const xs = []
+      xs.length = 0
       for (let x = x0; x < x1; x += 4) xs.push(x)
       xs.push(x1)
       let d = ''
@@ -297,7 +301,7 @@ export default function SiteFooter() {
               >
                 <stop offset="0" stopColor="white" stopOpacity="0" />
                 <stop offset="0.55" stopColor="white" stopOpacity="0.55" />
-                <stop offset="1" stopColor="white" stopOpacity="1" />
+                <stop offset="1" stopColor="white" stopOpacity="0.8" />
               </linearGradient>
             </defs>
             <path
