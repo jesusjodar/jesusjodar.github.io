@@ -105,7 +105,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               {history.map((m) => (
                 <Fragment key={m.id || m.q}>
                   {/* Fila de la pregunta del usuario: el botón de volver al inicio se sitúa a la izquierda (arriba de la futura respuesta) sin desplazar el mensaje del usuario hacia arriba */}
-                  <li className="flex w-full items-end justify-between gap-3">
+                  <li className="flex w-full items-center justify-between gap-3">
                     <button
                       type="button"
                       onClick={handleResetChat}
