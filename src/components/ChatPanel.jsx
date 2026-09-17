@@ -1,7 +1,39 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import CustomScrollbar from './CustomScrollbar.jsx'
 import { CHAT_SUGGESTIONS } from '../lib/portfolio.js'
 import { useChatAI } from '../hooks/useChatAI.js'
+
+// Configuración del renderizador Markdown para enlaces externos seguros
+marked.use({
+  breaks: true,
+  gfm: true,
+  renderer: {
+    link({ href, title, text }) {
+      const titleAttr = title ? ` title="${title}"` : ''
+      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`
+    },
+  },
+})
+
+function MarkdownMessage({ content }) {
+  const html = useMemo(() => {
+    if (!content) return ''
+    const rawHtml = marked.parse(content)
+    if (typeof window !== 'undefined' && DOMPurify?.sanitize) {
+      return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] })
+    }
+    return rawHtml
+  }, [content])
+
+  return (
+    <div
+      className="chat-markdown"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
+}
 
 // Panel superior de preguntas asistido por IA local (Qwen 0.5B en navegador con WebGPU).
 // Cada consulta entra con contexto limpio y sin arrastrar historial previo (stateless),
@@ -106,9 +138,9 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                           <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                         </li>
                       ) : m.a ? (
-                        /* Una vez completa, sustituye al bubble de puntos con outline de 2px como el shell */
+                        /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
                         <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
-                          {m.a}
+                          <MarkdownMessage content={m.a} />
                         </li>
                       ) : null}
                     </Fragment>
