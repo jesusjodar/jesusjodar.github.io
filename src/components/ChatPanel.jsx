@@ -35,20 +35,18 @@ function MarkdownMessage({ content }) {
   )
 }
 
-// Panel superior de preguntas asistido por IA local (Qwen 0.5B en navegador con WebGPU).
+// Panel superior de preguntas asistido por similitud semántica y ML en cliente.
 // Cada consulta entra con contexto limpio y sin arrastrar historial previo (stateless),
-// asegurando respuestas directas, rápidas y privadas sobre Jesús Jódar.
+// asegurando respuestas directas, instantáneas y precisas sobre Jesús Jódar.
 export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const [query, setQuery] = useState('')
   const [history, setHistory] = useState([])
   const scrollRef = useRef(null)
   const nextIdRef = useRef(1)
 
-  const { modelStatus, loadingPercent, isGenerating, sendQuery } = useChatAI({
+  const { isGenerating, sendQuery } = useChatAI({
     enabled: chatOpen,
   })
-
-  const isModelReady = modelStatus === 'ready'
 
   // Al añadir una respuesta o cambiar estado, baja al final de la lista.
   useEffect(() => {
@@ -57,7 +55,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
 
   const handleSend = (text) => {
     const q = (text || query).trim()
-    if (!q || !isModelReady || isGenerating) return
+    if (!q || isGenerating) return
 
     const messageId = nextIdRef.current++
     // Reemplaza cualquier mensaje anterior: cada consulta entra limpia en pantalla
@@ -65,11 +63,6 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
     setQuery('')
 
     sendQuery(q, {
-      onToken: (token) => {
-        setHistory((prev) =>
-          prev.map((m) => (m.id === messageId ? { ...m, a: m.a + token } : m))
-        )
-      },
       onDone: (content) => {
         setHistory((prev) =>
           prev.map((m) =>
@@ -166,7 +159,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                     type="button"
                     key={suggestion}
                     onClick={() => handleSend(suggestion)}
-                    disabled={!isModelReady || isGenerating}
+                    disabled={isGenerating}
                     className="cursor-pointer rounded-[10px] border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {suggestion}
@@ -177,9 +170,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
           ) : null}
 
           <form
-            className={`flex shrink-0 items-center gap-2 rounded-[20px] border-2 border-white py-2 pr-2 pl-5 transition-opacity duration-300 ${
-              isModelReady ? 'opacity-100 focus-within:border-white' : 'opacity-40'
-            }`}
+            className="flex shrink-0 items-center gap-2 rounded-[20px] border-2 border-white py-2 pr-2 pl-5 transition-opacity duration-300 opacity-100 focus-within:border-white"
             onSubmit={handleChatSubmit}
           >
             <input
@@ -188,73 +179,16 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Escribe tu pregunta..."
               aria-label="Escribe tu pregunta"
-              disabled={!isModelReady || isGenerating}
+              disabled={isGenerating}
               className="min-w-0 flex-1 bg-transparent py-1 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:cursor-not-allowed"
             />
             <button
               type="submit"
-              aria-label={!isModelReady ? 'Cargando modelo de IA' : 'Enviar'}
-              disabled={!isModelReady || isGenerating || !query.trim()}
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-white text-black transition-transform select-none enabled:cursor-pointer enabled:hover:scale-105 enabled:active:scale-95 disabled:opacity-90"
+              aria-label="Enviar"
+              disabled={isGenerating || !query.trim()}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-white text-black transition-transform select-none enabled:cursor-pointer enabled:hover:scale-105 enabled:active:scale-95 disabled:opacity-50"
             >
-              {!isModelReady ? (
-                loadingPercent > 0 ? (
-                  <svg
-                    className="h-[18px] w-[18px] -rotate-90 transform text-black"
-                    viewBox="0 0 20 20"
-                    aria-hidden="true"
-                  >
-                    <circle
-                      cx="10"
-                      cy="10"
-                      r="7.5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      fill="none"
-                      className="text-black/20"
-                    />
-                    <circle
-                      cx="10"
-                      cy="10"
-                      r="7.5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeDasharray={47.12}
-                      strokeDashoffset={47.12 * (1 - Math.min(Math.max(loadingPercent, 0), 100) / 100)}
-                      className="text-black transition-all duration-200 ease-out"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className="h-[18px] w-[18px] animate-spin text-black"
-                    viewBox="0 0 20 20"
-                    aria-hidden="true"
-                  >
-                    <circle
-                      cx="10"
-                      cy="10"
-                      r="7.5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      fill="none"
-                      className="text-black/20"
-                    />
-                    <circle
-                      cx="10"
-                      cy="10"
-                      r="7.5"
-                      stroke="currentColor"
-                      strokeWidth="2.2"
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeDasharray="22 47.12"
-                      className="text-black"
-                    />
-                  </svg>
-                )
-              ) : isGenerating ? (
+              {isGenerating ? (
                 <span className="h-3 w-3 animate-spin rounded-full border-2 border-black border-t-transparent" />
               ) : (
                 <svg
@@ -275,7 +209,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
           </form>
 
           <p className="mt-4 mr-2 mb-4 shrink-0 text-right text-xs text-white/60">
-            La IA es experimental y puede producir errores.
+            Respuestas basadas en el currículum y certificados oficiales de Jesús Jódar.
           </p>
         </div>
       </div>
