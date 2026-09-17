@@ -93,22 +93,21 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                       <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
                         {m.q}
                       </li>
-                      <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-sm leading-relaxed text-white">
-                        {m.a ? (
-                          <>
-                            <span>{m.a}</span>
-                            {m.isStreaming ? (
-                              <span className="ml-1 inline-block h-3.5 w-1.5 animate-pulse bg-[#2aff75] align-middle" />
-                            ) : null}
-                          </>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 py-0.5 text-white/50">
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.3s]"></span>
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.15s]"></span>
-                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"></span>
-                          </span>
-                        )}
-                      </li>
+                      {m.a ? (
+                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-sm leading-relaxed text-white">
+                          <span>{m.a}</span>
+                        </li>
+                      ) : null}
+                      {m.isStreaming ? (
+                        <li
+                          aria-label="Generando respuesta"
+                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md bg-white/10 px-4 py-3 text-white"
+                        >
+                          <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                          <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                          <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                        </li>
+                      ) : null}
                     </Fragment>
                   ))}
                 </ul>
