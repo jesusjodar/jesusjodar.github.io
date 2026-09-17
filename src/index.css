@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #0b1c55;
+  /* Neón para títulos y acentos */
+  --color-neon: #fff700;
+  --color-text-body: #ffffff;
+  --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+:root {
+  --color-text-body: #ffffff;
+  --frame-margin: 4vmin;
+  --tab-height: 32px;
+  --footer-h: max(2.25rem, 5.5vmin);
+  --frame-footer-gap: max(1rem, 2.5vmin);
+  --frame-border: 4px;
+  --scroll-pad: 2rem;
+  color-scheme: dark;
+}
+
+.text-white {
+  color: var(--color-text-body, #ffffff);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --tab-height: 38px;
+    --footer-h: max(2.5rem, 5.5vmin);
+    --frame-footer-gap: max(1.25rem, 3vmin);
+    --scroll-pad: 2rem;
+  }
+}
+
+html,
+body {
+  background-color: var(--color-base);
+  color: var(--color-text-body, #ffffff);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  overflow: hidden;
+  overscroll-behavior: none;
+  /* Texto sin antialiasing (crujiente, acorde al pixelado): Chrome, Edge
+     y Safari vía -webkit-; Firefox solo lo respeta en macOS (font-smooth).
+     Donde no hay soporte se ignora y se rasteriza con suavizado normal. */
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* Sin JS la página quedaría bloqueada (overflow hidden): permite scroll */
+noscript + #root,
+.no-js body {
+  overflow: auto;
+}
+
+/* Tipografía de display / logos (Anton) */
+.font-display {
+  font-family: 'Anton', 'Space Grotesk Variable', ui-sans-serif, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  color: var(--color-neon);
+}
+
+/* Tipografía manuscrita (Kalam) para anotaciones y firmas */
+.font-hand {
+  font-family: 'Kalam', cursive;
+  font-weight: 700;
+}
+
+/* Oculta la scrollbar nativa en toda la web sin perder la funcionalidad de scroll */
+html,
+body,
+*,
+*::before,
+*::after {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Animación de entrada (fade + slide vertical suave) */
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Solo anima en carga inicial; si el usuario prefiere movimiento reducido
+   la intro se omite en JS (introDone arranca en true). */
+@media (prefers-reduced-motion: no-preference) {
+  .intro-content {
+    animation: intro-rise 500ms ease-out both;
+  }
+}
+
+/* Trazo del marco: dibuja el contorno desde cero con dashoffset
+   (animación solo en carga inicial, ver intro-rise). */
+@keyframes intro-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .intro-frame-path {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: intro-draw 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Filtro de pixelado: aplicado al contenedor del CV. Confecciona el mosaico
+   exterior (pixOut) y deja pasar el contenido nítido dentro del marco (srcIn)
+   usando la máscara calculada en useFolderInset. */
+.pixel-content {
+  filter: url(#pixelate);
+}
+
+/* Tinta inversa a --color-base (texto, fills y strokes vía currentColor),
+   vía variable --color-neon (var() lo soporta todo). */
+.tint-inverse {
+  color: var(--color-neon);
+}
+
+/* Grano estático de alta densidad encima del gradiente.
+   Se genera con SVG feTurbulence (grano fino e irregular sin coste GPU
+   continuo, a diferencia de calcularlo en el fragment shader a 60fps).
+   El blend-mode overlay funde el grano con los colores vivos subyacentes. */
+.grain-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.65;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.7'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 140px 140px;
+}
+
+/* ============================================================
+   Rotación y balanceo suave sin vuelta completa (flotación cósmica)
+   ============================================================ */
+
+/* 1. Planeta: balanceo suave y majestuoso */
+@keyframes planet-sway {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-1px);
+  }
+}
+
+/* 2. Asteroide: cabeceo orgánico suave */
+@keyframes asteroid-sway {
+  0%,
+  100% {
+    transform: rotate(8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-8deg) translateY(-1px);
+  }
+}
+
+/* 3. Cohete: balanceo suave sobre su eje de vuelo */
+@keyframes rocket-sway {
+  0%,
+  100% {
+    transform: rotate(-6deg) translateY(0);
+  }
+  50% {
+    transform: rotate(6deg) translateY(-1.5px);
+  }
+}
+
+/* 4. Estrella: suave oscilación estelar */
+@keyframes star-sway {
+  0%,
+  100% {
+    transform: rotate(-10deg) scale(0.96);
+  }
+  50% {
+    transform: rotate(10deg) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-planet-sway {
+    animation: planet-sway 6.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .animate-asteroid-sway {
+    animation: asteroid-sway 5.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .animate-rocket-sway {
+    animation: rocket-sway 4.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .animate-star-sway {
+    animation: star-sway 4.8s ease-in-out infinite;
+    transform-origin: center;
+  }
+}
