@@ -109,9 +109,8 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                     {m.q}
                   </li>
 
-                  {/* Fila de respuesta con botón de reinicio/volver al inicio a la izquierda alineado arriba */}
-                  <li className="flex w-full items-start gap-2.5">
-                    {/* Botón volver al inicio: solo icono, cuadrado, más grande, outline blanco 2px como la respuesta */}
+                  {/* Botón volver al inicio: arriba de la respuesta, alineado a la izquierda, cuadrado grande con outline blanco */}
+                  <li className="flex justify-start">
                     <button
                       type="button"
                       onClick={handleResetChat}
@@ -133,24 +132,24 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                         <path d="M12 19l-7-7 7-7" />
                       </svg>
                     </button>
-
-                    {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
-                    {m.isStreaming ? (
-                      <div
-                        aria-label="Generando respuesta"
-                        className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
-                      >
-                        <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                        <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                        <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                      </div>
-                    ) : m.a ? (
-                      /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
-                      <div className="w-fit max-w-[calc(95%-3.25rem)] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
-                        <MarkdownMessage content={m.a} />
-                      </div>
-                    ) : null}
                   </li>
+
+                  {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
+                  {m.isStreaming ? (
+                    <li
+                      aria-label="Generando respuesta"
+                      className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
+                    >
+                      <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                      <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                      <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                    </li>
+                  ) : m.a ? (
+                    /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
+                    <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
+                      <MarkdownMessage content={m.a} />
+                    </li>
+                  ) : null}
                 </Fragment>
               ))}
             </ul>
