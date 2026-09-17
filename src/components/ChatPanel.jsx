@@ -86,31 +86,33 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               containerClassName="content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pr-1"
               trackClassName="group scroll-track relative z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 transition-opacity duration-200 select-none"
             >
-              <ul aria-live="polite" className="space-y-3">
-                {history.map((m) => (
-                  <Fragment key={m.id || m.q}>
-                    <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
-                      {m.q}
-                    </li>
-                    <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-sm leading-relaxed text-white">
-                      {m.a ? (
-                        <>
-                          <span>{m.a}</span>
-                          {m.isStreaming ? (
-                            <span className="ml-1 inline-block h-3.5 w-1.5 animate-pulse bg-[#2aff75] align-middle" />
-                          ) : null}
-                        </>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 py-0.5 text-white/50">
-                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.3s]"></span>
-                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.15s]"></span>
-                          <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"></span>
-                        </span>
-                      )}
-                    </li>
-                  </Fragment>
-                ))}
-              </ul>
+              <div className="flex min-h-full flex-col">
+                <ul aria-live="polite" className="mt-auto space-y-3 pb-1">
+                  {history.map((m) => (
+                    <Fragment key={m.id || m.q}>
+                      <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
+                        {m.q}
+                      </li>
+                      <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-sm leading-relaxed text-white">
+                        {m.a ? (
+                          <>
+                            <span>{m.a}</span>
+                            {m.isStreaming ? (
+                              <span className="ml-1 inline-block h-3.5 w-1.5 animate-pulse bg-[#2aff75] align-middle" />
+                            ) : null}
+                          </>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 py-0.5 text-white/50">
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.3s]"></span>
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white [animation-delay:-0.15s]"></span>
+                            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-white"></span>
+                          </span>
+                        )}
+                      </li>
+                    </Fragment>
+                  ))}
+                </ul>
+              </div>
             </CustomScrollbar>
           </div>
         ) : null}
@@ -238,21 +240,9 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             </button>
           </form>
 
-          <div className="mt-4 mr-2 mb-4 flex flex-wrap items-center justify-between gap-2 shrink-0 text-xs text-white/60">
-            <span className="flex items-center gap-1.5">
-              <span
-                className={`inline-block h-2 w-2 rounded-full ${
-                  isModelReady ? 'bg-[#2aff75]' : 'bg-white/30'
-                }`}
-              />
-              <span>
-                {isModelReady
-                  ? 'IA local activa (Qwen 0.5B WebGPU)'
-                  : 'IA local en dispositivo (privada)'}
-              </span>
-            </span>
-            <span>La IA es experimental y puede producir errores.</span>
-          </div>
+          <p className="mt-4 mr-2 mb-4 shrink-0 text-right text-xs text-white/60">
+            La IA es experimental y puede producir errores.
+          </p>
         </div>
       </div>
     </div>
