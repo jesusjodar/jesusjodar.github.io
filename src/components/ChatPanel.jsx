@@ -79,6 +79,11 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
     })
   }
 
+  const handleResetChat = () => {
+    setHistory([])
+    setQuery('')
+  }
+
   const handleChatSubmit = (e) => {
     e.preventDefault()
     handleSend(query)
@@ -104,22 +109,48 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                     {m.q}
                   </li>
 
-                  {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
-                  {m.isStreaming ? (
-                    <li
-                      aria-label="Generando respuesta"
-                      className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
+                  {/* Fila de respuesta con botón de reinicio/volver al inicio a la izquierda alineado arriba */}
+                  <li className="flex w-full items-start gap-2.5">
+                    {/* Botón volver al inicio: solo icono, cuadrado, más grande, outline blanco 2px como la respuesta */}
+                    <button
+                      type="button"
+                      onClick={handleResetChat}
+                      className="group flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-xl border-2 border-white text-white transition-all hover:bg-white/15 active:scale-95"
+                      aria-label="Volver al inicio del chat"
+                      title="Volver al inicio"
                     >
-                      <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                      <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                      <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                    </li>
-                  ) : m.a ? (
-                    /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
-                    <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
-                      <MarkdownMessage content={m.a} />
-                    </li>
-                  ) : null}
+                      <svg
+                        className="h-5 w-5 transition-transform group-hover:-translate-x-0.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                      >
+                        <path d="M19 12H5" />
+                        <path d="M12 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+
+                    {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
+                    {m.isStreaming ? (
+                      <div
+                        aria-label="Generando respuesta"
+                        className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
+                      >
+                        <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                        <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                        <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                      </div>
+                    ) : m.a ? (
+                      /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
+                      <div className="w-fit max-w-[calc(95%-3.25rem)] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
+                        <MarkdownMessage content={m.a} />
+                      </div>
+                    ) : null}
+                  </li>
                 </Fragment>
               ))}
             </ul>
