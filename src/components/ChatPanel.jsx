@@ -18,7 +18,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
 
   const isModelReady = modelStatus === 'ready'
 
-  // Al añadir una respuesta o recibir tokens, baja al final de la lista.
+  // Al añadir una respuesta o cambiar estado, baja al final de la lista.
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
   }, [history])
@@ -90,22 +90,25 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                 <ul aria-live="polite" className="mt-auto space-y-3 pb-1">
                   {history.map((m) => (
                     <Fragment key={m.id || m.q}>
+                      {/* Pregunta del usuario (fondo sólido blanco) */}
                       <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
                         {m.q}
                       </li>
-                      {m.a ? (
-                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md bg-white/10 px-4 py-2.5 text-sm leading-relaxed text-white">
-                          <span>{m.a}</span>
-                        </li>
-                      ) : null}
+
+                      {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos */}
                       {m.isStreaming ? (
                         <li
                           aria-label="Generando respuesta"
-                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md bg-white/10 px-4 py-3 text-white"
+                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/20 bg-[#161144] px-4 py-3 text-white shadow-lg"
                         >
                           <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                           <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                           <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                        </li>
+                      ) : m.a ? (
+                        /* Una vez completa, sustituye al bubble de puntos con fondo sólido */
+                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border border-white/20 bg-[#161144] px-4 py-2.5 text-sm leading-relaxed text-white shadow-lg">
+                          {m.a}
                         </li>
                       ) : null}
                     </Fragment>
