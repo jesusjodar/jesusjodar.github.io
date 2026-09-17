@@ -17,12 +17,27 @@ export const WAVE_STAR_D =
 // Determinista (antes Math.random en render → mismatch en SSR/hidratación)
 export const DIVIDER_ROTS = [24, 132, 248, 78]
 
+// Banco amplio y variado de preguntas sugeridas
 export const CHAT_SUGGESTIONS = [
-  'Cuéntame sobre tu experiencia con sistemas',
+  '¿Quién eres y cuál es tu perfil?',
   '¿Qué sabes hacer con Windows y Linux?',
-  '¿Cuál es tu formación y cómo aprendes?',
-  '¿Qué te gusta de la IA y la automatización?',
-  '¿En qué te gustaría trabajar?',
+  '¿Sabes montar o reparar ordenadores?',
+  '¿Qué hiciste en Grupo Security?',
+  '¿Qué herramientas de 3D dominas?',
+  '¿Usas Unity o Unreal Engine?',
+  '¿Qué programas de Adobe utilizas?',
+  '¿Qué experiencia tienes en tiendas o reposición?',
+  '¿Cómo aplicas la IA en tu día a día?',
+  '¿Cuál es tu titulación oficial y dónde estudiaste?',
+  '¿Qué cursos oficiales del SEF has completado?',
+  '¿Qué sabes de prevención de riesgos en oficinas?',
+  '¿Cómo gestionas la comunicación profesional?',
+  '¿Cómo resuelves problemas y tomas decisiones?',
+  '¿Tienes conocimientos de contabilidad básica?',
+  '¿Qué nivel de inglés tienes?',
+  '¿Cuáles son tus puntos fuertes personales?',
+  '¿Cuándo te puedes incorporar y qué disponibilidad tienes?',
+  '¿Cómo puedo contactar contigo?',
 ]
 
 export const SKILLS = [

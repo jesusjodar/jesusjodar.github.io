@@ -1,5 +1,6 @@
-// Base de conocimiento exhaustiva con preguntas y respuestas prefabricadas en formato Markdown
-// extraídas de los currículums (Informática, Diseño 3D, Comercio) y los 5 certificados oficiales SEF.
+// Base de conocimiento exhaustiva con preguntas y respuestas en primera persona ("yo")
+// redactadas directamente desde la voz de Jesús Jódar, sin incluir dirección postal,
+// cubriendo Informática, Sistemas, Hardware, Seguridad, Diseño 3D, Comercio y Certificados SEF.
 
 export const KNOWLEDGE_BASE = [
   {
@@ -23,14 +24,14 @@ export const KNOWLEDGE_BASE = [
       '¿Cómo te describes?',
       '¿Qué tipo de profesional eres?',
     ],
-    answer: `**Jesús Jódar Piernas** (24 años, Murcia) es una persona versátil, responsable y con gran capacidad de aprendizaje autodidacta. Su perfil combina tres vertientes principales:
+    answer: `¡Hola! Soy **Jesús Jódar Piernas** (24 años, Murcia). Me considero una persona curiosa, responsable y con una marcada vocación técnica y creativa. Mi perfil se apoya en cuatro pilares:
 
-- **Informática y Sistemas**: Años configurando entornos **Windows** y **Linux**, montaje/reparación de hardware, diagnóstico de fallos e integración de **inteligencia artificial** y automatización.
-- **Seguridad Electrónica**: Prácticas en **Grupo Security** (Lorca) trabajando con alarmas, videovigilancia **CCTV** y control de accesos en entornos reales.
-- **Diseño 3D y Creatividad**: Artista 3D freelance con **Blender**, **Substance 3D**, **Photoshop** y **After Effects**, con proyectos de portadas musicales y motores como **Unity** y **Unreal Engine**.
-- **Comercio y Atención al Cliente**: Trato directo con clientes, gestión de encargos, capacidad de reposición y disponibilidad completa e inmediata.
+- **Informática y Sistemas**: Llevo años configurando y optimizando entornos **Windows** y **Linux**, montando y diagnosticando hardware de PC, y experimentando con herramientas de **inteligencia artificial** y automatización de tareas.
+- **Seguridad Electrónica**: Hice mis prácticas en **Grupo Security** (Lorca), trabajando con alarmas, circuitos cerrados de televisión (**CCTV**) y control de accesos en instalaciones reales.
+- **Diseño 3D y Creatividad**: Como artista 3D freelance domino **Blender**, **Substance 3D**, **Photoshop** y **After Effects**, con proyectos de portadas musicales y entornos en motores como **Unreal Engine** y **Unity**.
+- **Comercio y Atención al Cliente**: Sé tratar con el público de forma cercana, resolver peticiones bajo presión, organizar productos y cuidar el orden y la reposición.
 
-Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y **5 certificados oficiales** del SEF en prevención de riesgos, comunicación, toma de decisiones y contabilidad.`,
+Cuento con titulación oficial británica **Pearson BTEC Level 3 con Distinction** en ESI Murcia y **5 certificados oficiales** del SEF en prevención de riesgos, comunicación, toma de decisiones y contabilidad.`,
   },
 
   {
@@ -50,11 +51,9 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Dónde estás ubicado?',
       '¿Cuál es tu dirección?',
     ],
-    answer: `**Datos personales de Jesús:**
-- **Edad**: 24 años.
-- **Ubicación**: Región de Murcia, España (Calle La Mar 107).
-- **Disponibilidad geográfica**: Murcia capital, Lorca, comarca y alrededores (abierto también a trabajo remoto o híbrido).
-- **Vehículo / Movilidad**: Disponibilidad total de horarios e incorporación inmediata.`,
+    answer: `Tengo **24 años** y vivo en la **Región de Murcia**, España.
+
+Tengo total movilidad y disponibilidad para trabajar de forma presencial en **Murcia capital, Lorca y alrededores**, así como en modalidades **híbridas o en remoto**. Cuento con disponibilidad completa e inmediata para incorporarme.`,
   },
 
   {
@@ -76,16 +75,16 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Has administrado entornos Windows o Linux?',
       '¿Tienes experiencia con servidores o sistemas?',
     ],
-    answer: `Jesús cuenta con **años de experiencia práctica y autodidacta** configurando y administrando sistemas operativos:
+    answer: `Tengo una trayectoria continuada y autodidacta administrando y optimizando ambos entornos:
 
 - **Windows**:
-  - Instalación limpia, particionado y optimización profunda del sistema.
-  - Resolución de incidencias de registro, servicios, dependencias y conflictos de drivers.
-  - Configuración de políticas locales, copias de seguridad y herramientas avanzadas de productividad.
+  - Realizo instalaciones limpias, particionados avanzados, clonación de discos y optimización fina de rendimiento y servicios.
+  - Resuelvo fallos de dependencias, registros, conflictos de controladores (drivers) e incompatibilidades de software.
+  - Configuro directivas locales, políticas de seguridad básica y copias de seguridad automatizadas.
 - **Linux**:
-  - Uso fluido de la **terminal** (Bash, gestión de paquetes, permisos, logs del sistema y automatización con scripts).
-  - Experiencia en distribuciones populares (Ubuntu, Debian, Fedora, Arch) y entornos para desarrollo e investigación técnica.
-  - Montaje de servidores locales, contenedores y entornos de software.`,
+  - Utilizo la **terminal (Bash)** con total naturalidad para administración de archivos, gestión de paquetes (APT, Pacman, etc.), permisos chmod/chown y análisis de registros (logs).
+  - Experiencia en distribuciones como **Ubuntu, Debian, Fedora y Arch Linux**, configurando servicios locales y entornos de pruebas.
+  - Automatizo tareas habituales mediante scripts para ganar agilidad y reproducibilidad.`,
   },
 
   {
@@ -105,11 +104,11 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Qué herramientas de hardware utilizas?',
       '¿Puedes armar un equipo desde cero?',
     ],
-    answer: `En el área de **hardware y mantenimiento de equipos**, Jesús tiene conocimientos sólidos y experiencia práctica:
+    answer: `El hardware es una de mis grandes pasiones y tengo amplia experiencia práctica:
 
-- **Montaje desde cero**: Ensamblaje completo de ordenadores de sobremesa (selección de componentes compatibles, montaje de placa base, CPU, disipador/refrigeración, memoria RAM, almacenamiento M.2 NVMe/SSD, tarjeta gráfica y gestión de cableado).
-- **Diagnóstico y resolución de fallos**: Identificación de problemas de alimentación, sobrecalentamiento, módulos de memoria defectuosos, cuello de botella o errores POST/BIOS.
-- **Mantenimiento preventivo y correctivo**: Limpieza física de componentes, renovación de pasta térmica, comprobación de ventilación y sustitución de piezas averiadas.`,
+- **Montaje desde cero**: Selecciono componentes compatibles según presupuesto y necesidades, monto la placa base, procesador, refrigeración/disipador, memoria RAM, almacenamiento M.2 NVMe/SSD, tarjeta gráfica y fuente de alimentación, cuidando al detalle el flujo de aire y la gestión de cableado.
+- **Diagnóstico y resolución de incidencias**: Localizo fallos por códigos acústicos o LEDs de la BIOS/POST, cuellos de botella térmicos, módulos de memoria con errores (MemTest), fallos de alimentación y fuentes inestables.
+- **Mantenimiento**: Limpieza integral de chasis y ventiladores, sustitución de pasta térmica en CPU/GPU y actualización/recuperación segura de BIOS/UEFI.`,
   },
 
   {
@@ -129,12 +128,12 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       'Inspección y reparación de sistemas de seguridad',
       '¿Has hecho prácticas en empresa?',
     ],
-    answer: `Entre **enero y febrero de 2026**, Jesús realizó sus prácticas formativas en la empresa **Grupo Security** (Lorca, Murcia):
+    answer: `Realicé mis prácticas de empresa en **Grupo Security** (Lorca) entre enero y febrero de 2026, interviniendo en sistemas de seguridad reales:
 
-- **Sistemas Electrónicos de Seguridad**: Inspección, diagnóstico y apoyo en la reparación de equipos en instalaciones reales.
-- **CCTV y Videovigilancia**: Verificación y revisión de cámaras de seguridad, cableado de red/coaxial y grabadores (DVR/NVR).
-- **Alarmas y Sensores**: Comprobación de centrales de alarma, sensores volumétricos, detectores y avisadores.
-- **Control de Accesos**: Apoyo en mantenimiento preventivo, comprobación de lectores y validación de sistemas en clientes residenciales y comerciales.`,
+- **Videovigilancia y CCTV**: Revisión y conexionado de cámaras de seguridad (tanto IP sobre cable de red como analógicas coaxiales), direccionamiento en red y comprobación de grabadores (DVR / NVR).
+- **Sistemas de Alarma**: Comprobación de centrales, sustitución y prueba de sensores volumétricos de movimiento, detectores magnéticos de apertura y sirenas.
+- **Control de Accesos**: Mantenimiento preventivo de lectores y módulos de control en instalaciones de clientes particulares y comerciales.
+- **Resolución técnica en campo**: Diagnóstico de averías eléctricas simples, comprobación de continuidades con polímetro y asistencia directa a los técnicos titulares en obra.`,
   },
 
   {
@@ -155,12 +154,12 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Desde cuándo haces 3D?',
       '¿Qué estilo de 3D trabajas?',
     ],
-    answer: `Como **Artista 3D Freelance** desde julio de 2022 hasta la actualidad, Jesús desarrolla proyectos conceptuales y comerciales:
+    answer: `Trabajo como **Artista 3D Freelance** desde julio de 2022, desarrollando encargos visuales para proyectos comerciales y musicales:
 
-- **Modelado y Animación en Blender**: Creación de geometrías poligonales, iluminación cinemática, renderizado fotorrealista y estilizado (Cycles y Eevee), y animación de cámaras y objetos.
-- **Texturizado con Adobe Substance 3D**: Generación de mapas PBR (albedo, roughness, metallic, normal) y materiales personalizados de alta calidad.
-- **Portadas Musicales y Singles**: Especializado en arte visual y portadas 3D para artistas y productores musicales, encargándose de la dirección de arte y el acabado final.
-- **Postproducción**: Retoque y composición final en **Photoshop** y **After Effects**.`,
+- **Blender**: Modelado poligonal, iluminación cinemática, composición de escenas, sombreadores de nodos y renders de alta calidad en motores **Cycles** y **Eevee**.
+- **Adobe Substance 3D**: Pintado y texturizado procedural de materiales PBR realistas (albedo, roughness, metallic, normal maps).
+- **Portadas Musicales y Singles**: He colaborado con artistas y productores diseñando portadas con identidad visual única, cuidando tipografía, color y atmósfera.
+- **Postproducción**: Retoque final, grading y acabado estético en Photoshop y After Effects.`,
   },
 
   {
@@ -178,11 +177,11 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Qué sabes hacer en Unity?',
       'Creación de entornos interactivos 3D',
     ],
-    answer: `En el ámbito de los motores de tiempo real y desarrollo interactivo:
+    answer: `Tengo formación práctica en motores de tiempo real para videojuegos y entornos interactivos:
 
-- **Unreal Engine**: Configuración de proyectos, iluminación con Lumen, materiales dinámicos, importación de assets FBX/GLTF optimizados y ensamblaje de escenas.
-- **Unity**: Integración de modelos 3D con texturas PBR, configuración de cámaras, colisionadores y pipelines de renderizado (URP).
-- **Optimización de Assets**: Conocimiento de topología limpia, LODs (niveles de detalle) y preparación de modelos desde Blender para videojuegos.`,
+- **Unreal Engine**: Importación y optimización de mallas y texturas, configuración de iluminación global dinámica con **Lumen**, materiales y montaje de entornos cinemáticos.
+- **Unity**: Integración de assets con texturas PBR, organización jerárquica de prefabs, colisiones y configuración de cámaras y pipelines de renderizado (URP).
+- **Optimización de Assets**: Aplico topología limpia con bajo conteo poligonal cuando el rendimiento lo exige, horneado de mapas de normales (baking) y preparación de modelos para tiempo real.`,
   },
 
   {
@@ -198,11 +197,11 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Sabes hacer animaciones 2D o motion graphics?',
       '¿Qué herramientas de diseño gráfico dominas?',
     ],
-    answer: `En edición visual y postproducción:
+    answer: `Utilizo las herramientas de Adobe como parte esencial de mi flujo visual:
 
-- **Adobe Photoshop**: Retoque fotográfico, composición por capas, corrección de color, tipografía y diseño gráfico para portadas, cartelería y redes sociales.
-- **Adobe After Effects**: Animación gráfica (*motion graphics*), efectos visuales, composición multipista, animación de tipografías y postproducción para piezas audiovisuales y bucles animados.
-- **Pipeline creativo**: Integración fluida entre renders 3D de Blender y retoque final en la suite de Adobe.`,
+- **Adobe Photoshop**: Retoque avanzado de imagen, fotocomposición por capas, tratamiento de color, máscaras complejas y diseño tipográfico para portadas o material promocional.
+- **Adobe After Effects**: Animación de grafismos (*motion design*), efectos visuales, montaje multipista y generación de bucles animados o visualizers para audio.
+- Integración ágil entre renderizados 3D y postproducción digital para conseguir acabados profesionales.`,
   },
 
   {
@@ -221,13 +220,12 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       'Habilidades para atención al cliente y ventas',
       '¿Por qué te gustaría trabajar en comercio o supermercados?',
     ],
-    answer: `Jesús tiene **gran motivación, disponibilidad completa y excelente perfil** para puestos de comercio, tiendas y supermercados:
+    answer: `Tengo total disposición, energía y excelentes aptitudes para trabajar en puestos de comercio, tiendas y supermercados:
 
-- **Atención al público y trato cercano**: Experiencia tratando directamente con clientes en su etapa freelance (gestión de expectativas, escucha activa, amabilidad, resolución de peticiones y cumplimiento de compromisos).
-- **Reposición y almacén**: Capacidad de trabajo físico, organización ordenada de productos, control visual de stock y reposición eficiente en estantes.
-- **Orden y limpieza**: Hábito de mantener el espacio de trabajo impecable, pulcro y estructurado.
-- **Actitud**: Puntualidad rigurosa, seriedad, compañerismo y rapidez para aprender cualquier procedimiento interno de tienda o caja.
-- **Disponibilidad**: Inmediata y completa para cualquier turno.`,
+- **Atención al público y amabilidad**: Mi experiencia tratando directamente con clientes freelance me ha enseñado a escuchar con atención, resolver dudas con simpatía y mantener la calma ante cualquier imprevisto.
+- **Reposición y orden**: Me desenvuelvo con soltura en labores físicas de descarga, control visual de stock, colocación ordenada de productos en estantes y rotación de fechas de caducidad (criterio FIFO).
+- **Cuidado del espacio**: Doy máxima prioridad a mantener pasillos y lineales despejados, limpios y presentables para facilitar la compra del cliente.
+- **Compromiso**: Puntualidad rigurosa, rapidez para aprender la operativa interna de caja o tienda y ganas de sumar en el equipo.`,
   },
 
   {
@@ -244,11 +242,11 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Por qué te interesa tanto la inteligencia artificial?',
       '¿Qué proyectos o flujos de IA has probado?',
     ],
-    answer: `A Jesús le entusiasma la **inteligencia artificial aplicada a la productividad y la automatización real**:
+    answer: `Me apasiona cómo la **inteligencia artificial** y la automatización pueden multiplicar la productividad del día a día:
 
-- **Aceleración de flujos de trabajo**: Integración de asistentes y modelos para resolver problemas técnicos, depurar configuraciones y generar contenido o código de apoyo.
-- **Automatización de tareas repetitivas**: Creación de scripts y uso de herramientas para procesar archivos, renombrado por lotes, conversiones de formato y flujos optimizados.
-- **Cultura tecnológica**: Seguimiento activo del ecosistema de modelos abiertos, herramientas locales y soluciones que marcan el estándar del software moderno.`,
+- **Aceleración técnica**: Utilizo modelos avanzados como asistentes para depurar código, estructurar documentación, redactar scripts y resolver incidencias de configuración de forma ágil.
+- **Automatización**: Desarrollo scripts para tareas repetitivas de archivos (renombrado masivo, conversiones de formato, procesado de datos en lote y sincronización).
+- **Entornos locales**: Me mantengo al día con modelos abiertos, ejecución local y herramientas de asistencia que optimizan el trabajo técnico sin fricción.`,
   },
 
   {
@@ -268,11 +266,11 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Cómo has aprendido informática y 3D?',
       '¿Eres autodidacta?',
     ],
-    answer: `La formación oficial y trayectoria de aprendizaje de Jesús incluye:
+    answer: `Mi formación combina titulación oficial reglada con un aprendizaje autodidacta permanente:
 
-- **Pearson BTEC International Level 3 Subsidiary Diploma in Creative Media** en la **Escuela Superior Internacional de Diseño de Murcia (ESI)** (2022 - 2023), graduado con **Grade with Distinction** (la máxima calificación de excelencia británica).
-- **Graduado en Educación Secundaria Obligatoria (ESO)** en el Centro Privado de Enseñanza **Madre de Dios**.
-- **Aprendizaje autodidacta continuo**: Todo su bagaje técnico en informática, sistemas operativos Windows/Linux, hardware, redes, IA y automatización lo ha forjado de forma autónoma investigando, montando laboratorios propios y resolviendo incidencias prácticas en entornos reales.`,
+- **Pearson BTEC International Level 3 Subsidiary Diploma in Creative Media** en la **Escuela Superior Internacional de Diseño de Murcia (ESI)** (2022 - 2023), donde me gradué con **Grade with Distinction** (la calificación británica más alta posible).
+- **Educación Secundaria Obligatoria (ESO)** en el Colegio **Madre de Dios**.
+- **Perfil autodidacta**: Todo lo referente a administración de sistemas (Windows/Linux), montaje de ordenadores, diagnóstico hardware, redes y programación lo he aprendido por iniciativa propia, montando mis propios equipos y resolviendo problemas técnicos reales día a día.`,
   },
 
   {
@@ -289,15 +287,15 @@ Además, cuenta con titulación **BTEC Level 3 con Distinction** en ESI Murcia y
       '¿Cuáles son tus diplomas?',
       '¿Tienes formación acreditada?',
     ],
-    answer: `Jesús ha completado **5 cursos oficiales acreditados** por el **Servicio Regional de Empleo y Formación (SEF)** y la **Fundación Integra** (a través de la plataforma form@carm, finalizados con aprovechamiento en octubre de 2025):
+    answer: `He completado **5 cursos oficiales certificados** por el **Servicio Regional de Empleo y Formación (SEF)** y la **Fundación Integra** (a través de Form@carm, finalizados en octubre de 2025):
 
-1. **Prevención de Riesgos Laborales en Oficinas y PVD** (10 h) - Código: *128_290742_1759822390*
-2. **Técnicas de Comunicación** (15 h) - Código: *226_290742_1759314018*
-3. **Análisis de Problemas y Toma de Decisiones** (20 h) - Código: *221_290742_1759391227*
-4. **Contabilidad Básica** (15 h) - Código: *206_290742_1759826269*
-5. **Presentaciones con Prezi** (15 h) - Código: *182_290742_1759480500*
+1. **Prevención de Riesgos Laborales en Oficinas y PVD** (10 h) - Ref: *128_290742_1759822390*
+2. **Técnicas de Comunicación** (15 h) - Ref: *226_290742_1759314018*
+3. **Análisis de Problemas y Toma de Decisiones** (20 h) - Ref: *221_290742_1759391227*
+4. **Contabilidad Básica** (15 h) - Ref: *206_290742_1759826269*
+5. **Presentaciones con Prezi** (15 h) - Ref: *182_290742_1759480500*
 
-Todos cuentan con código de verificación telemática de la Comunidad Autónoma de la Región de Murcia.`,
+Todos cuentan con código oficial de verificación telemática de la Comunidad Autónoma de la Región de Murcia.`,
   },
 
   {
@@ -313,11 +311,11 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Sabes de primeros auxilios y emergencias en oficina?',
       'Higiene postural en puestos informáticos',
     ],
-    answer: `Jesús completó el curso oficial de **Prevención de Riesgos Laborales en Oficinas y PVD** (10 horas, SEF y Fundación Integra, Octubre 2025):
+    answer: `Completé el curso oficial de **Prevención de Riesgos Laborales en Oficinas y PVD** (10 h, SEF y Fundación Integra):
 
-- **Reglas de seguridad en oficinas**: Normas de higiene, prevención de accidentes, medidas ante incendios y pautas de primeros auxilios.
-- **Puestos con Pantallas de Visualización de Datos (PVD)**: Ergonomía aplicada (altura e inclinación de pantalla, ajuste de silla y mesa, iluminación ambiental y descanso ocular).
-- **Higiene postural**: Prevención de trastornos musculoesqueléticos, fatiga física y visual en jornadas ante el ordenador.`,
+- **Seguridad en oficinas**: Normas de orden y limpieza, pautas de evacuación ante conatos de incendio y nociones de primeros auxilios.
+- **Pantallas de Visualización de Datos (PVD)**: Ajuste ergonómico del puesto (distancia y altura del monitor, posición del teclado, iluminación adecuada y pausas activas para la vista).
+- **Higiene postural**: Prevención de molestias cervicales, lumbares y síndrome del túnel carpiano mediante posturas correctas frente al ordenador.`,
   },
 
   {
@@ -333,11 +331,11 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       'Escucha activa y feedback',
       '¿Qué aprendiste en el curso de Técnicas de Comunicación?',
     ],
-    answer: `Jesús cuenta con diploma oficial en **Técnicas de Comunicación** (15 horas, SEF y Fundación Integra, Octubre 2025):
+    answer: `Tengo diploma oficial en **Técnicas de Comunicación** (15 h, SEF y Fundación Integra):
 
-- **Proceso de comunicación**: Comunicación verbal, no verbal, lenguaje corporal, escucha activa y gestión del *feedback*.
-- **Comunicación empresarial**: Canales descendentes, ascendentes y horizontales, dinamización de reuniones y trabajo coordinado en grupo.
-- **Comunicación telemática y telefónica**: Protocolos profesionales para llamadas telefónicas (fases de saludo, atención y despedida), redacción de correos electrónicos corporativos y videoconferencias.`,
+- **Habilidades comunicativas**: Práctica de la escucha activa, interpretación del lenguaje no verbal, claridad en la exposición y retroalimentación (*feedback*) constructiva.
+- **Comunicación corporativa**: Dinámica de reuniones productivas, trabajo en equipo y coordinación entre departamentos.
+- **Protocolos profesionales**: Atención telefónica correcta (saludo formal, toma de notas precisas y despedida profesional), redacción clara de correos y comunicación telemática.`,
   },
 
   {
@@ -352,12 +350,12 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       'Creatividad y toma de decisiones en equipo',
       '¿Qué aprendiste en el curso de toma de decisiones?',
     ],
-    answer: `Jesús superó el curso oficial de **Análisis de Problemas y Toma de Decisiones** (20 horas, SEF y Fundación Integra, Octubre 2025):
+    answer: `Completé el curso oficial de **Análisis de Problemas y Toma de Decisiones** (20 h, SEF y Fundación Integra):
 
-- **Diagnóstico del problema**: Técnicas para definir el problema raíz distinguiéndolo de los síntomas superficiales.
-- **Generación y selección de alternativas**: Desarrollo de opciones creativas, evaluación de impacto y riesgos, y elección razonada de la mejor estrategia.
-- **Implantación y control**: Ejecución del plan de acción y superación de bloqueos o resistencias.
-- **Toma de decisiones grupal**: Fomento de la creatividad compartida y el trabajo coordinado en equipo.`,
+- **Detección de la causa raíz**: Metodologías para separar las causas de fondo de los síntomas superficiales antes de precipitarse.
+- **Valoración de opciones**: Generación de alternativas creativas, análisis objetivo de riesgos y consecuencias de cada decisión.
+- **Planes de acción**: Puesta en marcha estructurada, seguimiento y capacidad de adaptación cuando las circunstancias cambian.
+- **Decisiones en grupo**: Técnicas para consensuar soluciones en equipo aportando valor sin generar conflictos.`,
   },
 
   {
@@ -372,11 +370,11 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Sabes hacer asientos contables?',
       '¿Qué viste en el curso de Contabilidad Básica?',
     ],
-    answer: `Jesús tiene formación oficial en **Contabilidad Básica** (15 horas, SEF y Fundación Integra, Octubre 2025):
+    answer: `Cuento con formación acreditada en **Contabilidad Básica** (15 h, SEF y Fundación Integra):
 
-- **Patrimonio empresarial**: Comprensión del activo, pasivo y patrimonio neto.
-- **Mecánica contable**: Principio de la partida doble, uso de cuentas, libro diario y registro de los asientos contables más frecuentes.
-- **Ciclo contable y PGC**: Introducción al Plan General de Contabilidad y elaboración de balances de situación y cuentas de resultados.`,
+- **Estructura patrimonial**: Comprensión del activo, pasivo y patrimonio neto de una empresa.
+- **Mecánica contable**: Principio de partida doble, funcionamiento de cuentas, libro diario y registro de operaciones habituales de compras, ventas y cobros.
+- **Plan General Contable**: Estructura de balances de situación y cuentas de pérdidas y ganancias.`,
   },
 
   {
@@ -390,11 +388,11 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Qué herramientas de presentaciones dominas?',
       'Presentaciones interactivas en Prezi',
     ],
-    answer: `Jesús está diplomado en **Presentaciones con Prezi** (15 horas, SEF y Fundación Integra, Octubre 2025):
+    answer: `Tengo certificación oficial en **Presentaciones con Prezi** (15 h, SEF y Fundación Integra):
 
-- **Diseño visual estructurado**: Jerarquía visual en mapas conceptuales dinámicos, creación de temas y subtemas navegables.
-- **Multimedia y animación**: Inserción de vídeo, gráficos, elementos vectoriales e iconos con transiciones de zoom fluidas.
-- **Presentaciones colaborativas**: Gestión en la nube, uso de Prezi Viewer y técnicas para captar la atención de la audiencia.`,
+- **Narrativa visual**: Estructuración del mensaje mediante mapas conceptuales navegables en lugar de diapositivas estáticas.
+- **Elementos dinámicos**: Inserción de gráficos interactivos, vídeos, iconos vectoriales y animaciones de zoom bien dosificadas para mantener la atención.
+- **Uso profesional**: Creación de presentaciones corporativas compartidas en la nube y optimizadas para exposiciones en público.`,
   },
 
   {
@@ -409,9 +407,10 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Puedes comunicarte en inglés?',
       'Nivel de inglés y español',
     ],
-    answer: `**Competencia lingüística de Jesús:**
-- **Español**: Idioma materno / nativo.
-- **Inglés**: Nivel **avanzado** (lectura fluida de documentación técnica, manejo de software en inglés, titulación BTEC impartida con estándares internacionales y capacidad para interactuar en contextos profesionales).`,
+    answer: `Mis competencias lingüísticas son:
+
+- **Español**: Lengua materna.
+- **Inglés**: Nivel **avanzado**. Leo con total fluidez manuales técnicos, librerías y documentación en inglés, utilizo software y sistemas íntegramente en inglés, y mi titulación BTEC fue evaluada bajo estándares académicos británicos.`,
   },
 
   {
@@ -428,13 +427,13 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Por qué deberíamos contratarte?',
       '¿Qué virtudes te definen como trabajador?',
     ],
-    answer: `Entre los **puntos fuertes personales** de Jesús destacan:
+    answer: `Mis principales fortalezas en el ámbito profesional son:
 
-- **Aprendizaje rápido y autonomía**: Habilidad natural para asimilar herramientas, sistemas o metodologías nuevas en poco tiempo.
-- **Resolución práctica de problemas**: Enfoque pragmático orientado a buscar soluciones directas y eficaces.
-- **Puntualidad y compromiso**: Respeto riguroso por los horarios, las fechas de entrega y los acuerdos establecidos.
-- **Organización, orden y limpieza**: Esmero en mantener el puesto y los archivos ordenados y accesibles.
-- **Buena actitud y compañerismo**: Trato cercano, facilidad para colaborar en equipo y apertura a recibir sugerencias y feedback constructivo.`,
+- **Curiosidad y aprendizaje rápido**: Asimilo herramientas nuevas, normativas internas y flujos de trabajo con gran rapidez y sin necesitar supervisión continua.
+- **Pragmatismo**: Me concentro en resolver incidencias de raíz buscando la solución más limpia y eficaz.
+- **Puntualidad y formalidad**: Máximo respeto por los compromisos, los horarios de llegada y los plazos de entrega pactados.
+- **Orden**: Cuido meticulosamente el orden de mi espacio de trabajo, los componentes y los archivos digitales.
+- **Cercanía y compañerismo**: Mantengo un trato cordial y constructivo con mis compañeros, con predisposición siempre a ayudar y aprender del equipo.`,
   },
 
   {
@@ -451,11 +450,11 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       'Disponibilidad para trabajar',
       '¿Qué tipo de jornada buscas?',
     ],
-    answer: `Jesús cuenta con **disponibilidad completa e incorporación inmediata**:
+    answer: `Tengo **disponibilidad completa e incorporación inmediata**:
 
-- **Horarios**: Abierto a jornada completa, media jornada, turnos rotativos o turnos de fin de semana.
-- **Incorporación**: Inmediata, sin periodos de espera ni compromisos previos vigentes.
-- **Modalidad**: Disponible tanto para trabajo **presencial** (Murcia, Lorca y cercanías) como para trabajo **híbrido o remoto**.`,
+- **Horarios**: Totalmente flexible para adaptarme a jornada completa, media jornada, turnos rotativos, mañanas, tardes o fines de semana.
+- **Fecha de inicio**: Puedo incorporarme desde el momento en que se acuerde, sin compromisos previos pendientes.
+- **Modalidad**: Disponible para trabajo presencial en **Murcia y cercanías**, o bien en formato híbrido y en remoto.`,
   },
 
   {
@@ -473,14 +472,14 @@ Todos cuentan con código de verificación telemática de la Comunidad Autónoma
       '¿Dónde puedo enviarte una oferta de trabajo?',
       'Datos de contacto',
     ],
-    answer: `Puedes comunicarte directamente con **Jesús Jódar** a través de cualquiera de estos canales:
+    answer: `Puedes ponerte en contacto conmigo a través de cualquiera de estos canales directos:
 
 - **Teléfono / WhatsApp**: [623 175 760](tel:+34623175760)
 - **Email**: [jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)
 - **LinkedIn**: [linkedin.com/in/jesujopi](https://linkedin.com/in/jesujopi/)
-- **Ubicación**: Murcia, España (Calle La Mar 107)
+- **Ubicación**: Región de Murcia, España
 
-Estará encantado de concertar una entrevista o responder cualquier propuesta laboral.`,
+Estaré encantado de responderte, comentar cualquier detalle de mi perfil o concertar una entrevista.`,
   },
 
   {
@@ -499,17 +498,17 @@ Estará encantado de concertar una entrevista o responder cualquier propuesta la
       'Hola Jesús',
       'Saludos',
     ],
-    answer: `¡Hola! Soy el asistente interactivo del portfolio de **Jesús Jódar**.
+    answer: `¡Hola! Me alegra saludarte. Soy **Jesús Jódar** y este es mi portfolio personal.
 
-Puedo responderte con todo detalle sobre su perfil. Pregúntame sobre:
-- **Informática y Sistemas**: Experiencia con Windows, Linux, montaje y reparación de hardware.
-- **Seguridad**: Sus prácticas en Grupo Security (alarmas, CCTV y control de accesos).
+Puedes preguntarme sobre cualquiera de mis áreas:
+- **Informática y Sistemas**: Windows, Linux, montaje y reparación de hardware de PC.
+- **Seguridad Electrónica**: Prácticas en Grupo Security (alarmas, cámaras CCTV y accesos).
 - **Diseño 3D y Videojuegos**: Blender, Substance 3D, Unreal Engine y portadas musicales.
-- **Comercio y Tiendas**: Atención al cliente, reposición y disponibilidad.
-- **Estudios y Certificados**: Su titulación BTEC con Distinction y sus 5 diplomas oficiales del SEF.
-- **Contacto**: Teléfono, email y disponibilidad de contratación.
+- **Comercio y Tiendas**: Atención al cliente, reposición y orden en tienda.
+- **Formación**: Diploma BTEC con Distinction y mis 5 certificados del SEF.
+- **Disponibilidad y Contacto**: Incorporación inmediata y canales para hablar.
 
-¿Qué te gustaría saber?`,
+¿Sobre qué te apetece que hablemos?`,
   },
 
   {
@@ -526,22 +525,22 @@ Puedo responderte con todo detalle sobre su perfil. Pregúntame sobre:
       'Genial, muchas gracias',
       'Muy amable',
     ],
-    answer: `¡De nada! Ha sido un placer ayudarte.
+    answer: `¡Muchas gracias a ti por tu interés y por dedicar un rato a conocerme!
 
-Si quieres conocer a Jesús en persona o hablar de una oportunidad profesional, puedes contactarle directamente en:
+Si quieres que hablemos sobre cualquier puesto o propuesta laboral, estoy totalmente disponible:
 - **Email**: [jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)
 - **Teléfono**: [623 175 760](tel:+34623175760)
 - **LinkedIn**: [linkedin.com/in/jesujopi](https://linkedin.com/in/jesujopi/)`,
   },
 ]
 
-export const FALLBACK_ANSWER = `No he podido identificar con total certeza tu pregunta, pero puedo darte información completa sobre cualquiera de estas áreas de Jesús Jódar:
+export const FALLBACK_ANSWER = `No he podido entender con total precisión tu pregunta, pero puedo contarte cualquier detalle sobre:
 
-- **Sistemas y Hardware**: Windows, Linux, montaje y diagnóstico de PCs.
-- **Seguridad Electrónica**: Prácticas en Grupo Security (CCTV, alarmas, control de accesos).
-- **Diseño 3D y Creatividad**: Blender, Substance 3D, Unreal Engine y arte visual.
-- **Comercio y Tiendas**: Reposición de mercancía, atención al cliente y orden.
-- **Formación Oficial**: Pearson BTEC Distinction en ESI y 5 certificados oficiales SEF (PRL en oficinas, Comunicación, Toma de decisiones, Contabilidad y Prezi).
-- **Contacto**: Teléfono (**623 175 760**), correo ([jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)) y disponibilidad de incorporación inmediata.
+- **Sistemas y Hardware**: Mi experiencia con Windows, Linux y montaje de ordenadores.
+- **Seguridad**: Mis prácticas en Grupo Security con alarmas y CCTV.
+- **Diseño 3D**: Modelado en Blender, texturizado en Substance y motores como Unreal.
+- **Comercio**: Reposición, almacén y atención directa a clientes.
+- **Certificados**: Mis 5 diplomas oficiales del SEF y mi titulación BTEC Distinction.
+- **Contacto**: Mi teléfono (**623 175 760**) o correo ([jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)).
 
-¿Te gustaría preguntar sobre alguno de estos temas?`
+¿Te gustaría que te cuente algo de esto en detalle?`

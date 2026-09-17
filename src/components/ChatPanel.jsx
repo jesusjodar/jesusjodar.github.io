@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import { CHAT_SUGGESTIONS } from '../lib/portfolio.js'
@@ -40,7 +40,27 @@ function MarkdownMessage({ content }) {
 export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const [query, setQuery] = useState('')
   const [history, setHistory] = useState([])
+  const [suggestionOffset, setSuggestionOffset] = useState(0)
   const nextIdRef = useRef(1)
+
+  // Rotación suave de las sugerencias cada 7 segundos cuando la pantalla de inicio está activa
+  useEffect(() => {
+    if (!chatOpen || history.length > 0) return
+    const interval = setInterval(() => {
+      setSuggestionOffset((prev) => (prev + 4) % CHAT_SUGGESTIONS.length)
+    }, 7000)
+    return () => clearInterval(interval)
+  }, [chatOpen, history.length])
+
+  // Obtiene 4 sugerencias consecutivas ciclando sobre el banco total
+  const visibleSuggestions = useMemo(() => {
+    const total = CHAT_SUGGESTIONS.length
+    const result = []
+    for (let i = 0; i < 4; i++) {
+      result.push(CHAT_SUGGESTIONS[(suggestionOffset + i) % total])
+    }
+    return result
+  }, [suggestionOffset])
 
   const { isGenerating, sendQuery } = useChatAI({
     enabled: chatOpen,
@@ -69,7 +89,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             m.id === messageId
               ? {
                   ...m,
-                  a: 'No se pudo completar la respuesta en este momento. Puedes contactar directamente con Jesús por email o LinkedIn.',
+                  a: 'No se pudo completar la respuesta en este momento. Puedes contactar directamente conmigo por email o LinkedIn.',
                   isStreaming: false,
                 }
               : m
@@ -82,6 +102,8 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const handleResetChat = () => {
     setHistory([])
     setQuery('')
+    // Al volver al inicio, rota también a un nuevo set de preguntas sugeridas
+    setSuggestionOffset((prev) => (prev + 4) % CHAT_SUGGESTIONS.length)
   }
 
   const handleChatSubmit = (e) => {
@@ -165,7 +187,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                 </h2>
               </div>
               <div className="mb-6 flex shrink-0 flex-row flex-wrap items-center gap-2.5 pr-6">
-                {CHAT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
+                {visibleSuggestions.map((suggestion) => (
                   <button
                     type="button"
                     key={suggestion}
