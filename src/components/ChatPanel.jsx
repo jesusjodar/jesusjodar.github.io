@@ -191,7 +191,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
           </form>
 
           <p className="mt-4 mr-2 mb-4 shrink-0 text-right text-xs text-white/60">
-            Función de chat y respuestas basadas en Machine Learning (ML).
+            La función de chat sobre mí es experimental y puede producir resultados inesperados.
           </p>
         </div>
       </div>
