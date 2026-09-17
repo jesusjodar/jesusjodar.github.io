@@ -17,7 +17,7 @@ export default function CvContent() {
       source.onload = () => {
         if (cancelled) return
         try {
-          const S = 280
+          const S = 220
           const canvas = document.createElement('canvas')
           canvas.width = S
           canvas.height = S
@@ -39,11 +39,11 @@ export default function CvContent() {
             [3, 11, 1, 9],
             [15, 7, 13, 5],
           ]
-          const levels = 7
-          const spread = 40
-          const contrast = 1.18
-          const exposure = 14
-          const gamma = 0.9
+          const levels = 6
+          const spread = 52
+          const contrast = 1.20
+          const exposure = 12
+          const gamma = 0.92
           for (let y = 0; y < S; y += 1) {
             for (let x = 0; x < S; x += 1) {
               const i = (y * S + x) * 4
@@ -99,6 +99,7 @@ export default function CvContent() {
             height={128}
             decoding="async"
             className="h-full w-full object-cover grayscale"
+            style={{ imageRendering: 'pixelated' }}
           />
           {/* Tinte al mismo tono de los textos coloreados vía variable del tema:
               la fusión `color` tiñe la foto en escala de grises con el tono exacto de --color-neon. */}
@@ -109,6 +110,13 @@ export default function CvContent() {
           />
         </div>
         <div className="min-w-0 sm:flex sm:flex-1 sm:flex-col sm:justify-end sm:self-stretch">
+          <div
+            aria-hidden="true"
+            className="font-barcode text-4xl sm:text-5xl leading-none select-none mb-2"
+            style={{ color: 'var(--color-neon)' }}
+          >
+            *JJ26*
+          </div>
           <h1 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">
             Jesús Jódar
           </h1>

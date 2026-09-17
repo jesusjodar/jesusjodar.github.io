@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import CustomScrollbar from './CustomScrollbar.jsx'
-import Sparkle from './Sparkle.jsx'
+import BloubBot from './BloubBot.jsx'
 import { CHAT_SUGGESTIONS } from '../lib/portfolio.js'
 
 // Panel superior de preguntas (demo local sin backend). Autocontenido:
@@ -78,15 +78,18 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             className={`overflow-hidden transition-all duration-500 ${history.length > 0 ? 'max-h-0 opacity-0' : 'max-h-[40rem] opacity-100'}`}
           >
               <div className="mb-8 pr-6">
-                <div className="flex shrink-0 flex-col items-start gap-4">
-                  <div className="relative mt-1 ml-1 shrink-0 tint-inverse">
-                    <Sparkle
-                      className="sparkle-sway h-10 w-10 sm:h-12 sm:w-12"
-                      sway="6deg"
-                    />
-                    <Sparkle
-                      className="sparkle-sway sparkle-sway-slow absolute top-0 left-full ml-1 h-4 w-4 sm:h-5 sm:w-5"
-                      sway="-12deg"
+                <div className="flex shrink-0 flex-col items-start gap-3">
+                  <div className="relative shrink-0 overflow-visible">
+                    <BloubBot
+                      size={80}
+                      className="-ml-0.5 h-16 w-16 sm:h-20 sm:w-20 cursor-default"
+                      color="#fff700"
+                      paper="#0b1c55"
+                      follow={true}
+                      playing={false}
+                      tight={true}
+                      eyeShape="capsule"
+                      active={chatOpen}
                     />
                   </div>
                   <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
@@ -98,6 +101,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                 {CHAT_SUGGESTIONS.slice(0, 4).map((suggestion) => (
                   <span
                     key={suggestion}
+                    onClick={() => setQuery(suggestion)}
                     className="cursor-pointer border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95 squircle"
                   >
                     {suggestion}

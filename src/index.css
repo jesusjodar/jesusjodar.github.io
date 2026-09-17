@@ -7,6 +7,8 @@
   --color-text-body: #ffffff;
   --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif,
     system-ui, sans-serif;
+  --font-barcode: 'Libre Barcode 39', cursive;
+  --font-barcode-text: 'Libre Barcode 39 Text', cursive;
 }
 
 :root {
@@ -68,6 +70,15 @@ noscript + #root,
 .font-hand {
   font-family: 'Kalam', cursive;
   font-weight: 700;
+}
+
+/* Tipografía de código de barras */
+.font-barcode {
+  font-family: 'Libre Barcode 39', cursive;
+}
+
+.font-barcode-text {
+  font-family: 'Libre Barcode 39 Text', cursive;
 }
 
 /* Oculta la scrollbar nativa en toda la web sin perder la funcionalidad de scroll */
