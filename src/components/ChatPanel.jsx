@@ -191,7 +191,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
           </form>
 
           <p className="mt-4 mr-2 mb-4 shrink-0 text-right text-xs text-white/60">
-            Función de chat y respuestas basadas en Machine Learning (ML) sobre el currículum y certificados oficiales de Jesús Jódar.
+            Función de chat y respuestas basadas en Machine Learning (ML).
           </p>
         </div>
       </div>
