@@ -1,7 +1,6 @@
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-import CustomScrollbar from './CustomScrollbar.jsx'
 import { CHAT_SUGGESTIONS } from '../lib/portfolio.js'
 import { useChatAI } from '../hooks/useChatAI.js'
 
@@ -41,17 +40,11 @@ function MarkdownMessage({ content }) {
 export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const [query, setQuery] = useState('')
   const [history, setHistory] = useState([])
-  const scrollRef = useRef(null)
   const nextIdRef = useRef(1)
 
   const { isGenerating, sendQuery } = useChatAI({
     enabled: chatOpen,
   })
-
-  // Al añadir una respuesta o cambiar estado, baja al final de la lista.
-  useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
-  }, [history])
 
   const handleSend = (text) => {
     const q = (text || query).trim()
@@ -94,59 +87,48 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex min-h-0 flex-col transition-opacity duration-300"
+      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex flex-col justify-end overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
       style={{ opacity: chatOpen ? 1 : 0, pointerEvents: chatOpen ? 'auto' : 'none' }}
       aria-hidden={chatOpen ? undefined : true}
       inert={!chatOpen || !introDone}
     >
-      {/* Bloque único de chat anclado al borde del marco */}
-      <div className="flex h-full min-h-0 flex-col pt-[calc(var(--frame-margin)+4rem)]">
+      {/* Bloque único de chat anclado al borde del marco, desbordando hacia arriba sin cortarse */}
+      <div className="flex min-h-full flex-col justify-end pt-4 pb-0">
         {history.length > 0 ? (
-          <div className="mb-4 flex min-h-0 flex-1 gap-3">
-            <CustomScrollbar
-              scrollContainerRef={scrollRef}
-              atMinHeight={false}
-              insetAnimating={false}
-              id="chat-scroll"
-              containerClassName="content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pr-1"
-              trackClassName="group scroll-track relative z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 transition-opacity duration-200 select-none"
-            >
-              <div className="flex min-h-full flex-col">
-                <ul aria-live="polite" className="mt-auto space-y-3 pb-1">
-                  {history.map((m) => (
-                    <Fragment key={m.id || m.q}>
-                      {/* Pregunta del usuario (fondo blanco sólido) */}
-                      <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
-                        {m.q}
-                      </li>
+          <div className="mb-4 flex flex-col justify-end">
+            <ul aria-live="polite" className="space-y-3 pb-1">
+              {history.map((m) => (
+                <Fragment key={m.id || m.q}>
+                  {/* Pregunta del usuario (fondo blanco sólido) */}
+                  <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
+                    {m.q}
+                  </li>
 
-                      {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
-                      {m.isStreaming ? (
-                        <li
-                          aria-label="Generando respuesta"
-                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
-                        >
-                          <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                          <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                          <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
-                        </li>
-                      ) : m.a ? (
-                        /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
-                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
-                          <MarkdownMessage content={m.a} />
-                        </li>
-                      ) : null}
-                    </Fragment>
-                  ))}
-                </ul>
-              </div>
-            </CustomScrollbar>
+                  {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
+                  {m.isStreaming ? (
+                    <li
+                      aria-label="Generando respuesta"
+                      className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
+                    >
+                      <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                      <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                      <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
+                    </li>
+                  ) : m.a ? (
+                    /* Una vez completa, sustituye al bubble de puntos con renderizado Markdown y outline como el shell */
+                    <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
+                      <MarkdownMessage content={m.a} />
+                    </li>
+                  ) : null}
+                </Fragment>
+              ))}
+            </ul>
           </div>
         ) : null}
 
-        <div className="mt-auto shrink-0">
+        <div className="shrink-0">
           {history.length === 0 ? (
-            <div>
+            <div className="pt-[calc(var(--frame-margin)+4rem)]">
               <div className="mb-8 pr-6">
                 <h2 className="font-display text-4xl leading-[0.92] tracking-tight text-white sm:text-6xl md:text-7xl">
                   Pregunta lo que quieras<br />
