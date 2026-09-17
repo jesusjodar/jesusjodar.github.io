@@ -12,9 +12,11 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const scrollRef = useRef(null)
   const nextIdRef = useRef(1)
 
-  const { modelStatus, loadingMessage, loadingPercent, isGenerating, sendQuery } = useChatAI({
+  const { modelStatus, loadingPercent, isGenerating, sendQuery } = useChatAI({
     enabled: chatOpen,
   })
+
+  const isModelReady = modelStatus === 'ready'
 
   // Al añadir una respuesta o recibir tokens, baja al final de la lista.
   useEffect(() => {
@@ -23,7 +25,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
 
   const handleSend = (text) => {
     const q = (text || query).trim()
-    if (!q || isGenerating) return
+    if (!q || !isModelReady || isGenerating) return
 
     const messageId = nextIdRef.current++
     setHistory((h) => [...h.slice(-7), { id: messageId, q, a: '', isStreaming: true }])
@@ -127,8 +129,8 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                     type="button"
                     key={suggestion}
                     onClick={() => handleSend(suggestion)}
-                    disabled={isGenerating}
-                    className="cursor-pointer rounded-[10px] border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95 disabled:opacity-50"
+                    disabled={!isModelReady || isGenerating}
+                    className="cursor-pointer rounded-[10px] border-2 border-white px-4 py-1.5 text-left text-sm text-white transition-all select-none hover:bg-white/10 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                   >
                     {suggestion}
                   </button>
@@ -137,23 +139,10 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             </div>
           ) : null}
 
-          {modelStatus === 'loading' ? (
-            <div className="mb-2 flex items-center justify-between px-2 text-xs text-white/75">
-              <span className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2aff75] opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2aff75]"></span>
-                </span>
-                {loadingMessage || 'Descargando IA local (Qwen 0.5B)...'}
-              </span>
-              {loadingPercent > 0 ? (
-                <span className="font-mono text-white/60">{loadingPercent}%</span>
-              ) : null}
-            </div>
-          ) : null}
-
           <form
-            className="flex shrink-0 items-center gap-2 rounded-[20px] border-2 border-white py-2 pr-2 pl-5 transition-colors focus-within:border-white"
+            className={`flex shrink-0 items-center gap-2 rounded-[20px] border-2 border-white py-2 pr-2 pl-5 transition-opacity duration-300 ${
+              isModelReady ? 'opacity-100 focus-within:border-white' : 'opacity-40'
+            }`}
             onSubmit={handleChatSubmit}
           >
             <input
@@ -162,16 +151,73 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Escribe tu pregunta..."
               aria-label="Escribe tu pregunta"
-              disabled={isGenerating}
-              className="min-w-0 flex-1 bg-transparent py-1 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:opacity-50"
+              disabled={!isModelReady || isGenerating}
+              className="min-w-0 flex-1 bg-transparent py-1 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:cursor-not-allowed"
             />
             <button
               type="submit"
-              aria-label="Enviar"
-              disabled={isGenerating || !query.trim()}
-              className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-[12px] bg-white text-black transition-transform hover:scale-105 active:scale-95 disabled:opacity-40"
+              aria-label={!isModelReady ? 'Cargando modelo de IA' : 'Enviar'}
+              disabled={!isModelReady || isGenerating || !query.trim()}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[12px] bg-white text-black transition-transform select-none enabled:cursor-pointer enabled:hover:scale-105 enabled:active:scale-95 disabled:opacity-90"
             >
-              {isGenerating ? (
+              {!isModelReady ? (
+                loadingPercent > 0 ? (
+                  <svg
+                    className="h-[18px] w-[18px] -rotate-90 transform text-black"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="7.5"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      fill="none"
+                      className="text-black/20"
+                    />
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="7.5"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeDasharray={47.12}
+                      strokeDashoffset={47.12 * (1 - Math.min(Math.max(loadingPercent, 0), 100) / 100)}
+                      className="text-black transition-all duration-200 ease-out"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="h-[18px] w-[18px] animate-spin text-black"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="7.5"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      fill="none"
+                      className="text-black/20"
+                    />
+                    <circle
+                      cx="10"
+                      cy="10"
+                      r="7.5"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeDasharray="22 47.12"
+                      className="text-black"
+                    />
+                  </svg>
+                )
+              ) : isGenerating ? (
                 <span className="h-3 w-3 animate-spin rounded-full border-2 border-black border-t-transparent" />
               ) : (
                 <svg
@@ -195,18 +241,14 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             <span className="flex items-center gap-1.5">
               <span
                 className={`inline-block h-2 w-2 rounded-full ${
-                  modelStatus === 'ready'
-                    ? 'bg-[#2aff75]'
-                    : modelStatus === 'loading'
-                      ? 'bg-amber-400 animate-pulse'
-                      : 'bg-white/30'
+                  isModelReady ? 'bg-[#2aff75]' : 'bg-white/30'
                 }`}
               />
-              {modelStatus === 'ready'
-                ? 'IA local activa (Qwen 0.5B WebGPU)'
-                : modelStatus === 'loading'
-                  ? 'Cargando IA local...'
+              <span>
+                {isModelReady
+                  ? 'IA local activa (Qwen 0.5B WebGPU)'
                   : 'IA local en dispositivo (privada)'}
+              </span>
             </span>
             <span>La IA es experimental y puede producir errores.</span>
           </div>
