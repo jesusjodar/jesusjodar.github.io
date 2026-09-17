@@ -57,11 +57,12 @@ mat2 Rot(float a) {
   return mat2(c, -s, s, c);
 }
 
-// SIMD Perlin Noise: 4 esquinas procesadas en paralelo con 2 vec4
+// SIMD Perlin Noise con interpolación quíntica C2 de Perlin (evita discontinuidades y aristas en la rejilla)
 float noiseVectorized(vec2 p) {
   vec2 i = floor(p);
   vec2 f = fract(p);
-  vec2 u = f * f * (3.0 - 2.0 * f);
+  // Curva de interpolación C2 de Ken Perlin (6t^5 - 15t^4 + 10t^3) elimina dientes de sierra y bandas
+  vec2 u = f * f * f * (f * (f * 6.0 - 15.0) + 10.0);
 
   // Evaluamos el dot base de 'i' una sola vez
   float dot0 = dot(i, vec2(2127.1, 81.17));
@@ -192,7 +193,7 @@ const Grainient = ({
     // - alpha: false -> El compositor del SO no necesita mezclar el canvas con capas inferiores.
     // - depth: false -> Ahorra un buffer de profundidad de 24-bit y su correspondiente clear.
     // - powerPreference: 'low-power' -> Evita activar GPUs dedicadas en portátiles.
-    // - dpr: 1 si renderScale < 1 -> Evita cuadruplicar píxeles en pantallas Retina cuando el usuario pide downscaling.
+    // - dpr: equilibrado hasta 1.5 para máxima nitidez sin sobrecargar la GPU.
     const renderer = new Renderer({
       webgl: 2,
       alpha: false,
@@ -200,7 +201,7 @@ const Grainient = ({
       stencil: false,
       antialias: false,
       powerPreference: 'low-power',
-      dpr: (renderScaleRef.current ?? 1) < 1 ? 1 : Math.min(window.devicePixelRatio || 1, 2)
+      dpr: Math.min(window.devicePixelRatio || 1, 1.5)
     });
 
     const gl = renderer.gl;
@@ -299,79 +300,97 @@ const Grainient = ({
       if (staticMode) return;
       if (isVisible && isPageVisible && raf === 0) raf = requestAnimationFrame(loop);
     };
-    const tryStop = () => {
-      if (raf !== 0) { cancelAnimationFrame(raf); raf = 0; }
+
+    const stop = () => {
+      if (raf !== 0) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
     };
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        isVisible = entry.isIntersecting;
-        if (isVisible) tryStart();
-        else tryStop();
-      },
-      { threshold: 0 }
-    );
+    const io = new IntersectionObserver(([entry]) => {
+      isVisible = entry.isIntersecting;
+      if (isVisible) tryStart();
+      else stop();
+    });
     io.observe(container);
 
     const onVisibility = () => {
       isPageVisible = !document.hidden;
       if (isPageVisible) tryStart();
-      else tryStop();
+      else stop();
     };
     document.addEventListener('visibilitychange', onVisibility);
 
-    tryStart();
-
     return () => {
-      tryStop();
-      ro.disconnect();
+      stop();
       io.disconnect();
+      ro.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
-      ctxMap.delete(container);
+      if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
-      try { container.removeChild(canvas); } catch { /* ignore */ }
     };
   }, []);
 
-  // Sincronización de uniforms reactivos (coste GPU cero, sin reconstrucción de contexto)
+  // Actualización reactiva de uniforms sin re-montar
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const ctx = ctxMap.get(container);
+    const ctx = ctxMap.get(containerRef.current);
     if (!ctx) return;
-    const { program } = ctx;
+    const { program, renderer, mesh } = ctx;
     const u = program.uniforms;
 
-    u.uTimeSpeed.value      = timeSpeed;
-    u.uColorBalance.value   = colorBalance;
-    u.uWarpStrength.value   = warpStrength;
-    u.uWarpFrequency.value  = warpFrequency;
-    u.uWarpSpeed.value      = warpSpeed;
-    u.uWarpAmplitude.value  = warpAmplitude;
-    u.uBlendAngle.value     = blendAngle;
-    u.uBlendSoftness.value  = blendSoftness;
+    timeSpeedRef.current = timeSpeed;
+    renderScaleRef.current = renderScale;
+    frameSkipRef.current = frameSkip;
+    grainAnimatedRef.current = grainAnimated;
+
+    u.uTimeSpeed.value = timeSpeed;
+    u.uColorBalance.value = colorBalance;
+    u.uWarpStrength.value = warpStrength;
+    u.uWarpFrequency.value = warpFrequency;
+    u.uWarpSpeed.value = warpSpeed;
+    u.uWarpAmplitude.value = warpAmplitude;
+    u.uBlendAngle.value = blendAngle;
+    u.uBlendSoftness.value = blendSoftness;
     u.uRotationAmount.value = rotationAmount;
-    u.uNoiseScale.value     = noiseScale;
-    u.uGrainAmount.value    = grainAmount;
-    u.uGrainScale.value     = grainScale;
-    u.uGrainAnimated.value  = grainAnimated ? 1.0 : 0.0;
-    u.uContrast.value       = contrast;
-    u.uGamma.value          = gamma;
-    u.uSaturation.value     = saturation;
-    u.uCenterOffset.value   = new Float32Array([centerX, centerY]);
-    u.uZoom.value           = zoom;
-    u.uColor1.value         = new Float32Array(hexToRgb(color1));
-    u.uColor2.value         = new Float32Array(hexToRgb(color2));
-    u.uColor3.value         = new Float32Array(hexToRgb(color3));
-    u.uLightMode.value      = lightMode ? 1.0 : 0.0;
+    u.uNoiseScale.value = noiseScale;
+    u.uGrainAmount.value = grainAmount;
+    u.uGrainScale.value = grainScale;
+    u.uGrainAnimated.value = grainAnimated ? 1.0 : 0.0;
+    u.uContrast.value = contrast;
+    u.uGamma.value = gamma;
+    u.uSaturation.value = saturation;
+    u.uCenterOffset.value[0] = centerX;
+    u.uCenterOffset.value[1] = centerY;
+    u.uZoom.value = zoom;
+    u.uLightMode.value = lightMode ? 1.0 : 0.0;
+
+    const c1 = hexToRgb(color1);
+    const c2 = hexToRgb(color2);
+    const c3 = hexToRgb(color3);
+    u.uColor1.value.set(c1);
+    u.uColor2.value.set(c2);
+    u.uColor3.value.set(c3);
+
+    // Re-render manual si está en pausa
+    if (timeSpeed === 0 && !grainAnimated) {
+      renderer.render({ scene: mesh, sort: false, frustumCull: false, update: false, clear: false });
+    }
   }, [
     timeSpeed, colorBalance, warpStrength, warpFrequency, warpSpeed,
     warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
-    centerX, centerY, zoom, color1, color2, color3, lightMode
+    centerX, centerY, zoom, color1, color2, color3, lightMode,
+    renderScale, frameSkip
   ]);
 
-  return <div ref={containerRef} className={`relative h-full w-full overflow-hidden ${className}`.trim()} />;
+  return (
+    <div
+      ref={containerRef}
+      className={`relative h-full w-full overflow-hidden ${className}`}
+      style={{ contain: 'strict' }}
+    />
+  );
 };
 
 export default Grainient;

@@ -80,16 +80,16 @@ function App() {
           warpFrequency={2}
           warpSpeed={2}
           warpAmplitude={45}
-          blendSoftness={0.25}
+          blendSoftness={0.35}
           rotationAmount={500}
           noiseScale={3}
           grainAmount={0}
           grainScale={4}
           grainAnimated={false}
-          contrast={1.6}
+          contrast={1.45}
           saturation={1.5}
           zoom={0.9}
-          renderScale={0.25}
+          renderScale={0.75}
           frameSkip={2}
         />
         <div aria-hidden="true" className="grain-overlay" />
