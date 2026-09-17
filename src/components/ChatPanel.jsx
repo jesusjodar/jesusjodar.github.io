@@ -90,24 +90,24 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                 <ul aria-live="polite" className="mt-auto space-y-3 pb-1">
                   {history.map((m) => (
                     <Fragment key={m.id || m.q}>
-                      {/* Pregunta del usuario (fondo sólido blanco) */}
+                      {/* Pregunta del usuario (fondo blanco sólido) */}
                       <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
                         {m.q}
                       </li>
 
-                      {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos */}
+                      {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
                       {m.isStreaming ? (
                         <li
                           aria-label="Generando respuesta"
-                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border border-white/20 bg-[#161144] px-4 py-3 text-white shadow-lg"
+                          className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md border-2 border-white px-4 py-3 text-white"
                         >
                           <span className="chat-dot-1 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                           <span className="chat-dot-2 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                           <span className="chat-dot-3 inline-block h-1.5 w-1.5 rounded-full bg-white" />
                         </li>
                       ) : m.a ? (
-                        /* Una vez completa, sustituye al bubble de puntos con fondo sólido */
-                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border border-white/20 bg-[#161144] px-4 py-2.5 text-sm leading-relaxed text-white shadow-lg">
+                        /* Una vez completa, sustituye al bubble de puntos con outline de 2px como el shell */
+                        <li className="w-fit max-w-[95%] rounded-2xl rounded-bl-md border-2 border-white px-4 py-2.5 text-sm leading-relaxed text-white">
                           {m.a}
                         </li>
                       ) : null}
