@@ -83,7 +83,7 @@ function App() {
           blendSoftness={0.35}
           rotationAmount={500}
           noiseScale={3}
-          grainAmount={0}
+          grainAmount={0.12}
           grainScale={4}
           grainAnimated={false}
           contrast={1.45}
@@ -150,6 +150,25 @@ function App() {
             />
             <feComposite in="pixOut" in2="srcIn" operator="over" />
           </filter>
+
+          {/* Borde ondulado para la foto de perfil.
+              clipPathUnits="objectBoundingBox": coords 0-1 relativas al elemento,
+              escala sola a cualquier tamaño. 2 ondas por lado usando cúbicas de
+              Bézier como aproximación de sinusoide, amplitud 12 %. */}
+          <clipPath id="wave-stamp" clipPathUnits="objectBoundingBox">
+            <path d="
+              M 0,0
+              C 0.1667,0.12 0.3333,0.12 0.5,0
+              C 0.6667,0.12 0.8333,0.12 1,0
+              C 0.88,0.1667 0.88,0.3333 1,0.5
+              C 0.88,0.6667 0.88,0.8333 1,1
+              C 0.8333,0.88 0.6667,0.88 0.5,1
+              C 0.3333,0.88 0.1667,0.88 0,1
+              C 0.12,0.8333 0.12,0.6667 0,0.5
+              C 0.12,0.3333 0.12,0.1667 0,0
+              Z
+            " />
+          </clipPath>
         </defs>
       </svg>
       <Suspense fallback={null}>

@@ -173,8 +173,9 @@ body,
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.9;
+  opacity: 1;
   mix-blend-mode: overlay;
+  filter: contrast(15);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 140px 140px;
@@ -347,27 +348,4 @@ body,
 }
 
 
-/* Efecto de borde dentado redondeado / sello postal en los 4 lados */
-.perforated-stamp {
-  --hole-r: 6px;
-  --spacing: 20px;
-  -webkit-mask:
-    radial-gradient(circle var(--hole-r) at 50% 0, #0000 97%, #000 100%) 50% 0 / var(--spacing) 100% repeat-x,
-    radial-gradient(circle var(--hole-r) at 50% 100%, #0000 97%, #000 100%) 50% 100% / var(--spacing) 100% repeat-x,
-    radial-gradient(circle var(--hole-r) at 0 50%, #0000 97%, #000 100%) 0 50% / 100% var(--spacing) repeat-y,
-    radial-gradient(circle var(--hole-r) at 100% 50%, #0000 97%, #000 100%) 100% 50% / 100% var(--spacing) repeat-y;
-  mask:
-    radial-gradient(circle var(--hole-r) at 50% 0, #0000 97%, #000 100%) 50% 0 / var(--spacing) 100% repeat-x,
-    radial-gradient(circle var(--hole-r) at 50% 100%, #0000 97%, #000 100%) 50% 100% / var(--spacing) 100% repeat-x,
-    radial-gradient(circle var(--hole-r) at 0 50%, #0000 97%, #000 100%) 0 50% / 100% var(--spacing) repeat-y,
-    radial-gradient(circle var(--hole-r) at 100% 50%, #0000 97%, #000 100%) 100% 50% / 100% var(--spacing) repeat-y;
-  -webkit-mask-composite: destination-in;
-  mask-composite: intersect;
-}
-
-@media (max-width: 639px) {
-  .perforated-stamp {
-    --hole-r: 4px;
-    --spacing: 14px;
-  }
-}
+/* Foto de perfil: cuadrada, sin bordes adicionales */
