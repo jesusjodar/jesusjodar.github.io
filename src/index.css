@@ -345,3 +345,29 @@ body,
 .chat-markdown a:hover {
   color: #ffffff;
 }
+
+
+/* Efecto de borde dentado redondeado / sello postal en los 4 lados */
+.perforated-stamp {
+  --hole-r: 6px;
+  --spacing: 20px;
+  -webkit-mask:
+    radial-gradient(circle var(--hole-r) at 50% 0, #0000 97%, #000 100%) 50% 0 / var(--spacing) 100% repeat-x,
+    radial-gradient(circle var(--hole-r) at 50% 100%, #0000 97%, #000 100%) 50% 100% / var(--spacing) 100% repeat-x,
+    radial-gradient(circle var(--hole-r) at 0 50%, #0000 97%, #000 100%) 0 50% / 100% var(--spacing) repeat-y,
+    radial-gradient(circle var(--hole-r) at 100% 50%, #0000 97%, #000 100%) 100% 50% / 100% var(--spacing) repeat-y;
+  mask:
+    radial-gradient(circle var(--hole-r) at 50% 0, #0000 97%, #000 100%) 50% 0 / var(--spacing) 100% repeat-x,
+    radial-gradient(circle var(--hole-r) at 50% 100%, #0000 97%, #000 100%) 50% 100% / var(--spacing) 100% repeat-x,
+    radial-gradient(circle var(--hole-r) at 0 50%, #0000 97%, #000 100%) 0 50% / 100% var(--spacing) repeat-y,
+    radial-gradient(circle var(--hole-r) at 100% 50%, #0000 97%, #000 100%) 100% 50% / 100% var(--spacing) repeat-y;
+  -webkit-mask-composite: destination-in;
+  mask-composite: intersect;
+}
+
+@media (max-width: 639px) {
+  .perforated-stamp {
+    --hole-r: 4px;
+    --spacing: 14px;
+  }
+}

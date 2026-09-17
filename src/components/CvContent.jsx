@@ -9,7 +9,7 @@ function CvContent() {
   return (
     <div className="max-w-5xl text-left">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-        <div className="relative h-24 w-24 shrink-0 self-start aspect-square overflow-hidden bg-white sm:h-56 sm:w-auto lg:h-64">
+        <div className="perforated-stamp relative h-24 w-24 shrink-0 self-start aspect-square bg-white sm:h-56 sm:w-auto lg:h-64">
           <img
             src="/pfp-dither.png"
             alt="Foto de perfil de Jesús Jódar"
