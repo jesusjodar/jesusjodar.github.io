@@ -104,13 +104,8 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
             <ul aria-live="polite" className="space-y-3 pb-1">
               {history.map((m) => (
                 <Fragment key={m.id || m.q}>
-                  {/* Pregunta del usuario (fondo blanco sólido) */}
-                  <li className="ml-auto w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
-                    {m.q}
-                  </li>
-
-                  {/* Botón volver al inicio: arriba de la respuesta, alineado a la izquierda, cuadrado grande con outline blanco */}
-                  <li className="flex justify-start">
+                  {/* Fila de la pregunta del usuario: el botón de volver al inicio se sitúa a la izquierda (arriba de la futura respuesta) sin desplazar el mensaje del usuario hacia arriba */}
+                  <li className="flex w-full items-end justify-between gap-3">
                     <button
                       type="button"
                       onClick={handleResetChat}
@@ -132,6 +127,10 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                         <path d="M12 19l-7-7 7-7" />
                       </svg>
                     </button>
+
+                    <div className="w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
+                      {m.q}
+                    </div>
                   </li>
 
                   {/* Mientras se genera, muestra ÚNICAMENTE el bubble de tres puntos con outline como el shell */}
