@@ -28,7 +28,8 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
     if (!q || !isModelReady || isGenerating) return
 
     const messageId = nextIdRef.current++
-    setHistory((h) => [...h.slice(-7), { id: messageId, q, a: '', isStreaming: true }])
+    // Reemplaza cualquier mensaje anterior: cada consulta entra limpia en pantalla
+    setHistory([{ id: messageId, q, a: '', isStreaming: true }])
     setQuery('')
 
     sendQuery(q, {
