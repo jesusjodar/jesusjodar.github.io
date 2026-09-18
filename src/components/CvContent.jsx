@@ -4,6 +4,7 @@ import {
   faWhatsapp,
   faXTwitter,
 } from '@fortawesome/free-brands-svg-icons'
+import { getProjectMeta } from '../lib/galleryData.js'
 import { SKILLS } from '../lib/portfolio.js'
 
 // El blog (con marked + DOMPurify) carga en diferido para no engordar el
@@ -216,7 +217,7 @@ function CutoutTab({ maskId, label, width, textLength, active, onClick }) {
 // tinte neón y derretido pixelado del borde inferior se aplicaron offline
 // desde la foto original con scripts/prerender-pfp.py, así que en runtime
 // es un simple <img> sin procesado ni capas de fusión.
-function CvContent({ tab, onTabChange }) {
+function CvContent({ tab, onTabChange, activeGalleryId = 1 }) {
   const switchTab = (next) => {
     if (next === tab) return
     onTabChange(next)
@@ -234,35 +235,54 @@ function CvContent({ tab, onTabChange }) {
     const id = window.setTimeout(prefetch, 1500)
     return () => window.clearTimeout(id)
   }, [])
+
+  const galleryMeta = getProjectMeta(activeGalleryId)
+
   return (
     <div className="mx-auto max-w-5xl text-left">
-      <div className="mb-8 flex flex-wrap gap-3">
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         {/* textLength = avance medido + interletraje interno, sin el
             espaciado final que descentraría el anclaje medio. */}
-        <CutoutTab
-          maskId="cutout-cv"
-          label="CV"
-          width={110}
-          textLength={34}
-          active={tab === 'cv'}
-          onClick={() => switchTab('cv')}
-        />
-        <CutoutTab
-          maskId="cutout-blog"
-          label="BLOG"
-          width={110}
-          textLength={72}
-          active={tab === 'blog'}
-          onClick={() => switchTab('blog')}
-        />
-        <CutoutTab
-          maskId="cutout-img"
-          label="IMG"
-          width={110}
-          textLength={54}
-          active={tab === 'img'}
-          onClick={() => switchTab('img')}
-        />
+        <div className="flex flex-wrap items-start gap-3 self-start">
+          <CutoutTab
+            maskId="cutout-cv"
+            label="CV"
+            width={110}
+            textLength={34}
+            active={tab === 'cv'}
+            onClick={() => switchTab('cv')}
+          />
+          <CutoutTab
+            maskId="cutout-blog"
+            label="BLOG"
+            width={110}
+            textLength={72}
+            active={tab === 'blog'}
+            onClick={() => switchTab('blog')}
+          />
+          <CutoutTab
+            maskId="cutout-img"
+            label="IMG"
+            width={110}
+            textLength={54}
+            active={tab === 'img'}
+            onClick={() => switchTab('img')}
+          />
+        </div>
+
+        {/* En la pestaña IMG: título y descripción alineados a la derecha en línea con los botones */}
+        {tab === 'img' && galleryMeta && (
+          <div className="flex min-h-10 max-w-xs flex-col items-end justify-start self-start text-right select-none sm:max-w-sm md:max-w-md">
+            <h3 className="font-['Anton',sans-serif] text-base leading-tight uppercase tracking-wider text-white transition-opacity duration-200 sm:text-lg">
+              {galleryMeta.title}
+            </h3>
+            {galleryMeta.description && (
+              <p className="mt-0.5 max-w-xs text-[11px] font-semibold leading-snug text-white transition-opacity duration-200 sm:max-w-sm sm:text-xs md:max-w-md">
+                {galleryMeta.description}
+              </p>
+            )}
+          </div>
+        )}
       </div>
       {tab === 'cv' ? (
         <CvMain />

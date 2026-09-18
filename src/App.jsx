@@ -12,9 +12,7 @@ import { INTRO_MS } from './lib/portfolio.js'
 const ChatPanel = lazy(() => import('./components/ChatPanel.jsx'))
 // La galería vive en una capa fija a sangre completa (fuera del scroll y
 // del filtro de pixelado) para poder desbordar horizontalmente sin recortes.
-const GalleryPlaceholder = lazy(
-  () => import('./components/GalleryPlaceholder.jsx'),
-)
+const Carousel = lazy(() => import('./components/Carousel.jsx'))
 
 // Orquestador del layout: posee intro + contenedor de scroll y compone
 // los independientes ChatPanel (preguntas), FolderFrame (outline),
@@ -30,6 +28,7 @@ function App() {
   // Pestaña CV/Blog (vive en CvContent, pero App la necesita para mostrar
   // el fondo de ondas del blog tras el contenido).
   const [tab, setTab] = useState('cv')
+  const [activeGalleryId, setActiveGalleryId] = useState('1-1')
 
   useEffect(() => {
     if (introDone) return
@@ -43,7 +42,7 @@ function App() {
   useEffect(() => {
     const prefetch = () => {
       import('./components/ChatPanel.jsx')
-      import('./components/GalleryPlaceholder.jsx')
+      import('./components/Carousel.jsx')
     }
     if ('requestIdleCallback' in window) {
       const id = window.requestIdleCallback(prefetch, { timeout: 3000 })
@@ -219,7 +218,7 @@ function App() {
           insetAnimating={insetAnimating}
           trackHidden={tab === 'img'}
         >
-          <CvContent tab={tab} onTabChange={setTab} />
+          <CvContent tab={tab} onTabChange={setTab} activeGalleryId={activeGalleryId} />
         </CustomScrollbar>
       </div>
       {/* Capa a sangre completa para IMG: fuera del scroll y del filtro,
@@ -233,7 +232,7 @@ function App() {
         <div className="pointer-events-none fixed inset-x-0 top-0 z-20">
           <div className="pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+1.5rem+7rem)] sm:pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+3.5rem+7rem)]">
             <Suspense fallback={null}>
-              <GalleryPlaceholder />
+              <Carousel onFocusChange={setActiveGalleryId} />
             </Suspense>
           </div>
         </div>
