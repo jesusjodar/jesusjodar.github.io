@@ -63,8 +63,8 @@ const KNOWN_RATIOS = {
   14: '4 / 5',
 }
 
-// Distancia máxima de elementos con medios cargados alrededor del foco para virtualización
-const VIRTUAL_BUFFER = 4
+// Margen base de elementos con medios cargados alrededor del foco para virtualización anticipada
+const BASE_VIRTUAL_BUFFER = 8
 
 // Chevrons de navegación sin redondeo con trazo de 4px idéntico al outline
 function ChevronLeft() {
@@ -131,7 +131,7 @@ function SlideVideo({ src, active, onLoadedMetadata }) {
       muted
       loop
       playsInline
-      preload="metadata"
+      preload="auto"
       disablePictureInPicture
       onLoadedMetadata={onLoadedMetadata}
     />
@@ -162,10 +162,7 @@ const CarouselItem = memo(function CarouselItem({
         if (!isFocused) onFocusItem(index)
       }}
       className="flex shrink-0 snap-center flex-col items-center select-none"
-      style={{
-        contentVisibility: 'auto',
-        containIntrinsicSize: `auto ${defaultRatio === '9 / 16' ? '180px' : defaultRatio === '4 / 5' ? '256px' : '320px'} 320px`,
-      }}
+
     >
       <div
         aria-label={`Grupo ${group.id}: diapositiva ${activeIndex + 1} de ${group.slides.length}`}
@@ -207,11 +204,7 @@ const CarouselItem = memo(function CarouselItem({
                 <img
                   src={slide.url}
                   alt=""
-                  loading={
-                    index >= GROUPS.length - 2 && index <= GROUPS.length + 3
-                      ? 'eager'
-                      : 'lazy'
-                  }
+                  loading="eager"
                   decoding="async"
                   draggable={false}
                   className="pointer-events-none block h-full w-full select-none object-contain"
@@ -308,6 +301,24 @@ const CarouselItem = memo(function CarouselItem({
 
 export default function Carousel({ onFocusChange }) {
   const stripRef = useRef(null)
+  const [bufferSize, setBufferSize] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return Math.max(BASE_VIRTUAL_BUFFER, Math.ceil(window.innerWidth / 280) + 4)
+    }
+    return BASE_VIRTUAL_BUFFER
+  })
+
+  // Ajustar buffer reactivamente según el ancho del viewport para pantallas anchas/ultrawide
+  useEffect(() => {
+    const updateBuffer = () => {
+      const width = stripRef.current?.clientWidth || window.innerWidth
+      const needed = Math.max(BASE_VIRTUAL_BUFFER, Math.ceil(width / 280) + 4)
+      setBufferSize((prev) => (prev !== needed ? needed : prev))
+    }
+    updateBuffer()
+    window.addEventListener('resize', updateBuffer)
+    return () => window.removeEventListener('resize', updateBuffer)
+  }, [])
   const itemRefs = useRef([])
   const [focusedIndex, setFocusedIndex] = useState(GROUPS.length)
   const focusedIndexRef = useRef(GROUPS.length)
@@ -496,7 +507,7 @@ export default function Carousel({ onFocusChange }) {
       >
         <div className="gallery-scope mx-auto flex w-max max-w-none items-center gap-3 pb-4 sm:gap-6">
           {LOOP_ITEMS.map((item, index) => {
-            const isVirtual = Math.abs(index - focusedIndex) > VIRTUAL_BUFFER
+            const isVirtual = Math.abs(index - focusedIndex) > bufferSize
             return (
               <CarouselItem
                 key={item.uniqueKey}
