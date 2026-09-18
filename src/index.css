@@ -155,6 +155,16 @@ body,
   will-change: transform;
 }
 
+/* Ondas pixeladas negras desde el borde inferior (lienzo precalculado
+   que se pinta centrado y sin repetir, espejo del derretido de la foto
+   pero hacia arriba): capa trasera bajo el contenido, sin taparlo.
+   useFolderInset lo recorta del interior del marco con la misma clipshape. */
+.pixel-gradient {
+  background-image: url(/drip-tile.png);
+  background-repeat: no-repeat;
+  background-position: bottom center;
+}
+
 /* Tinta inversa a --color-base (texto, fills y strokes vía currentColor),
    vía variable --color-neon (var() lo soporta todo). */
 .tint-inverse {

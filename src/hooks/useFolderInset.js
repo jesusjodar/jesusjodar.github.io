@@ -26,6 +26,8 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
   const maskImgRef = useRef(null)
   const blurRef = useRef(null)
   const pixelFadeRef = useRef(null)
+  // Capa del gradiente inferior: se recorta con la misma clipshape.
+  const gradientRef = useRef(null)
   const chevTimeoutRef = useRef(0)
   const insetRafRef = useRef(0)
   // Fuente de verdad del inset: ref (sin re-render a 60fps).
@@ -200,31 +202,38 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     const maskEl = maskImgRef.current
     if (wrap && maskEl) {
       const box = wrap.getBoundingClientRect()
-      const px = (x) => f(x - box.left)
-      const py = (y) => f(y - box.top)
-      const bezMask = (x0, y0, cx, cy, x1, y1) => {
-        const cp1x = x0 + (cx - x0) * K
-        const cp1y = y0 + (cy - y0) * K
-        const cp2x = x1 + (cx - x1) * K
-        const cp2y = y1 + (cy - y1) * K
-        return `C ${px(cp1x)} ${py(cp1y)}, ${px(cp2x)} ${py(cp2y)}, ${px(x1)} ${py(y1)}`
+      // El mismo path en dos sistemas de coords: de la caja (máscara del
+      // pixelado) y del viewport (máscara del gradiente, a todo el ancho).
+      const makePath = (ox, oy) => {
+        const qx = (x) => f(x - ox)
+        const qy = (y) => f(y - oy)
+        const bez = (x0, y0, cx, cy, x1, y1) => {
+          const cp1x = x0 + (cx - x0) * K
+          const cp1y = y0 + (cy - y0) * K
+          const cp2x = x1 + (cx - x1) * K
+          const cp2y = y1 + (cy - y1) * K
+          return `C ${qx(cp1x)} ${qy(cp1y)}, ${qx(cp2x)} ${qy(cp2y)}, ${qx(x1)} ${qy(y1)}`
+        }
+        const bi = 2 * s
+        const yB = mY + h
+        return (
+          `M ${qx(mX + bi)} ${qy(mY + t + R)} ` +
+          `${bez(mX + bi, mY + t + R, mX + bi, mY + t + s, mX + s + R, mY + t + s)} ` +
+          `L ${qx(mX + tabW - R)} ${qy(mY + t + s)} ` +
+          `${bez(mX + tabW - R, mY + t + s, mX + tabW - s, mY + t + s, mX + tabW - s, mY + t + R)} ` +
+          `L ${qx(mX + tabW - s)} ${qy(mY + tTab - R)} ` +
+          `${bez(mX + tabW - s, mY + tTab - R, mX + tabW - s, mY + tTab + s, mX + tabW + R, mY + tTab + s)} ` +
+          `L ${qx(mX + w - s - r)} ${qy(mY + tTab + s)} ` +
+          `${bez(mX + w - s - r, mY + tTab + s, mX + w - bi, mY + tTab + s, mX + w - bi, mY + tTab + r)} ` +
+          `L ${qx(mX + w - bi)} ${qy(mY + h - s - r)} ` +
+          `${bez(mX + w - bi, mY + h - s - r, mX + w - bi, yB - bi, mX + w - s - r, yB - bi)} ` +
+          `L ${qx(mX + s + r)} ${qy(yB - bi)} ` +
+          `${bez(mX + s + r, yB - bi, mX + bi, yB - bi, mX + bi, mY + h - s - r)} ` +
+          `Z`
+        )
       }
-      const bi = 2 * s
-      const yB = mY + h
-      const d =
-        `M ${px(mX + bi)} ${py(mY + t + R)} ` +
-        `${bezMask(mX + bi, mY + t + R, mX + bi, mY + t + s, mX + s + R, mY + t + s)} ` +
-        `L ${px(mX + tabW - R)} ${py(mY + t + s)} ` +
-        `${bezMask(mX + tabW - R, mY + t + s, mX + tabW - s, mY + t + s, mX + tabW - s, mY + t + R)} ` +
-        `L ${px(mX + tabW - s)} ${py(mY + tTab - R)} ` +
-        `${bezMask(mX + tabW - s, mY + tTab - R, mX + tabW - s, mY + tTab + s, mX + tabW + R, mY + tTab + s)} ` +
-        `L ${px(mX + w - s - r)} ${py(mY + tTab + s)} ` +
-        `${bezMask(mX + w - s - r, mY + tTab + s, mX + w - bi, mY + tTab + s, mX + w - bi, mY + tTab + r)} ` +
-        `L ${px(mX + w - bi)} ${py(mY + h - s - r)} ` +
-        `${bezMask(mX + w - bi, mY + h - s - r, mX + w - bi, yB - bi, mX + w - s - r, yB - bi)} ` +
-        `L ${px(mX + s + r)} ${py(yB - bi)} ` +
-        `${bezMask(mX + s + r, yB - bi, mX + bi, yB - bi, mX + bi, mY + h - s - r)} ` +
-        `Z`
+      const d = makePath(box.left, box.top)
+      const dV = makePath(0, 0)
       const bw = Math.max(1, Math.round(box.width))
       const bh = Math.max(1, Math.round(box.height))
       maskEl.setAttribute('x', '0')
@@ -238,6 +247,30 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
         'href',
         `data:image/svg+xml,${encodeURIComponent(svg)}`,
       )
+      // El gradiente inferior se recorta con LA MISMA clipshape del efecto
+      // pixelado (el path `d` tal cual): rectángulo exterior + interior con
+      // fill-rule evenodd, así el interior queda calado en un solo path sin
+      // máscaras anidadas. El alfa codifica el recorte: vale en modo alpha
+      // y en modo luminancia. Se ancla con tamaño/posición exactos en px
+      // (sin estirar) porque el div ocupa todo el viewport y la máscara
+      // vive en coords de la caja del contenido.
+      const grad = gradientRef.current
+      if (grad) {
+        const vw = window.innerWidth
+        const vh = window.innerHeight
+        const cutSvg =
+          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${vw} ${vh}'>` +
+          `<path d='M0 0H${vw}V${vh}H0Z ${dV}' fill='#fff' fill-rule='evenodd'/></svg>`
+        const cutUri = `url("data:image/svg+xml,${encodeURIComponent(cutSvg)}")`
+        grad.style.setProperty('mask-image', cutUri)
+        grad.style.setProperty('-webkit-mask-image', cutUri)
+        grad.style.setProperty('mask-size', '100% 100%')
+        grad.style.setProperty('-webkit-mask-size', '100% 100%')
+        grad.style.setProperty('mask-position', '0 0')
+        grad.style.setProperty('-webkit-mask-position', '0 0')
+        grad.style.setProperty('mask-repeat', 'no-repeat')
+        grad.style.setProperty('-webkit-mask-repeat', 'no-repeat')
+      }
     }
   }, [])
 
@@ -348,6 +381,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     maskImgRef,
     blurRef,
     pixelFadeRef,
+    gradientRef,
     atMinRef,
     chatOpen,
     atMinHeight,

@@ -37,7 +37,7 @@ export default function TopHint({ hintRef, collapsed = false }) {
         </svg>
       </div>
 
-      {/* Estado plegado (chat abierto): CV + flecha abajo */}
+      {/* Estado plegado (chat abierto): CV, BLOG + flecha abajo */}
       <div
         className={`absolute left-0 top-0 flex items-center justify-start transition-opacity duration-300 ${
           collapsed ? 'opacity-100' : 'opacity-0 pointer-events-none'
@@ -46,6 +46,11 @@ export default function TopHint({ hintRef, collapsed = false }) {
         <span className="font-hand truncate text-xl leading-none tracking-wide text-[#fff]">
           <span className="inline-block rotate-[-6deg]">C</span>
           <span className="inline-block rotate-[5deg] translate-y-[-1px]">V</span>
+          <span className="inline-block rotate-[4deg] translate-y-[2px]">,</span>{' '}
+          <span className="inline-block rotate-[-4deg] translate-y-[1px]">B</span>
+          <span className="inline-block rotate-[6deg]">L</span>
+          <span className="inline-block rotate-[-5deg] translate-y-[-1px]">O</span>
+          <span className="inline-block rotate-[3deg]">G</span>
         </span>
         {/* Flecha garabateada hacia abajo: un poco más a la derecha y arriba */}
         <svg

@@ -53,6 +53,7 @@ function App() {
     maskImgRef,
     blurRef,
     pixelFadeRef,
+    gradientRef,
     chatOpen,
     atMinHeight,
     insetAnimating,
@@ -94,6 +95,14 @@ function App() {
         />
         <div aria-hidden="true" className="grain-overlay" />
       </div>
+      {/* Ondas pixeladas negras que nacen del borde inferior: capa trasera
+          bajo el contenido (no tapa lo que desborda); useFolderInset la
+          recorta del interior del marco con la misma clipshape. */}
+      <div
+        aria-hidden="true"
+        ref={gradientRef}
+        className="pixel-gradient pointer-events-none fixed inset-0 z-[5]"
+      />
       <svg
         className="pointer-events-none fixed inset-0 -z-10 h-0 w-0"
         aria-hidden="true"
