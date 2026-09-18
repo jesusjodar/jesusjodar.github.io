@@ -14,7 +14,7 @@ const SYNONYMS = {
   correo: 'email contacto',
   camaras: 'cctv videovigilancia seguridad',
   camara: 'cctv videovigilancia seguridad',
-  video: 'edicion after effects',
+  video: 'videojuegos unity unreal',
   games: 'videojuegos unity unreal',
   juegos: 'videojuegos unity unreal',
   diplomas: 'certificados cursos sef formacion',
@@ -24,18 +24,12 @@ const SYNONYMS = {
   estudiado: 'estudios formacion btec',
   estudiaste: 'estudios formacion btec',
   universidad: 'estudios escuela esi formacion',
-  ingles: 'idiomas ingles language',
   super: 'supermercado tienda comercio reposicion',
   reponer: 'reposicion reponedor supermercado comercio',
   reponedor: 'reposicion supermercado comercio tienda',
   seguridad: 'security alarmas cctv accesos',
   cctv: 'camaras videovigilancia security seguridad',
   alarma: 'alarmas security seguridad',
-  prezi: 'presentaciones prezi diapositivas',
-  contable: 'contabilidad balances asientos',
-  decisiones: 'problemas toma decisiones resolutivo',
-  ergonomia: 'prl riesgos oficinas pvd postura',
-  postura: 'prl riesgos ergonomia pvd',
 }
 
 const STOPWORDS = new Set([

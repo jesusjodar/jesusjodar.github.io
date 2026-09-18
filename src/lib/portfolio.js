@@ -20,37 +20,35 @@ export const DIVIDER_ROTS = [24, 132, 248, 78]
 // Banco amplio y variado de preguntas sugeridas
 export const CHAT_SUGGESTIONS = [
   '¿Quién eres y cuál es tu perfil?',
-  '¿Qué sabes hacer con Windows y Linux?',
+  '¿Qué sabes hacer con Windows, Linux y macOS?',
+  '¿Qué haces en diseño 3D con Blender?',
+  '¿Qué estudiaste de desarrollo de videojuegos?',
+  '¿Tienes GitHub con proyectos?',
+  '¿Cómo usas la IA local y Ollama?',
+  '¿Qué lenguajes y herramientas de desarrollo usas?',
   '¿Sabes montar o reparar ordenadores?',
-  '¿Qué hiciste en Grupo Security?',
-  '¿Qué herramientas de 3D dominas?',
-  '¿Usas Unity o Unreal Engine?',
-  '¿Qué programas de Adobe utilizas?',
-  '¿Qué experiencia tienes en tiendas o reposición?',
-  '¿Cómo aplicas la IA en tu día a día?',
-  '¿Cuál es tu titulación oficial y dónde estudiaste?',
-  '¿Qué cursos oficiales del SEF has completado?',
-  '¿Qué sabes de prevención de riesgos en oficinas?',
-  '¿Cómo gestionas la comunicación profesional?',
-  '¿Cómo resuelves problemas y tomas decisiones?',
-  '¿Tienes conocimientos de contabilidad básica?',
-  '¿Qué nivel de inglés tienes?',
-  '¿Cuáles son tus puntos fuertes personales?',
-  '¿Cuándo te puedes incorporar y qué disponibilidad tienes?',
+  '¿Sabes de redes y SSH?',
+  '¿Cuál es tu formación?',
+  '¿Cómo trabajas y aprendes?',
+  '¿Qué te interesa profesionalmente?',
+  '¿Qué es tu portfolio 3D?',
+  '¿Dónde vives?',
   '¿Cómo puedo contactar contigo?',
 ]
 
 export const SKILLS = [
   'Windows',
   'Linux',
-  'Hardware',
-  'Diseño 3D',
+  'macOS',
+  'JavaScript',
+  'TypeScript',
+  'React',
+  'Blender',
   'IA',
-  'Automatización',
-  'Resolución de incidencias',
-  'Aprendizaje autodidacta',
-  'Trabajo en equipo',
-  'Atención al cliente',
+  'Ollama',
+  'RAG',
+  'Git',
+  'Hardware',
 ]
 
 export const getTabH = () =>
@@ -81,19 +79,19 @@ export function chevronUpD(cx, cy, w, h) {
 // Respuesta local honesta (no hay backend de IA)
 export function localAnswer(q) {
   const s = q.toLowerCase()
-  if (/sistema|windows|linux|incidencia|hardware|repar/.test(s))
-    return 'Trabajo con Windows y Linux: configuro equipos, instalo software y diagnostico fallos de hardware y software. En Grupo Security (Lorca, 2026) revisé alarmas, CCTV y control de accesos.'
-  if (/forma|estudi|aprend|btec|eso|creativ/.test(s))
-    return 'Estudié Creative Media (Pearson BTEC L3 con Distinction, ESID Murcia) + ESO. Sistemas, herramientas e IA, de forma autodidacta.'
-  if (/ia\b|automat|software|moder/.test(s))
-    return 'Oriento mi trabajo a IA y automatización: automatizar lo automatizable y usar software moderno para resolver incidencias más rápido.'
+  if (/sistema|windows|linux|macos|incidencia|hardware|repar/.test(s))
+    return 'Trabajo con Windows, Linux y macOS: configuro equipos, instalo software y diagnostico fallos de hardware y software. En Grupo Security (Lorca, 2026) revisé alarmas, CCTV y control de accesos.'
+  if (/forma|estudi|aprend|btec|creativ|ifct|videojuego/.test(s))
+    return 'Creative Media (Pearson BTEC L3 con Distinction) + IFCT0108 de microinformática + estudios de desarrollo de videojuegos. Lo demás, de forma autodidacta.'
+  if (/ia\b|agente|ollama|automat|software|moder/.test(s))
+    return 'Oriento mi trabajo a IA, automatización y desarrollo: LLMs locales, agentes y herramientas propias.'
   if (/trabaj|oportun|busc|quier/.test(s))
-    return 'Busco oportunidades donde crecer con sistemas, IA y automatización. Escríbeme a jesusjodarpiernas@gmail.com.'
-  if (/contact|email|tel|linkedin|murcia|donde/.test(s))
-    return 'jesusjodarpiernas@gmail.com · 623 175 760 · linkedin.com/in/jesujopi · Murcia, España.'
+    return 'Busco oportunidades donde crecer con sistemas, IA, desarrollo y 3D. Escríbeme a jesusjodarpiernas@gmail.com.'
+  if (/contact|email|tel|linkedin|github|murcia|donde/.test(s))
+    return 'jesusjodarpiernas@gmail.com · 623 175 760 · linkedin.com/in/jesujopi · github.com/jesusjodar · Murcia, España.'
   if (/experiencia|security|lorca|pract/.test(s))
-    return 'Prácticas en Grupo Security (Lorca, principios 2026): inspección y reparación de sistemas de seguridad, mantenimiento y verificación de instalaciones.'
+    return 'Prácticas en Grupo Security (Lorca, 2026): inspección y reparación de sistemas de seguridad, mantenimiento y verificación de instalaciones.'
   if (/hola|quien|quién|sobre ti|jesus|jesús/.test(s))
-    return 'Soy Jesús Jódar, 24 años, de Murcia. Apasionado de sistemas, IA y automatización. Abajo tienes el resumen completo.'
+    return 'Soy Jesús Jódar, de Murcia. Perfil técnico-creativo: sistemas, IA, desarrollo y diseño 3D. Abajo tienes el resumen completo.'
   return 'Demo local: busca por “experiencia”, “formación”, “Windows”, “IA” o “contacto”. Debajo tienes el resumen completo.'
 }

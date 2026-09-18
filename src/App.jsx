@@ -200,7 +200,7 @@ function App() {
       <div
         ref={contentWrapRef}
         style={{ top: 0 }}
-        className="intro-content pixel-content fixed inset-y-0 left-[calc(var(--frame-margin)+var(--frame-border))] right-[calc(var(--frame-margin)+var(--frame-border))] z-10 flex items-stretch gap-5 pr-3 sm:gap-8 sm:pr-10"
+        className="intro-content pixel-content fixed inset-y-0 left-[calc(var(--side)+var(--frame-border))] right-[calc(var(--side)+var(--frame-border))] z-10 flex items-stretch gap-5 pr-3 sm:gap-8 sm:pr-10"
       >
         <CustomScrollbar
           scrollContainerRef={scrollContainerRef}

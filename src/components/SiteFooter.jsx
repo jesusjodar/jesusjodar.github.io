@@ -148,7 +148,7 @@ export default function SiteFooter() {
   }, [])
 
   return (
-    <footer className="fixed left-[var(--frame-margin)] right-[var(--frame-margin)] bottom-[calc(var(--frame-footer-gap)/2)] z-[60] flex h-[var(--footer-h)] min-w-0 items-center justify-between gap-3 px-2 sm:gap-4 sm:px-3">
+    <footer className="fixed left-[var(--side)] right-[var(--side)] bottom-[calc(var(--frame-footer-gap)/2)] z-[60] flex h-[var(--footer-h)] min-w-0 items-center justify-between gap-3 px-2 sm:gap-4 sm:px-3">
       <svg
         ref={nameSvgRef}
         className="h-[1.25em] w-[12em] shrink-0 overflow-visible text-base intro-footer-text sm:text-lg"

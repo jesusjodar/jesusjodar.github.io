@@ -5,7 +5,9 @@
  * Formato de cada .md: primera línea = título (se admite '# Título'),
  * resto de líneas = cuerpo en markdown. Fechas de la metadata del
  * archivo: creación (birthtime, con fallback a mtime) y modificación
- * (mtime, por si se edita un post). Orden: modificación descendente.
+ * (mtime, por si se edita un post). El número de ediciones se lleva en
+ * posts/.edit-counts.json (mtime visto + contador): si el mtime cambia
+ * entre ejecuciones, suma una edición. Orden: modificación descendente.
  *
  * Se ejecuta solo en predev/prebuild: el bundle importa el JSON ya
  * generado, sin leer el sistema de ficheros en runtime.
@@ -24,6 +26,16 @@ import { fileURLToPath } from 'node:url'
 const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)))
 const dir = path.join(root, 'posts')
 const out = path.join(root, 'src', 'lib', 'posts.json')
+const countsPath = path.join(dir, '.edit-counts.json')
+
+let counts = {}
+if (existsSync(countsPath)) {
+  try {
+    counts = JSON.parse(readFileSync(countsPath, 'utf8'))
+  } catch {
+    counts = {}
+  }
+}
 
 const files = existsSync(dir)
   ? readdirSync(dir)
@@ -40,15 +52,24 @@ for (const file of files) {
   const body = lines.slice(1).join('\n').trim()
   if (!title) continue
   const created = st.birthtimeMs > 0 ? st.birthtimeMs : st.mtimeMs
+  const slug = path.basename(file, '.md')
+  const prev = counts[slug]
+  const edits = prev ? prev.edits + (prev.mtime !== st.mtimeMs ? 1 : 0) : 0
+  counts[slug] = { mtime: st.mtimeMs, edits }
   posts.push({
-    slug: path.basename(file, '.md'),
+    slug,
     title,
     body,
+    edits,
     created: new Date(created).toISOString(),
     updated: new Date(st.mtimeMs).toISOString(),
   })
 }
 posts.sort((a, b) => (a.updated < b.updated ? 1 : -1))
+for (const slug of Object.keys(counts)) {
+  if (!posts.some((p) => p.slug === slug)) delete counts[slug]
+}
+writeFileSync(countsPath, JSON.stringify(counts, null, 2) + '\n')
 
 mkdirSync(path.dirname(out), { recursive: true })
 writeFileSync(out, JSON.stringify(posts, null, 2) + '\n')

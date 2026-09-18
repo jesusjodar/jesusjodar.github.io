@@ -18,7 +18,7 @@ export default function FolderFrame({
     <>
       <div
         ref={frameRef}
-        className="pointer-events-none fixed left-[var(--frame-margin)] right-[var(--frame-margin)] top-[var(--frame-margin)] bottom-[calc(var(--footer-h)+var(--frame-footer-gap))] z-50"
+        className="pointer-events-none fixed left-[var(--side)] right-[var(--side)] top-[var(--frame-margin)] bottom-[calc(var(--footer-h)+var(--frame-footer-gap))] z-50"
       >
         <svg className="block h-full w-full" fill="none" aria-hidden="true">
           <path

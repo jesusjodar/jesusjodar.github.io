@@ -114,7 +114,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex flex-col overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
+      className="fixed inset-x-[calc(var(--side)+1rem)] top-0 z-40 flex flex-col overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
       style={{ opacity: chatOpen ? 1 : 0, pointerEvents: chatOpen ? 'auto' : 'none' }}
       aria-hidden={chatOpen ? undefined : true}
       inert={!chatOpen || !introDone}

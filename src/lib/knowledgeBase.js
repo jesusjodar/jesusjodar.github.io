@@ -1,12 +1,12 @@
 // Base de conocimiento exhaustiva con preguntas y respuestas en primera persona ("yo")
-// redactadas directamente desde la voz de Jesús Jódar, sin incluir dirección postal,
-// cubriendo Informática, Sistemas, Hardware, Seguridad, Diseño 3D, Comercio y Certificados SEF.
+// redactadas directamente desde la voz de Jesús Jódar: perfil técnico-creativo
+// (sistemas, IA, desarrollo, diseño 3D), formación y contacto.
 
 export const KNOWLEDGE_BASE = [
   {
     id: 'sobre_mi',
     category: 'perfil',
-    keywords: ['jesus', 'jodar', 'quien', 'eres', 'perfil', 'resumen', 'presentate', 'cuentame', 'sobre', 'ti', 'conocer'],
+    keywords: ['jesus', 'jodar', 'quien', 'eres', 'perfil', 'resumen', 'presentate', 'cuentame', 'sobre', 'ti', 'conocer', 'tecnico', 'creativo'],
     patterns: [
       '¿Quién eres?',
       '¿Quién es Jesús?',
@@ -24,44 +24,37 @@ export const KNOWLEDGE_BASE = [
       '¿Cómo te describes?',
       '¿Qué tipo de profesional eres?',
     ],
-    answer: `¡Hola! Soy **Jesús Jódar Piernas** (24 años, Murcia). Me considero una persona curiosa, responsable y con una marcada vocación técnica y creativa. Mi perfil se apoya en cuatro pilares:
+    answer: `¡Hola! Soy **Jesús Jódar**, de Murcia. Tengo un perfil técnico-creativo: me apasionan la informática, la inteligencia artificial y el diseño digital.
 
-- **Informática y Sistemas**: Llevo años configurando y optimizando entornos **Windows** y **Linux**, montando y diagnosticando hardware de PC, y experimentando con herramientas de **inteligencia artificial** y automatización de tareas.
-- **Seguridad Electrónica**: Hice mis prácticas en **Grupo Security** (Lorca), trabajando con alarmas, circuitos cerrados de televisión (**CCTV**) y control de accesos en instalaciones reales.
-- **Diseño 3D y Creatividad**: Como artista 3D freelance domino **Blender**, **Substance 3D**, **Photoshop** y **After Effects**, con proyectos de portadas musicales y entornos en motores como **Unreal Engine** y **Unity**.
-- **Comercio y Atención al Cliente**: Sé tratar con el público de forma cercana, resolver peticiones bajo presión, organizar productos y cuidar el orden y la reposición.
-
-Cuento con titulación oficial británica **Pearson BTEC Level 3 con Distinction** en ESI Murcia y **5 certificados oficiales** del SEF en prevención de riesgos, comunicación, toma de decisiones y contabilidad.`,
+- **Sistemas e informática**: Años configurando equipos y moviéndome entre **Windows**, **Linux** y **macOS**, además de hardware, redes y resolución de incidencias.
+- **Inteligencia artificial**: Investigo LLMs locales, **Ollama**, **RAG**, agentes y automatización.
+- **Desarrollo de software**: JavaScript, TypeScript, React, Vite y Tailwind CSS, con Git y GitHub. Me importan las interfaces con identidad visual.
+- **Diseño 3D y videojuegos**: **Blender** (modelado, materiales, iluminación, render), estudios de desarrollo de videojuegos e interés en Unity y Unreal Engine.`,
   },
 
   {
-    id: 'edad_y_personal',
+    id: 'residencia',
     category: 'personal',
-    keywords: ['edad', 'anos', 'cumpleanos', 'donde', 'vives', 'residencia', 'murcia', 'lorca', 'ciudad', 'nacimiento', 'personal'],
+    keywords: ['donde', 'vives', 'residencia', 'murcia', 'lorca', 'ciudad', 'nacimiento', 'personal', 'ubicado', 'espana'],
     patterns: [
-      '¿Cuántos años tienes?',
-      '¿Qué edad tienes?',
       '¿Dónde vives?',
       '¿De dónde eres?',
       '¿En qué ciudad resides?',
       '¿Vives en Murcia?',
       '¿Cuál es tu lugar de residencia?',
-      'Datos personales',
-      '¿Dónde naciste?',
       '¿Dónde estás ubicado?',
-      '¿Cuál es tu dirección?',
     ],
-    answer: `Tengo **24 años** y vivo en la **Región de Murcia**, España.
+    answer: `Soy de **Murcia, España**.
 
-Tengo total movilidad y disponibilidad para trabajar de forma presencial en **Murcia capital, Lorca y alrededores**, así como en modalidades **híbridas o en remoto**. Cuento con disponibilidad completa e inmediata para incorporarme.`,
+Estoy abierto a oportunidades dentro de informática, sistemas, inteligencia artificial, automatización, desarrollo de software y diseño 3D, en un entorno donde pueda aportar y seguir creciendo.`,
   },
 
   {
-    id: 'sistemas_windows_linux',
+    id: 'sistemas_windows_linux_macos',
     category: 'informatica',
-    keywords: ['sistemas', 'windows', 'linux', 'so', 'distros', 'ubuntu', 'debian', 'servicios', 'terminal', 'bash', 'drivers', 'instalacion', 'configuracion', 'utilidades'],
+    keywords: ['sistemas', 'windows', 'linux', 'macos', 'mac', 'apple', 'so', 'distros', 'ubuntu', 'debian', 'servicios', 'terminal', 'bash', 'drivers', 'instalacion', 'configuracion', 'utilidades', 'redes', 'ssh', 'bios', 'uefi', 'gpu'],
     patterns: [
-      '¿Qué sabes hacer con Windows y Linux?',
+      '¿Qué sabes hacer con Windows, Linux y macOS?',
       'Cuéntame sobre tu experiencia con sistemas',
       '¿Qué experiencia tienes en sistemas operativos?',
       '¿Sabes usar Linux?',
@@ -69,22 +62,18 @@ Tengo total movilidad y disponibilidad para trabajar de forma presencial en **Mu
       '¿Manejas la terminal de Linux?',
       '¿Qué distribuciones de Linux has usado?',
       '¿Cómo trabajas con Windows y Linux?',
+      '¿Usas macOS?',
+      '¿Sabes de redes y SSH?',
       'Instalación y configuración de sistemas',
-      'Gestión de drivers y utilidades avanzadas',
-      '¿Qué utilidades de sistema sueles utilizar?',
       '¿Has administrado entornos Windows o Linux?',
       '¿Tienes experiencia con servidores o sistemas?',
     ],
-    answer: `Tengo una trayectoria continuada y autodidacta administrando y optimizando ambos entornos:
+    answer: `Llevo años moviéndome entre sistemas, casi todo aprendido de forma autodidacta:
 
-- **Windows**:
-  - Realizo instalaciones limpias, particionados avanzados, clonación de discos y optimización fina de rendimiento y servicios.
-  - Resuelvo fallos de dependencias, registros, conflictos de controladores (drivers) e incompatibilidades de software.
-  - Configuro directivas locales, políticas de seguridad básica y copias de seguridad automatizadas.
-- **Linux**:
-  - Utilizo la **terminal (Bash)** con total naturalidad para administración de archivos, gestión de paquetes (APT, Pacman, etc.), permisos chmod/chown y análisis de registros (logs).
-  - Experiencia en distribuciones como **Ubuntu, Debian, Fedora y Arch Linux**, configurando servicios locales y entornos de pruebas.
-  - Automatizo tareas habituales mediante scripts para ganar agilidad y reproducibilidad.`,
+- **Windows**: Configuración, mantenimiento, instalación de software, diagnóstico de problemas y administración cotidiana del sistema.
+- **Linux**: Terminal y herramientas CLI con naturalidad, configuración de entornos, servidores y experimentación con distintas distribuciones y escritorios.
+- **macOS**: Uso y configuración del ecosistema, con herramientas de desarrollo y terminal.
+- **Hardware y redes**: Montaje y mantenimiento de PCs, GPUs, BIOS/UEFI, redes básicas, conectividad y SSH.`,
   },
 
   {
@@ -128,300 +117,152 @@ Tengo total movilidad y disponibilidad para trabajar de forma presencial en **Mu
       'Inspección y reparación de sistemas de seguridad',
       '¿Has hecho prácticas en empresa?',
     ],
-    answer: `Realicé mis prácticas de empresa en **Grupo Security** (Lorca) entre enero y febrero de 2026, interviniendo en sistemas de seguridad reales:
+    answer: `Realicé mis **prácticas profesionales en Grupo Security** (Lorca, 2026), dentro de los sistemas electrónicos de seguridad:
 
-- **Videovigilancia y CCTV**: Revisión y conexionado de cámaras de seguridad (tanto IP sobre cable de red como analógicas coaxiales), direccionamiento en red y comprobación de grabadores (DVR / NVR).
-- **Sistemas de Alarma**: Comprobación de centrales, sustitución y prueba de sensores volumétricos de movimiento, detectores magnéticos de apertura y sirenas.
-- **Control de Accesos**: Mantenimiento preventivo de lectores y módulos de control en instalaciones de clientes particulares y comerciales.
-- **Resolución técnica en campo**: Diagnóstico de averías eléctricas simples, comprobación de continuidades con polímetro y asistencia directa a los técnicos titulares en obra.`,
+- Inspección y reparación de sistemas electrónicos.
+- Mantenimiento y verificación de instalaciones.
+- Revisión de sistemas de **alarma**, **CCTV** y **control de accesos**.
+- Diagnóstico de incidencias y comprobación del funcionamiento.
+- Trabajo técnico dentro de un entorno profesional.
+
+Me permitió trasladar lo que sé de informática y hardware a sistemas reales.`,
   },
 
   {
     id: 'diseno_3d_blender',
     category: 'creativo',
-    keywords: ['3d', 'blender', 'substance', 'modelado', 'render', 'texturizado', 'portadas', 'musica', 'albums', 'singles', 'freelance', 'animacion', 'cycles', 'eevee'],
+    keywords: ['3d', 'blender', 'modelado', 'render', 'materiales', 'iluminacion', 'assets', 'freelance', 'hard', 'surface', 'escenas', 'composicion'],
     patterns: [
       '¿Qué haces en diseño 3D?',
       '¿Manejas Blender?',
       '¿Qué experiencia tienes en 3D?',
-      'Cuéntame sobre tu trabajo como artista 3D',
       '¿Haces modelado y renderizado?',
       '¿Qué programas de 3D utilizas?',
-      '¿Has hecho portadas musicales en 3D?',
-      '¿Usas Substance Painter?',
-      '¿Haces texturizado y animación?',
       'Experiencia como 3D Freelance',
-      '¿Desde cuándo haces 3D?',
-      '¿Qué estilo de 3D trabajas?',
+      '¿Qué es tu portfolio 3D?',
+      '¿Dónde puedo ver tus trabajos 3D?',
+      '¿Qué sabes de hard-surface?',
     ],
-    answer: `Trabajo como **Artista 3D Freelance** desde julio de 2022, desarrollando encargos visuales para proyectos comerciales y musicales:
+    answer: `Llevo años haciendo trabajos y proyectos personales de **diseño 3D** como freelance, con **Blender** como herramienta principal:
 
-- **Blender**: Modelado poligonal, iluminación cinemática, composición de escenas, sombreadores de nodos y renders de alta calidad en motores **Cycles** y **Eevee**.
-- **Adobe Substance 3D**: Pintado y texturizado procedural de materiales PBR realistas (albedo, roughness, metallic, normal maps).
-- **Portadas Musicales y Singles**: He colaborado con artistas y productores diseñando portadas con identidad visual única, cuidando tipografía, color y atmósfera.
-- **Postproducción**: Retoque final, grading y acabado estético en Photoshop y After Effects.`,
+- Modelado 3D y hard-surface, escenas, materiales, iluminación, composición y renderizado.
+- Diseño de assets y recursos para proyectos digitales.
+- Trabajo autónomo completo: interpretar una idea, investigar el resultado, desarrollar el proyecto y entregarlo.
+
+Mi portfolio 3D está en **@jesujopi**. Mi interés por el 3D va muy ligado a los videojuegos y las experiencias digitales.`,
   },
 
   {
     id: 'videojuegos_unity_unreal',
     category: 'creativo',
-    keywords: ['videojuegos', 'unity', 'unreal', 'engine', 'motor', 'gaming', 'juegos', 'shaders', 'assets', 'entornos', 'level', 'design'],
+    keywords: ['videojuegos', 'unity', 'unreal', 'engine', 'motor', 'gaming', 'juegos', 'universidad', 'universitarios', 'estudios', 'interactive', 'interactivos'],
     patterns: [
       '¿Sabes de videojuegos?',
       '¿Usas Unity o Unreal Engine?',
       '¿Qué experiencia tienes con motores de videojuegos?',
       '¿Has desarrollado videojuegos?',
-      '¿Sabes integrar assets 3D en Unreal o Unity?',
+      '¿Qué estudiaste de desarrollo de videojuegos?',
       'Desarrollo de videojuegos',
-      '¿Qué sabes hacer en Unreal Engine?',
-      '¿Qué sabes hacer en Unity?',
-      'Creación de entornos interactivos 3D',
+      '¿Te interesan Unity y Unreal?',
     ],
-    answer: `Tengo formación práctica en motores de tiempo real para videojuegos y entornos interactivos:
+    answer: `Cursé estudios universitarios de **desarrollo de videojuegos** hasta segundo curso, con contacto con el desarrollo y los proyectos interactivos, la programación y la mezcla entre diseño y tecnología.
 
-- **Unreal Engine**: Importación y optimización de mallas y texturas, configuración de iluminación global dinámica con **Lumen**, materiales y montaje de entornos cinemáticos.
-- **Unity**: Integración de assets con texturas PBR, organización jerárquica de prefabs, colisiones y configuración de cámaras y pipelines de renderizado (URP).
-- **Optimización de Assets**: Aplico topología limpia con bajo conteo poligonal cuando el rendimiento lo exige, horneado de mapas de normales (baking) y preparación de modelos para tiempo real.`,
+Me interesan tecnologías como **Unity y Unreal Engine**, y a largo plazo áreas como 3D Art, Environment Art, Technical Art, procedural, IA aplicada a videojuegos y experiencias inmersivas. Es la combinación que más me tira: **3D + programación + tecnología + IA**.`,
   },
 
   {
-    id: 'edicion_video_photoshop_aftereffects',
-    category: 'creativo',
-    keywords: ['photoshop', 'after', 'effects', 'video', 'edicion', 'postproduccion', 'diseno', 'grafico', 'adobe', 'motion', 'composicion'],
-    patterns: [
-      '¿Sabes editar vídeo?',
-      '¿Qué programas de Adobe utilizas?',
-      '¿Manejas Photoshop y After Effects?',
-      '¿Haces diseño gráfico o edición visual?',
-      'Composición y postproducción de imagen y vídeo',
-      '¿Sabes hacer animaciones 2D o motion graphics?',
-      '¿Qué herramientas de diseño gráfico dominas?',
-    ],
-    answer: `Utilizo las herramientas de Adobe como parte esencial de mi flujo visual:
-
-- **Adobe Photoshop**: Retoque avanzado de imagen, fotocomposición por capas, tratamiento de color, máscaras complejas y diseño tipográfico para portadas o material promocional.
-- **Adobe After Effects**: Animación de grafismos (*motion design*), efectos visuales, montaje multipista y generación de bucles animados o visualizers para audio.
-- Integración ágil entre renderizados 3D y postproducción digital para conseguir acabados profesionales.`,
-  },
-
-  {
-    id: 'comercio_supermercado_reposicion',
-    category: 'comercio',
-    keywords: ['comercio', 'supermercado', 'tienda', 'reposicion', 'reponedor', 'caja', 'cajero', 'publico', 'atencion', 'cliente', 'almacen', 'orden', 'limpieza', 'puntualidad'],
-    patterns: [
-      '¿Tienes experiencia en comercio o tiendas?',
-      '¿Te interesa trabajar en un supermercado o tienda?',
-      '¿Puedes trabajar como reponedor o en atención al cliente?',
-      '¿Qué experiencia tienes de cara al público?',
-      'Trabajo en comercio y supermercados',
-      '¿Sabes tratar con clientes?',
-      'Reposición de productos y orden en tienda',
-      '¿Estás dispuesto a trabajar en comercio?',
-      'Habilidades para atención al cliente y ventas',
-      '¿Por qué te gustaría trabajar en comercio o supermercados?',
-    ],
-    answer: `Tengo total disposición, energía y excelentes aptitudes para trabajar en puestos de comercio, tiendas y supermercados:
-
-- **Atención al público y amabilidad**: Mi experiencia tratando directamente con clientes freelance me ha enseñado a escuchar con atención, resolver dudas con simpatía y mantener la calma ante cualquier imprevisto.
-- **Reposición y orden**: Me desenvuelvo con soltura en labores físicas de descarga, control visual de stock, colocación ordenada de productos en estantes y rotación de fechas de caducidad (criterio FIFO).
-- **Cuidado del espacio**: Doy máxima prioridad a mantener pasillos y lineales despejados, limpios y presentables para facilitar la compra del cliente.
-- **Compromiso**: Puntualidad rigurosa, rapidez para aprender la operativa interna de caja o tienda y ganas de sumar en el equipo.`,
-  },
-
-  {
-    id: 'ia_automatizacion',
+    id: 'ia_local_ollama',
     category: 'informatica',
-    keywords: ['ia', 'inteligencia', 'artificial', 'automatizacion', 'scripts', 'productividad', 'modelos', 'llm', 'prompts', 'tecnologia', 'moderna'],
+    keywords: ['ia', 'inteligencia', 'artificial', 'automatizacion', 'ollama', 'local', 'llm', 'modelos', 'rag', 'cuantizacion', 'gpu', 'inferencia', 'multimodal', 'stt', 'tts', 'voz'],
     patterns: [
-      '¿Qué te gusta de la IA y la automatización?',
-      '¿Cómo utilizas la inteligencia artificial?',
-      '¿Qué sabes hacer con IA?',
-      '¿Tienes experiencia en automatización de procesos?',
-      '¿Qué herramientas de IA utilizas en tu día a día?',
-      'Automatización y productividad',
+      '¿Cómo usas la IA local y Ollama?',
+      '¿Qué sabes de inteligencia artificial?',
+      '¿Trabajas con LLMs locales?',
+      '¿Qué es RAG?',
+      '¿Haces inferencia en GPU?',
+      '¿Qué modelos de IA utilizas?',
       '¿Por qué te interesa tanto la inteligencia artificial?',
-      '¿Qué proyectos o flujos de IA has probado?',
+      'Automatización e IA',
     ],
-    answer: `Me apasiona cómo la **inteligencia artificial** y la automatización pueden multiplicar la productividad del día a día:
+    answer: `La IA es mi principal área de investigación. No solo uso modelos: investigo cómo integrarlos en sistemas completos:
 
-- **Aceleración técnica**: Utilizo modelos avanzados como asistentes para depurar código, estructurar documentación, redactar scripts y resolver incidencias de configuración de forma ágil.
-- **Automatización**: Desarrollo scripts para tareas repetitivas de archivos (renombrado masivo, conversiones de formato, procesado de datos en lote y sincronización).
-- **Entornos locales**: Me mantengo al día con modelos abiertos, ejecución local y herramientas de asistencia que optimizan el trabajo técnico sin fricción.`,
+- **LLMs locales** con Ollama, modelos de distintos tamaños, cuantización e inferencia en GPU.
+- **RAG**, memoria persistente y bases de datos vectoriales y gráficas.
+- **Voz**: STT, TTS, VAD y conversación en tiempo real.
+- Modelos multimodales y arquitecturas híbridas local/cloud, corriendo en hardware de consumo.`,
   },
 
   {
-    id: 'estudios_btec_esi',
-    category: 'formacion',
-    keywords: ['estudios', 'formacion', 'btec', 'esi', 'titulacion', 'diploma', 'distinction', 'creative', 'media', 'madre', 'dios', 'eso', 'colegio', 'instituto', 'academica'],
+    id: 'desarrollo_software',
+    category: 'informatica',
+    keywords: ['desarrollo', 'software', 'programacion', 'javascript', 'typescript', 'react', 'vite', 'tailwind', 'html', 'css', 'git', 'github', 'actions', 'terminal', 'cli', 'vscode', 'apis', 'frontend', 'backend', 'interfaces'],
     patterns: [
-      '¿Cuál es tu formación y cómo aprendes?',
+      '¿Qué lenguajes y herramientas de desarrollo usas?',
+      '¿Programas en JavaScript?',
+      '¿Sabes React?',
+      '¿Qué stack de desarrollo manejas?',
+      '¿Usas Git y GitHub?',
+      '¿Haces desarrollo web?',
+      '¿Qué es tu GitHub?',
+      '¿Tienes proyectos de programación?',
+    ],
+    answer: `Aprendo programando proyectos propios. Mi stack habitual:
+
+- **Frontend**: HTML, CSS, JavaScript, TypeScript, React, Vite y Tailwind CSS.
+- **Herramientas**: Git, GitHub, GitHub Actions, Terminal, CLI y VS Code.
+- **Backend / IA**: APIs, Ollama, LLMs, RAG, bases de datos y sistemas de agentes.
+
+Mis experimentos están en **github.com/jesusjodar**. Me importan las interfaces con identidad visual, no solo funcionales.`,
+  },
+
+  {
+    id: 'github_portfolio',
+    category: 'contacto',
+    keywords: ['github', 'jesusjodar', 'repositorios', 'codigo', 'portfolio3d', 'jesujopi', 'portfolio'],
+    patterns: [
+      '¿Tienes GitHub con proyectos?',
+      '¿Dónde está tu GitHub?',
+      '¿Qué hay en tu GitHub?',
+      '¿Qué es tu portfolio 3D?',
+      '¿Dónde veo tus trabajos 3D?',
+    ],
+    answer: `Mi GitHub es **github.com/jesusjodar**: proyectos y experimentos de programación, interfaces, automatización e IA. Es mi cuaderno de aprendizaje en público.
+
+Mi portfolio de trabajos 3D está en **@jesujopi**.`,
+  },
+
+  {
+    id: 'estudios_formacion',
+    category: 'formacion',
+    keywords: ['estudios', 'formacion', 'btec', 'esi', 'titulacion', 'diploma', 'distinction', 'creative', 'media', 'ifct0108', 'microinformaticos', 'montaje', 'universidad', 'videojuegos', 'autodidacta', 'aprender'],
+    patterns: [
+      '¿Cuál es tu formación?',
       '¿Qué has estudiado?',
       '¿Qué títulos tienes?',
       '¿Dónde estudiaste?',
       'Háblame de tu título BTEC',
-      '¿Qué es el BTEC que tienes?',
-      '¿Estudiaste en ESI Murcia?',
-      '¿Tienes la ESO?',
-      '¿Qué nivel de estudios tienes?',
-      '¿Cómo has aprendido informática y 3D?',
+      '¿Qué fue el IFCT0108?',
+      '¿Qué estudiaste de desarrollo de videojuegos?',
       '¿Eres autodidacta?',
+      '¿Cómo aprendes?',
     ],
-    answer: `Mi formación combina titulación oficial reglada con un aprendizaje autodidacta permanente:
+    answer: `Mi formación mezcla titulación oficial con aprendizaje autodidacta permanente:
 
-- **Pearson BTEC International Level 3 Subsidiary Diploma in Creative Media** en la **Escuela Superior Internacional de Diseño de Murcia (ESI)** (2022 - 2023), donde me gradué con **Grade with Distinction** (la calificación británica más alta posible).
-- **Educación Secundaria Obligatoria (ESO)** en el Colegio **Madre de Dios**.
-- **Perfil autodidacta**: Todo lo referente a administración de sistemas (Windows/Linux), montaje de ordenadores, diagnóstico hardware, redes y programación lo he aprendido por iniciativa propia, montando mis propios equipos y resolviendo problemas técnicos reales día a día.`,
-  },
-
-  {
-    id: 'cursos_certificados_sef',
-    category: 'certificados',
-    keywords: ['certificados', 'cursos', 'diplomas', 'sef', 'carm', 'integra', 'formacarm', 'titulos', 'oficiales', 'formacion', 'complementaria'],
-    patterns: [
-      '¿Qué certificados o cursos tienes?',
-      '¿Qué cursos has hecho en el SEF?',
-      '¿Tienes diplomas oficiales?',
-      'Háblame de tus cursos de Formacarm y Fundación Integra',
-      '¿Qué formación complementaria tienes?',
-      'Cursos certificados del Servicio Regional de Empleo',
-      '¿Cuáles son tus diplomas?',
-      '¿Tienes formación acreditada?',
-    ],
-    answer: `He completado **5 cursos oficiales certificados** por el **Servicio Regional de Empleo y Formación (SEF)** y la **Fundación Integra** (a través de Form@carm, finalizados en octubre de 2025):
-
-1. **Prevención de Riesgos Laborales en Oficinas y PVD** (10 h) - Ref: *128_290742_1759822390*
-2. **Técnicas de Comunicación** (15 h) - Ref: *226_290742_1759314018*
-3. **Análisis de Problemas y Toma de Decisiones** (20 h) - Ref: *221_290742_1759391227*
-4. **Contabilidad Básica** (15 h) - Ref: *206_290742_1759826269*
-5. **Presentaciones con Prezi** (15 h) - Ref: *182_290742_1759480500*
-
-Todos cuentan con código oficial de verificación telemática de la Comunidad Autónoma de la Región de Murcia.`,
-  },
-
-  {
-    id: 'curso_prl_oficinas',
-    category: 'certificados',
-    keywords: ['prl', 'riesgos', 'laborales', 'oficinas', 'pvd', 'pantallas', 'ergonomia', 'postura', 'primeros', 'auxilios', 'incendios', 'seguridad'],
-    patterns: [
-      '¿Tienes formación en Prevención de Riesgos Laborales?',
-      '¿Qué sabes de PRL en oficinas y PVD?',
-      'Háblame del curso de Prevención de Riesgos',
-      '¿Qué aprendiste sobre pantallas y ergonomía?',
-      'Prevención de riesgos y seguridad laboral',
-      '¿Sabes de primeros auxilios y emergencias en oficina?',
-      'Higiene postural en puestos informáticos',
-    ],
-    answer: `Completé el curso oficial de **Prevención de Riesgos Laborales en Oficinas y PVD** (10 h, SEF y Fundación Integra):
-
-- **Seguridad en oficinas**: Normas de orden y limpieza, pautas de evacuación ante conatos de incendio y nociones de primeros auxilios.
-- **Pantallas de Visualización de Datos (PVD)**: Ajuste ergonómico del puesto (distancia y altura del monitor, posición del teclado, iluminación adecuada y pausas activas para la vista).
-- **Higiene postural**: Prevención de molestias cervicales, lumbares y síndrome del túnel carpiano mediante posturas correctas frente al ordenador.`,
-  },
-
-  {
-    id: 'curso_comunicacion',
-    category: 'certificados',
-    keywords: ['comunicacion', 'tecnicas', 'verbal', 'no verbal', 'escucha', 'activa', 'feedback', 'telefono', 'llamadas', 'reuniones', 'empresarial'],
-    patterns: [
-      '¿Qué sabes de técnicas de comunicación?',
-      'Háblame de tu formación en comunicación',
-      '¿Cómo te comunicas en el trabajo?',
-      '¿Sabes atender el teléfono profesionalmente?',
-      'Comunicación en la empresa y trabajo en equipo',
-      'Escucha activa y feedback',
-      '¿Qué aprendiste en el curso de Técnicas de Comunicación?',
-    ],
-    answer: `Tengo diploma oficial en **Técnicas de Comunicación** (15 h, SEF y Fundación Integra):
-
-- **Habilidades comunicativas**: Práctica de la escucha activa, interpretación del lenguaje no verbal, claridad en la exposición y retroalimentación (*feedback*) constructiva.
-- **Comunicación corporativa**: Dinámica de reuniones productivas, trabajo en equipo y coordinación entre departamentos.
-- **Protocolos profesionales**: Atención telefónica correcta (saludo formal, toma de notas precisas y despedida profesional), redacción clara de correos y comunicación telemática.`,
-  },
-
-  {
-    id: 'curso_toma_decisiones',
-    category: 'certificados',
-    keywords: ['problemas', 'decisiones', 'toma', 'analisis', 'soluciones', 'resolutivo', 'creatividad', 'grupo'],
-    patterns: [
-      '¿Cómo tomas decisiones o resuelves problemas?',
-      'Háblame del curso de Análisis de Problemas y Toma de Decisiones',
-      '¿Cómo actúas ante un problema inesperado?',
-      'Metodología para solucionar problemas',
-      'Creatividad y toma de decisiones en equipo',
-      '¿Qué aprendiste en el curso de toma de decisiones?',
-    ],
-    answer: `Completé el curso oficial de **Análisis de Problemas y Toma de Decisiones** (20 h, SEF y Fundación Integra):
-
-- **Detección de la causa raíz**: Metodologías para separar las causas de fondo de los síntomas superficiales antes de precipitarse.
-- **Valoración de opciones**: Generación de alternativas creativas, análisis objetivo de riesgos y consecuencias de cada decisión.
-- **Planes de acción**: Puesta en marcha estructurada, seguimiento y capacidad de adaptación cuando las circunstancias cambian.
-- **Decisiones en grupo**: Técnicas para consensuar soluciones en equipo aportando valor sin generar conflictos.`,
-  },
-
-  {
-    id: 'curso_contabilidad',
-    category: 'certificados',
-    keywords: ['contabilidad', 'balance', 'asientos', 'partida', 'doble', 'pgc', 'patrimonio', 'cuentas', 'facturas', 'finanzas'],
-    patterns: [
-      '¿Sabes algo de contabilidad?',
-      'Háblame de tu curso de Contabilidad Básica',
-      '¿Qué conocimientos tienes de cuentas o finanzas?',
-      '¿Conoces la partida doble o el Plan General Contable?',
-      '¿Sabes hacer asientos contables?',
-      '¿Qué viste en el curso de Contabilidad Básica?',
-    ],
-    answer: `Cuento con formación acreditada en **Contabilidad Básica** (15 h, SEF y Fundación Integra):
-
-- **Estructura patrimonial**: Comprensión del activo, pasivo y patrimonio neto de una empresa.
-- **Mecánica contable**: Principio de partida doble, funcionamiento de cuentas, libro diario y registro de operaciones habituales de compras, ventas y cobros.
-- **Plan General Contable**: Estructura de balances de situación y cuentas de pérdidas y ganancias.`,
-  },
-
-  {
-    id: 'curso_prezi',
-    category: 'certificados',
-    keywords: ['prezi', 'presentaciones', 'diapositivas', 'visual', 'interactivo', 'animaciones', 'exposicion'],
-    patterns: [
-      '¿Sabes usar Prezi?',
-      'Háblame de tu curso de Presentaciones con Prezi',
-      '¿Cómo preparas una presentación profesional?',
-      '¿Qué herramientas de presentaciones dominas?',
-      'Presentaciones interactivas en Prezi',
-    ],
-    answer: `Tengo certificación oficial en **Presentaciones con Prezi** (15 h, SEF y Fundación Integra):
-
-- **Narrativa visual**: Estructuración del mensaje mediante mapas conceptuales navegables en lugar de diapositivas estáticas.
-- **Elementos dinámicos**: Inserción de gráficos interactivos, vídeos, iconos vectoriales y animaciones de zoom bien dosificadas para mantener la atención.
-- **Uso profesional**: Creación de presentaciones corporativas compartidas en la nube y optimizadas para exposiciones en público.`,
-  },
-
-  {
-    id: 'idiomas',
-    category: 'habilidades',
-    keywords: ['idiomas', 'ingles', 'espanol', 'lenguas', 'english', 'spanish', 'hablas', 'nivel'],
-    patterns: [
-      '¿Qué idiomas hablas?',
-      '¿Qué nivel de inglés tienes?',
-      '¿Hablas inglés?',
-      '¿Cuál es tu nivel de idiomas?',
-      '¿Puedes comunicarte en inglés?',
-      'Nivel de inglés y español',
-    ],
-    answer: `Mis competencias lingüísticas son:
-
-- **Español**: Lengua materna.
-- **Inglés**: Nivel **avanzado**. Leo con total fluidez manuales técnicos, librerías y documentación en inglés, utilizo software y sistemas íntegramente en inglés, y mi titulación BTEC fue evaluada bajo estándares académicos británicos.`,
+- **Creative Media** (Pearson BTEC International Level 3, con **Distinction**) en la Escuela Superior Internacional de Diseño de Murcia: medios creativos y producción digital.
+- **IFCT0108** (octubre 2025 - enero 2026): montaje y mantenimiento de sistemas microinformáticos, con prácticas profesionales.
+- **Desarrollo de videojuegos**: estudios universitarios hasta segundo curso.
+- **Autodidacta**: sistemas, redes, programación e IA los aprendo investigando documentación, experimentando y construyendo proyectos propios.`,
   },
 
   {
     id: 'habilidades_blandas_personales',
     category: 'habilidades',
-    keywords: ['habilidades', 'blandas', 'soft', 'skills', 'puntualidad', 'actitud', 'responsabilidad', 'orden', 'autonomia', 'equipo', 'trabajo'],
+    keywords: ['habilidades', 'blandas', 'soft', 'skills', 'puntualidad', 'actitud', 'responsabilidad', 'orden', 'autonomia', 'equipo', 'trabajo', 'aprender', 'haciendo'],
     patterns: [
       '¿Cuáles son tus principales habilidades blandas?',
       '¿Cuáles son tus puntos fuertes?',
       '¿Cómo trabajas en equipo?',
-      '¿Eres puntual y responsable?',
+      '¿Cómo trabajas y aprendes?',
       '¿Cómo te adaptas al cambio?',
       'Habilidades personales de Jesús',
       '¿Por qué deberíamos contratarte?',
@@ -429,57 +270,55 @@ Todos cuentan con código oficial de verificación telemática de la Comunidad A
     ],
     answer: `Mis principales fortalezas en el ámbito profesional son:
 
-- **Curiosidad y aprendizaje rápido**: Asimilo herramientas nuevas, normativas internas y flujos de trabajo con gran rapidez y sin necesitar supervisión continua.
-- **Pragmatismo**: Me concentro en resolver incidencias de raíz buscando la solución más limpia y eficaz.
-- **Puntualidad y formalidad**: Máximo respeto por los compromisos, los horarios de llegada y los plazos de entrega pactados.
-- **Orden**: Cuido meticulosamente el orden de mi espacio de trabajo, los componentes y los archivos digitales.
-- **Cercanía y compañerismo**: Mantengo un trato cordial y constructivo con mis compañeros, con predisposición siempre a ayudar y aprender del equipo.`,
+- **Aprender haciendo**: cuando aparece una tecnología nueva, investigo cómo funciona y construyo algo con ella.
+- **Autonomía**: me desenvuelvo solo buscando información técnica, sin necesitar conocer la herramienta de antemano.
+- **Perfil transversal**: paso de Blender a Linux, de un modelo de IA a una interfaz o a un problema de hardware.
+- **Orden y compromiso**: cuido mi espacio, mis archivos y mis plazos, con trato cordial hacia el equipo.`,
   },
 
   {
     id: 'disponibilidad_e_incorporacion',
     category: 'disponibilidad',
-    keywords: ['disponibilidad', 'incorporacion', 'inmediata', 'horario', 'turnos', 'jornada', 'completa', 'manana', 'tarde', 'finde', 'trabajar'],
+    keywords: ['disponibilidad', 'incorporacion', 'inmediata', 'horario', 'trabajar', 'oportunidades', 'buscas', 'empleo'],
     patterns: [
-      '¿Cuándo podrías incorporarte?',
-      '¿Tienes disponibilidad inmediata?',
-      '¿Qué disponibilidad horaria tienes?',
-      '¿Puedes trabajar a jornada completa?',
-      '¿Trabajarías por turnos o fines de semana?',
-      '¿Estás disponible para empezar ya?',
+      '¿Tienes disponibilidad?',
+      '¿Estás disponible para trabajar?',
+      '¿Qué buscas profesionalmente?',
+      '¿Qué te interesa profesionalmente?',
+      '¿Estás abierto a oportunidades?',
       'Disponibilidad para trabajar',
-      '¿Qué tipo de jornada buscas?',
     ],
-    answer: `Tengo **disponibilidad completa e incorporación inmediata**:
+    answer: `Estoy abierto a oportunidades dentro de informática, sistemas, inteligencia artificial, automatización, desarrollo de software y diseño 3D, en un entorno donde pueda aportar y seguir creciendo.
 
-- **Horarios**: Totalmente flexible para adaptarme a jornada completa, media jornada, turnos rotativos, mañanas, tardes o fines de semana.
-- **Fecha de inicio**: Puedo incorporarme desde el momento en que se acuerde, sin compromisos previos pendientes.
-- **Modalidad**: Disponible para trabajo presencial en **Murcia y cercanías**, o bien en formato híbrido y en remoto.`,
+Soy de **Murcia, España**. Escríbeme y hablamos: [jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com).`,
   },
 
   {
     id: 'contacto_contratacion',
     category: 'contacto',
-    keywords: ['contacto', 'contactar', 'email', 'correo', 'telefono', 'movil', 'linkedin', 'hablar', 'entrevista', 'contratar', 'cv', 'curriculum'],
+    keywords: ['contacto', 'contactar', 'email', 'correo', 'telefono', 'movil', 'linkedin', 'github', 'hablar', 'entrevista', 'contratar', 'cv', 'curriculum'],
     patterns: [
       '¿Cómo puedo contactar con Jesús?',
       '¿Cuál es tu teléfono?',
       '¿Cuál es tu correo electrónico?',
       '¿Tienes perfil de LinkedIn?',
+      '¿Tienes GitHub?',
       'Quiero hacerte una entrevista',
       '¿Cómo me pongo en contacto contigo?',
       'Contacto y datos de Jesús Jódar',
       '¿Dónde puedo enviarte una oferta de trabajo?',
       'Datos de contacto',
+      '¿Cómo puedo contactar contigo?',
     ],
-    answer: `Puedes ponerte en contacto conmigo a través de cualquiera de estos canales directos:
+    answer: `Puedes ponerte en contacto conmigo por aquí:
 
-- **Teléfono / WhatsApp**: [623 175 760](tel:+34623175760)
 - **Email**: [jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)
+- **Teléfono**: [623 175 760](tel:+34623175760)
 - **LinkedIn**: [linkedin.com/in/jesujopi](https://linkedin.com/in/jesujopi/)
-- **Ubicación**: Región de Murcia, España
+- **GitHub**: [github.com/jesusjodar](https://github.com/jesusjodar)
+- **Ubicación**: Murcia, España
 
-Estaré encantado de responderte, comentar cualquier detalle de mi perfil o concertar una entrevista.`,
+Estaré encantado de responderte y concertar una entrevista.`,
   },
 
   {
@@ -501,12 +340,13 @@ Estaré encantado de responderte, comentar cualquier detalle de mi perfil o conc
     answer: `¡Hola! Me alegra saludarte. Soy **Jesús Jódar** y este es mi portfolio personal.
 
 Puedes preguntarme sobre cualquiera de mis áreas:
-- **Informática y Sistemas**: Windows, Linux, montaje y reparación de hardware de PC.
-- **Seguridad Electrónica**: Prácticas en Grupo Security (alarmas, cámaras CCTV y accesos).
-- **Diseño 3D y Videojuegos**: Blender, Substance 3D, Unreal Engine y portadas musicales.
-- **Comercio y Tiendas**: Atención al cliente, reposición y orden en tienda.
-- **Formación**: Diploma BTEC con Distinction y mis 5 certificados del SEF.
-- **Disponibilidad y Contacto**: Incorporación inmediata y canales para hablar.
+- **Sistemas**: Windows, Linux, macOS, hardware y redes.
+- **IA**: LLMs locales, Ollama, RAG, agentes y automatización.
+- **Desarrollo**: JavaScript, React, GitHub y herramientas.
+- **3D y videojuegos**: Blender, estudios de desarrollo y Unity/Unreal.
+- **Experiencia**: Grupo Security y freelance 3D.
+- **Formación**: BTEC con Distinction, IFCT0108 y desarrollo de videojuegos.
+- **Contacto**: Email, teléfono, LinkedIn y GitHub.
 
 ¿Sobre qué te apetece que hablemos?`,
   },
@@ -527,20 +367,23 @@ Puedes preguntarme sobre cualquiera de mis áreas:
     ],
     answer: `¡Muchas gracias a ti por tu interés y por dedicar un rato a conocerme!
 
-Si quieres que hablemos sobre cualquier puesto o propuesta laboral, estoy totalmente disponible:
+Si quieres que hablemos sobre cualquier propuesta, estoy totalmente disponible:
 - **Email**: [jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)
 - **Teléfono**: [623 175 760](tel:+34623175760)
-- **LinkedIn**: [linkedin.com/in/jesujopi](https://linkedin.com/in/jesujopi/)`,
+- **LinkedIn**: [linkedin.com/in/jesujopi](https://linkedin.com/in/jesujopi/)
+- **GitHub**: [github.com/jesusjodar](https://github.com/jesusjodar)`,
   },
 ]
 
 export const FALLBACK_ANSWER = `No he podido entender con total precisión tu pregunta, pero puedo contarte cualquier detalle sobre:
 
-- **Sistemas y Hardware**: Mi experiencia con Windows, Linux y montaje de ordenadores.
-- **Seguridad**: Mis prácticas en Grupo Security con alarmas y CCTV.
-- **Diseño 3D**: Modelado en Blender, texturizado en Substance y motores como Unreal.
-- **Comercio**: Reposición, almacén y atención directa a clientes.
-- **Certificados**: Mis 5 diplomas oficiales del SEF y mi titulación BTEC Distinction.
-- **Contacto**: Mi teléfono (**623 175 760**) o correo ([jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)).
+- **Perfil**: Quién soy y a qué me dedico.
+- **Sistemas**: Windows, Linux, macOS, hardware y redes.
+- **IA**: LLMs locales, Ollama, RAG y agentes.
+- **Desarrollo**: JavaScript, React, GitHub y herramientas.
+- **3D y videojuegos**: Blender y desarrollo de videojuegos.
+- **Experiencia**: Grupo Security y freelance 3D.
+- **Formación**: BTEC con Distinction, IFCT0108 y videojuegos.
+- **Contacto**: Mi correo ([jesusjodarpiernas@gmail.com](mailto:jesusjodarpiernas@gmail.com)) o [GitHub](https://github.com/jesusjodar).
 
 ¿Te gustaría que te cuente algo de esto en detalle?`
