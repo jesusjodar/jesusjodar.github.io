@@ -173,6 +173,7 @@ const Grainient = ({
   grainAmount = 0.1,
   grainScale = 2.0,
   grainAnimated = false,
+  animated = false,
   contrast = 1.5,
   gamma = 1.0,
   saturation = 1.0,
@@ -194,6 +195,7 @@ const Grainient = ({
   const frameSkipRef = useRef(frameSkip);
   const timeSpeedRef = useRef(timeSpeed);
   const grainAnimatedRef = useRef(grainAnimated);
+  const animatedRef = useRef(animated);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -263,7 +265,7 @@ const Grainient = ({
     const skip = Math.max(1, Math.floor(frameSkipRef.current ?? 1));
     // Intervalo de throttling independiente del refresco de pantalla (60/120/144Hz)
     const minDelta = skip > 1 ? (1000 / (60 / skip)) - 4 : 0;
-    const staticMode = (timeSpeedRef.current ?? 0) === 0 && !grainAnimatedRef.current;
+    const staticMode = !animatedRef.current || ((timeSpeedRef.current ?? 0) === 0 && !grainAnimatedRef.current);
 
     const setSize = () => {
       const rect = container.getBoundingClientRect();
@@ -352,6 +354,7 @@ const Grainient = ({
     const u = program.uniforms;
 
     timeSpeedRef.current = timeSpeed;
+    animatedRef.current = animated;
     renderScaleRef.current = renderScale;
     frameSkipRef.current = frameSkip;
     grainAnimatedRef.current = grainAnimated;
@@ -395,7 +398,7 @@ const Grainient = ({
     warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
     centerX, centerY, zoom, color1, color2, color3, lightMode,
-    renderScale, frameSkip, outputBrightness, outputContrast
+    renderScale, frameSkip, outputBrightness, outputContrast, animated
   ]);
 
   return (

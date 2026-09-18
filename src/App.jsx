@@ -86,7 +86,8 @@ function App() {
           color2="#3123b8"
           color3="#0e0a38"
           colorBalance={-0.15}
-          timeSpeed={0.3}
+          animated={false}
+          timeSpeed={0}
           warpStrength={1}
           warpFrequency={2}
           warpSpeed={2}
@@ -102,8 +103,7 @@ function App() {
           outputBrightness={0.9}
           outputContrast={1.11}
           zoom={0.9}
-          renderScale={0.6}
-          frameSkip={2}
+          renderScale={1.0}
         />
         <div aria-hidden="true" className="grain-overlay" />
       </div>

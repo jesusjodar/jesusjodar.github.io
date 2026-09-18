@@ -5,7 +5,7 @@
 // se agrupan en el mismo recuadro del carrusel con puntos y flechas de navegación
 // debajo para deslizar entre diapositivas en bucle.
 // El carrusel es un bucle infinito continuo con scroll-snap al centro.
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { getProjectMeta } from '../lib/galleryData.js'
 
 const RAW_MEDIA = Object.entries(
@@ -62,6 +62,9 @@ const KNOWN_RATIOS = {
   4: '9 / 16',
   14: '4 / 5',
 }
+
+// Distancia máxima de elementos con medios cargados alrededor del foco para virtualización
+const VIRTUAL_BUFFER = 4
 
 // Chevrons de navegación sin redondeo con trazo de 4px idéntico al outline
 function ChevronLeft() {
@@ -135,10 +138,11 @@ function SlideVideo({ src, active, onLoadedMetadata }) {
   )
 }
 
-function CarouselItem({
+const CarouselItem = memo(function CarouselItem({
   group,
   index,
   isFocused,
+  isVirtual,
   activeIndex,
   onSelectSlide,
   onPrevSlide,
@@ -158,6 +162,10 @@ function CarouselItem({
         if (!isFocused) onFocusItem(index)
       }}
       className="flex shrink-0 snap-center flex-col items-center select-none"
+      style={{
+        contentVisibility: 'auto',
+        containIntrinsicSize: `auto ${defaultRatio === '9 / 16' ? '180px' : defaultRatio === '4 / 5' ? '256px' : '320px'} 320px`,
+      }}
     >
       <div
         aria-label={`Grupo ${group.id}: diapositiva ${activeIndex + 1} de ${group.slides.length}`}
@@ -166,12 +174,13 @@ function CarouselItem({
             ? 'scale-100 border-white bg-white/10 shadow-[0_0_30px_rgba(255,255,255,0.22)]'
             : 'scale-90 cursor-pointer border-white/30 bg-white/5 hover:border-white/60'
         }`}
-        style={{ aspectRatio }}
+        style={{ aspectRatio: isVirtual ? defaultRatio : aspectRatio }}
       >
-        <div
-          className="flex h-full w-full transition-transform duration-300 ease-out motion-reduce:transition-none"
-          style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-        >
+        {!isVirtual ? (
+          <div
+            className="flex h-full w-full transition-transform duration-300 ease-out motion-reduce:transition-none"
+            style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+          >
           {group.slides.map((slide, i) => (
             <div
               key={slide.file}
@@ -221,7 +230,10 @@ function CarouselItem({
               )}
             </div>
           ))}
-        </div>
+          </div>
+        ) : (
+          <div className="h-full w-full bg-white/[0.02]" />
+        )}
       </div>
 
       {/* Controles bajo el elemento del carousel (flechas + puntos en bucle) */}
@@ -230,7 +242,7 @@ function CarouselItem({
           isFocused ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
-        {hasMultiple && (
+        {!isVirtual && hasMultiple && (
           <>
             <button
               type="button"
@@ -292,7 +304,7 @@ function CarouselItem({
       </div>
     </div>
   )
-}
+})
 
 export default function Carousel({ onFocusChange }) {
   const stripRef = useRef(null)
@@ -483,12 +495,15 @@ export default function Carousel({ onFocusChange }) {
         className="no-scrollbar pointer-events-auto w-full overflow-x-auto snap-x snap-mandatory focus:outline-none [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
       >
         <div className="gallery-scope mx-auto flex w-max max-w-none items-center gap-3 pb-4 sm:gap-6">
-          {LOOP_ITEMS.map((item, index) => (
-            <CarouselItem
-              key={item.uniqueKey}
-              group={item}
-              index={index}
-              isFocused={index === focusedIndex}
+          {LOOP_ITEMS.map((item, index) => {
+            const isVirtual = Math.abs(index - focusedIndex) > VIRTUAL_BUFFER
+            return (
+              <CarouselItem
+                key={item.uniqueKey}
+                group={item}
+                index={index}
+                isFocused={index === focusedIndex}
+                isVirtual={isVirtual}
               activeIndex={slideMap[item.id] || 0}
               onSelectSlide={handleSelectSlide}
               onPrevSlide={handlePrevSlide}
@@ -498,7 +513,8 @@ export default function Carousel({ onFocusChange }) {
                 itemRefs.current[index] = el
               }}
             />
-          ))}
+            )
+          })}
         </div>
       </div>
 
