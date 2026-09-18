@@ -61,7 +61,7 @@ export default function FolderFrame({
           }
           aria-expanded={chatOpen}
           onClick={onChevClick}
-          className="pointer-events-auto absolute flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          className="pointer-events-auto absolute flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full outline-none select-none"
           style={{ left: 0, top: 0, width: 44, height: 44, touchAction: 'manipulation' }}
         />
         <TopHint hintRef={topHintRef} collapsed={chatOpen} />

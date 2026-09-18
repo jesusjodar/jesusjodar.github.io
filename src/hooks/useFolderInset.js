@@ -181,9 +181,11 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
 
     // Progreso de colapso [0..1]
     const progress = maxInsetNow > 0 ? Math.min(1, Math.max(0, topInset / maxInsetNow)) : 0
-    // Desenfoque del interior del marco: de 0px (expandido) a 28px (colapsado)
+    // Desenfoque del interior del marco: de 0px (expandido) a 22px
+    // (colapsado). Topado por coste: el gaussiano a pantalla completa es
+    // el segundo primitivo más caro tras el dilate del mosaico.
     if (blurRef.current) {
-      blurRef.current.setAttribute('stdDeviation', (progress * 28).toFixed(1))
+      blurRef.current.setAttribute('stdDeviation', (progress * 22).toFixed(1))
     }
     // Opacidad del efecto pixel exterior: de 0.5 (expandido) a 0.0 (colapsado)
     if (pixelFadeRef.current) {

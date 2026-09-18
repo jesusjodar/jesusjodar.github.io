@@ -148,7 +148,7 @@ function App() {
             />
             <feComposite in="pixFade" in2="mask" operator="out" result="pixOut" />
             {/* Blur dinámico del interior del marco: al colapsar se desenfoca
-                progresivamente hasta 28px, y al expandir vuelve a 0px (nítido). */}
+                progresivamente hasta 22px, y al expandir vuelve a 0px (nítido). */}
             <feGaussianBlur
               ref={blurRef}
               in="SourceGraphic"
@@ -205,6 +205,7 @@ function App() {
       >
         <CustomScrollbar
           scrollContainerRef={scrollContainerRef}
+          contentRef={contentWrapRef}
           atMinHeight={atMinHeight}
           insetAnimating={insetAnimating}
         >

@@ -128,6 +128,15 @@ noscript + #root,
   font-family: 'Libre Barcode 39 Text', cursive;
 }
 
+/* Cursor propio (mano pixelada) en lugar de todos los punteros */
+html,
+body,
+*,
+*::before,
+*::after {
+  cursor: url(/link-select.cur), pointer;
+}
+
 /* Oculta la scrollbar nativa en toda la web sin perder la funcionalidad de scroll */
 html,
 body,

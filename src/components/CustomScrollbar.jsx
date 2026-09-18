@@ -15,6 +15,7 @@ const PORTFOLIO_TRACK_CLASS =
 
 export default function CustomScrollbar({
   scrollContainerRef,
+  contentRef = null,
   atMinHeight,
   insetAnimating,
   children,
@@ -30,10 +31,15 @@ export default function CustomScrollbar({
   const [hasScroll, setHasScroll] = useState(true)
   const hasScrollRef = useRef(true)
   const atMinRef = useRef(atMinHeight)
+  const insetAnimatingRef = useRef(insetAnimating)
 
   useEffect(() => {
     atMinRef.current = atMinHeight
   }, [atMinHeight])
+
+  useEffect(() => {
+    insetAnimatingRef.current = insetAnimating
+  }, [insetAnimating])
 
   useEffect(() => {
     const track = trackRef.current
@@ -63,6 +69,7 @@ export default function CustomScrollbar({
     let shownY = prevY
     let stretch = 0
     let dir = 0
+    let fastMode = false
     let raf = 0
     let idleFrames = 0
     let running = true
@@ -72,7 +79,9 @@ export default function CustomScrollbar({
     const tick = () => {
       if (!running) return
       if (document.hidden || atMinRef.current) {
-        raf = requestAnimationFrame(tick)
+        // Sin reprogramar: parado total hasta que wake() (scroll, resize,
+        // visibilidad o atMinHeight) lo reanude. Antes giraba en vacío.
+        running = false
         return
       }
       const now = performance.now()
@@ -92,6 +101,23 @@ export default function CustomScrollbar({
       if (scrollable !== hasScrollRef.current) {
         hasScrollRef.current = scrollable
         setHasScroll(scrollable)
+      }
+      // En scroll de velocidad alta se desactivan del todo los efectos
+      // (pixelado, fade y opacidad: filter none) y se restauran al aflojar.
+      // Entra tarde (>1.8) y sale pronto (<1.2), sin aguantar; con filtro
+      // completo durante la animación del marco.
+      const wrap = contentRef?.current
+      if (wrap && maxScroll > 0) {
+        if (!fastMode && !insetAnimatingRef.current && stretch > 1.8) {
+          fastMode = true
+          wrap.style.filter = 'none'
+        } else if (
+          fastMode &&
+          (insetAnimatingRef.current || stretch < 1.2)
+        ) {
+          fastMode = false
+          wrap.style.filter = ''
+        }
       }
       const H = maxScroll <= 0 ? trackH : thumbH * (1 + stretch)
       const ratio =
@@ -285,7 +311,7 @@ export default function CustomScrollbar({
       clearTimeout(pulse)
       if (dragging) stopDrag()
     }
-  }, [scrollContainerRef])
+  }, [scrollContainerRef, contentRef, atMinHeight])
 
   return (
     <>
