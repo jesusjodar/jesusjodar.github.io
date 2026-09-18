@@ -65,13 +65,12 @@ function App() {
 
   return (
     <main className="h-screen supports-[height:100dvh]:h-dvh overflow-hidden bg-[#0e0a38] font-sans text-white antialiased">
-      {/* Fondo Grainient azul violáceo/magenta con ajustes de brillo/contraste predefinidos.
-          El grano sale del shader y se pinta estático y nítido encima con .grain-overlay. */}
+      {/* Fondo Grainient azul violáceo/magenta. El grado final
+          (brightness/contrast) va en uniforms del shader y en
+          .grain-overlay: sin filter en el wrapper para no refiltrar el
+          canvas animado en cada frame. */}
       <div
         aria-hidden="true"
-        style={{
-          filter: 'brightness(90%) contrast(111%)',
-        }}
         className="fixed inset-0 z-0"
       >
         <Grainient
@@ -92,6 +91,8 @@ function App() {
           grainAnimated={false}
           contrast={1.45}
           saturation={1.5}
+          outputBrightness={0.9}
+          outputContrast={1.11}
           zoom={0.9}
           renderScale={0.75}
           frameSkip={2}

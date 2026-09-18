@@ -121,6 +121,22 @@ export default function SiteFooter() {
       return () => ro.disconnect()
     }
 
+    // Fotogramas precalculados de un periodo completo (2π): por frame solo
+    // se hace setAttribute desde el array, sin construir strings ni basura
+    // para el GC. Al depender solo de la geometría, se re-hornea al cambiar
+    // el tamaño; la estrella sigue viva (un setAttribute barato).
+    const FRAMES = 144
+    const TWO_PI = Math.PI * 2
+    let baked = []
+    const bake = () => {
+      measure()
+      baked = []
+      for (let k = 0; k < FRAMES; k++) {
+        baked.push(buildD((k / FRAMES) * TWO_PI))
+      }
+    }
+    bake()
+
     let raf = 0
     let visible = true
     const onVis = () => {
@@ -128,16 +144,20 @@ export default function SiteFooter() {
       if (visible) raf = requestAnimationFrame(render)
       else cancelAnimationFrame(raf)
     }
+    const t0 = performance.now()
     const render = (t) => {
       if (!visible) return
-      const phase = (t / 1000) * 2.2
-      path.setAttribute('d', buildD(phase))
+      // Onda horneada (cuantizada) + estrella continua: el giro rápido de
+      // la estrella (×14) necesita fase continua para no ir a saltos.
+      const phase = ((t - t0) / 1000) * 2.2
+      const idx = Math.floor((phase / TWO_PI) * FRAMES) % FRAMES
+      path.setAttribute('d', baked[idx])
       placeStar(phase)
       raf = requestAnimationFrame(render)
     }
     raf = requestAnimationFrame(render)
 
-    const ro = new ResizeObserver(measure)
+    const ro = new ResizeObserver(bake)
     ro.observe(el)
     document.addEventListener('visibilitychange', onVis)
     return () => {

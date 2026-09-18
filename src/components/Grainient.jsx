@@ -43,6 +43,8 @@ uniform float uGrainAnimated;
 uniform float uContrast;
 uniform float uGamma;
 uniform float uSaturation;
+uniform float uOutputBrightness;
+uniform float uOutputContrast;
 uniform vec2 uCenterOffset;
 uniform float uZoom;
 uniform vec3 uColor1;
@@ -144,6 +146,12 @@ void main() {
     col = mix(vec3(1.0), clamp(hue * 0.58 + col * 0.18, 0.0, 1.0), coverage);
   }
 
+  // Grado de salida (sustituye al filter CSS brightness+contrast que
+  // llevaba el wrapper: evita refiltrar el canvas animado en cada frame).
+  // Orden idéntico al anterior: saturación, clamp, brillo, contraste.
+  col *= uOutputBrightness;
+  col = (col - 0.5) * uOutputContrast + 0.5;
+
   fragColor = vec4(col, 1.0);
 }
 `;
@@ -168,6 +176,8 @@ const Grainient = ({
   contrast = 1.5,
   gamma = 1.0,
   saturation = 1.0,
+  outputBrightness = 1.0,
+  outputContrast = 1.0,
   centerX = 0.0,
   centerY = 0.0,
   zoom = 0.9,
@@ -235,6 +245,8 @@ const Grainient = ({
         uContrast:       { value: 1.5 },
         uGamma:          { value: 1.0 },
         uSaturation:     { value: 1.0 },
+        uOutputBrightness: { value: 1.0 },
+        uOutputContrast:   { value: 1.0 },
         uCenterOffset:   { value: new Float32Array([0, 0]) },
         uZoom:           { value: 0.9 },
         uColor1:         { value: new Float32Array([1, 1, 1]) },
@@ -360,6 +372,8 @@ const Grainient = ({
     u.uContrast.value = contrast;
     u.uGamma.value = gamma;
     u.uSaturation.value = saturation;
+    u.uOutputBrightness.value = outputBrightness;
+    u.uOutputContrast.value = outputContrast;
     u.uCenterOffset.value[0] = centerX;
     u.uCenterOffset.value[1] = centerY;
     u.uZoom.value = zoom;
@@ -381,7 +395,7 @@ const Grainient = ({
     warpAmplitude, blendAngle, blendSoftness, rotationAmount, noiseScale,
     grainAmount, grainScale, grainAnimated, contrast, gamma, saturation,
     centerX, centerY, zoom, color1, color2, color3, lightMode,
-    renderScale, frameSkip
+    renderScale, frameSkip, outputBrightness, outputContrast
   ]);
 
   return (

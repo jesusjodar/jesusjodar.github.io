@@ -1,13 +1,14 @@
-import { memo, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { marked } from 'marked'
-import DOMPurify from 'dompurify'
+import { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   faLinkedinIn,
   faWhatsapp,
   faXTwitter,
 } from '@fortawesome/free-brands-svg-icons'
 import { SKILLS } from '../lib/portfolio.js'
-import POSTS from '../lib/posts.json'
+
+// El blog (con marked + DOMPurify) carga en diferido para no engordar el
+// bundle inicial; se precarga en tiempo libre más abajo.
+const BlogPlaceholder = lazy(() => import('./BlogPlaceholder.jsx'))
 
 // Código de barras Code 39 "*26*" dibujado a mano como SVG (solo layout
 // de escritorio): 9 elementos por carácter (1 = fino, 3 = grueso) con
@@ -51,19 +52,6 @@ function Barcode26() {
     </svg>
   )
 }
-
-// Misma config de Markdown que el chat (el chunk del chat puede no haberse
-// cargado al ver el blog, así que se configura aquí también).
-marked.use({
-  breaks: true,
-  gfm: true,
-  renderer: {
-    link({ href, title, text }) {
-      const titleAttr = title ? ` title="${title}"` : ''
-      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`
-    },
-  },
-})
 
 // Botón cuadrado blanco con el icono troquelado (se ve el fondo a través).
 // Las marcas salen de Font Awesome (viewBox propio) y se encajan centradas
@@ -227,6 +215,18 @@ function CvContent({ tab, onTabChange }) {
     onTabChange(next)
     document.getElementById('portfolio-scroll')?.scrollTo({ top: 0 })
   }
+
+  // Precarga del chunk del blog en tiempo libre: invisible al usuario,
+  // listo para el primer clic en BLOG.
+  useEffect(() => {
+    const prefetch = () => import('./BlogPlaceholder.jsx')
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(prefetch, { timeout: 3000 })
+      return () => window.cancelIdleCallback?.(id)
+    }
+    const id = window.setTimeout(prefetch, 1500)
+    return () => window.clearTimeout(id)
+  }, [])
   return (
     <div className="mx-auto max-w-5xl text-left">
       <div className="mb-8 flex flex-wrap gap-3">
@@ -249,7 +249,13 @@ function CvContent({ tab, onTabChange }) {
           onClick={() => switchTab('blog')}
         />
       </div>
-      {tab === 'cv' ? <CvMain /> : <BlogPlaceholder />}
+      {tab === 'cv' ? (
+        <CvMain />
+      ) : (
+        <Suspense fallback={null}>
+          <BlogPlaceholder />
+        </Suspense>
+      )}
     </div>
   )
 }
@@ -626,80 +632,6 @@ function CvMain() {
         </ul>
       </section>
     </>
-  )
-}
-
-// Contenido provisional del blog con la misma estética de textos del CV.
-// Los posts salen de posts/*.md (scripts/collect-posts.js).
-function formatPostDate(iso) {
-  return new Date(iso).toLocaleDateString('es-ES', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-function BlogPost({ post }) {
-  const html = useMemo(() => {
-    if (!post.body) return ''
-    const rawHtml = marked.parse(post.body)
-    if (typeof window !== 'undefined' && DOMPurify?.sanitize) {
-      return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] })
-    }
-    return rawHtml
-  }, [post.body])
-
-  const edited = post.edits > 0
-  return (
-    <article>
-      <h3 className="font-display text-2xl">{post.title}</h3>
-      <p className="mt-2 text-sm text-white/60">
-        {formatPostDate(post.created)}
-        {edited
-          ? ` · Editado ${post.edits} ${post.edits === 1 ? 'vez' : 'veces'}`
-          : ''}
-      </p>
-      {html ? (
-        <div
-          className="chat-markdown mt-4 text-base leading-relaxed text-white"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      ) : null}
-    </article>
-  )
-}
-
-function BlogPlaceholder() {
-  return (
-    <div>
-      <h2 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">Blog</h2>
-      <p className="mt-4 text-base leading-relaxed text-white">
-        Aquí iré publicando ideas, proyectos y cualquier tema que me parezca
-        interesante o me ronde por la cabeza: sistemas, inteligencia
-        artificial, automatización y todo lo que vaya aprendiendo por el camino.
-      </p>
-      {POSTS.length > 0 ? (
-        <div className="mt-12 space-y-12">
-          {POSTS.map((post) => (
-            <BlogPost key={post.slug} post={post} />
-          ))}
-        </div>
-      ) : (
-        <p className="mt-12 text-base text-white/60">
-          Aún no hay entradas. Estoy escribiendo las primeras.
-        </p>
-      )}
-      <div className="mt-16 flex items-center gap-4">
-        <div aria-hidden="true" className="h-1 flex-1 bg-white/30" />
-        <p
-          className="font-display text-lg tracking-wider"
-          style={{ color: 'rgba(255,255,255,0.4)' }}
-        >
-          Has llegado al final
-        </p>
-        <div aria-hidden="true" className="h-1 flex-1 bg-white/30" />
-      </div>
-    </div>
   )
 }
 
