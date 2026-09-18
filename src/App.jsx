@@ -22,6 +22,9 @@ function App() {
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ??
       false,
   )
+  // Pestaña CV/Blog (vive en CvContent, pero App la necesita para mostrar
+  // el fondo de ondas del blog tras el contenido).
+  const [tab, setTab] = useState('cv')
 
   useEffect(() => {
     if (introDone) return
@@ -204,7 +207,7 @@ function App() {
           atMinHeight={atMinHeight}
           insetAnimating={insetAnimating}
         >
-          <CvContent />
+          <CvContent tab={tab} onTabChange={setTab} />
         </CustomScrollbar>
       </div>
       <SiteFooter />

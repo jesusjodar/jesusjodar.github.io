@@ -1,5 +1,21 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import { SKILLS } from '../lib/portfolio.js'
+import POSTS from '../lib/posts.json'
+
+// Misma config de Markdown que el chat (el chunk del chat puede no haberse
+// cargado al ver el blog, así que se configura aquí también).
+marked.use({
+  breaks: true,
+  gfm: true,
+  renderer: {
+    link({ href, title, text }) {
+      const titleAttr = title ? ` title="${title}"` : ''
+      return `<a href="${href}"${titleAttr} target="_blank" rel="noopener noreferrer">${text}</a>`
+    },
+  },
+})
 
 // Código de barras Code 39 "*26*" dibujado a mano como SVG (ISO/IEC 16388,
 // patrones de BWIPP): cada carácter son 9 elementos barra/espacio alternos
@@ -50,46 +66,69 @@ function Barcode26() {
   )
 }
 
-// Pestaña decorativa con texto troquelado: rectángulo blanco relleno cuya
-// máscara recorta las letras, dejando ver el fondo a través del texto.
-function CutoutTab({ maskId, label, width, textLength }) {
+// Pestaña con texto troquelado: rectángulo relleno cuya máscara recorta
+// las letras, dejando ver el fondo a través del texto. La pestaña activa
+// va en neón con el texto en negro sólido; las demás en blanco troquelado.
+function CutoutTab({ maskId, label, width, textLength, active, onClick }) {
+  const textProps = {
+    x: '50%',
+    y: '50%',
+    textAnchor: 'middle',
+    dominantBaseline: 'central',
+    fontFamily: "'Bebas Neue', 'Space Grotesk Variable', sans-serif",
+    fontSize: 36,
+    letterSpacing: 6,
+    textLength,
+    lengthAdjust: 'spacing',
+    fill: '#000',
+    stroke: '#000',
+    strokeWidth: 2,
+    paintOrder: 'stroke',
+  }
   return (
-    <svg
-      viewBox={`0 0 ${width} 56`}
-      className="block h-10 w-auto"
-      focusable="false"
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      aria-label={label === 'CV' ? 'Ver currículum' : 'Ver blog'}
+      className="cursor-pointer transition-transform duration-150 hover:scale-[1.04] active:scale-95"
     >
-      <defs>
-        <mask id={maskId}>
-          <rect x={0} y={0} width={width} height={56} fill="#fff" />
-          <text
-            x="50%"
-            y="50%"
-            textAnchor="middle"
-            dominantBaseline="central"
-            fontFamily="'Bebas Neue', 'Space Grotesk Variable', sans-serif"
-            fontSize={36}
-            letterSpacing={6}
-            textLength={textLength}
-            lengthAdjust="spacing"
-            fill="#000"
-            stroke="#000"
-            strokeWidth={2}
-            paintOrder="stroke"
-          >
-            {label}
-          </text>
-        </mask>
-      </defs>
-      <rect
-        x={0}
-        y={0}
-        width={width}
-        height={56}
-        fill="#fff"
-        mask={`url(#${maskId})`}
-      />
-    </svg>
+      <svg
+        viewBox={`0 0 ${width} 56`}
+        className="block h-10 w-auto"
+        aria-hidden="true"
+      >
+        {active ? (
+          <>
+            <rect
+              x={0}
+              y={0}
+              width={width}
+              height={56}
+              fill="var(--color-neon)"
+            />
+            <text {...textProps}>{label}</text>
+          </>
+        ) : (
+          <>
+            <defs>
+              <mask id={maskId}>
+                <rect x={0} y={0} width={width} height={56} fill="#fff" />
+                <text {...textProps}>{label}</text>
+              </mask>
+            </defs>
+            <rect
+              x={0}
+              y={0}
+              width={width}
+              height={56}
+              fill="#fff"
+              mask={`url(#${maskId})`}
+            />
+          </>
+        )}
+      </svg>
+    </button>
   )
 }
 
@@ -97,15 +136,43 @@ function CutoutTab({ maskId, label, width, textLength }) {
 // tinte neón y derretido pixelado del borde inferior se aplicaron offline
 // desde la foto original con scripts/prerender-pfp.py, así que en runtime
 // es un simple <img> sin procesado ni capas de fusión.
-function CvContent() {
+function CvContent({ tab, onTabChange }) {
+  const switchTab = (next) => {
+    if (next === tab) return
+    onTabChange(next)
+    document.getElementById('portfolio-scroll')?.scrollTo({ top: 0 })
+  }
   return (
     <div className="max-w-5xl text-left">
-      <div aria-hidden="true" className="mb-8 flex flex-wrap gap-3">
+      <div className="mb-8 flex flex-wrap gap-3">
         {/* textLength = avance medido + interletraje interno, sin el
             espaciado final que descentraría el anclaje medio. */}
-        <CutoutTab maskId="cutout-cv" label="CV" width={110} textLength={34} />
-        <CutoutTab maskId="cutout-blog" label="BLOG" width={110} textLength={72} />
+        <CutoutTab
+          maskId="cutout-cv"
+          label="CV"
+          width={110}
+          textLength={34}
+          active={tab === 'cv'}
+          onClick={() => switchTab('cv')}
+        />
+        <CutoutTab
+          maskId="cutout-blog"
+          label="BLOG"
+          width={110}
+          textLength={72}
+          active={tab === 'blog'}
+          onClick={() => switchTab('blog')}
+        />
       </div>
+      {tab === 'cv' ? <CvMain /> : <BlogPlaceholder />}
+    </div>
+  )
+}
+
+// Cuerpo del currículum (foto, titular y secciones).
+function CvMain() {
+  return (
+    <>
       <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
         <div className="relative h-24 w-24 shrink-0 self-start aspect-square sm:h-56 sm:w-auto lg:h-64">
           <img
@@ -215,6 +282,79 @@ function CvContent() {
           <li className="text-white">Murcia, España</li>
         </ul>
       </section>
+    </>
+  )
+}
+
+// Contenido provisional del blog con la misma estética de textos del CV.
+// Los posts salen de posts/*.md (scripts/collect-posts.js).
+function formatPostDate(iso) {
+  return new Date(iso).toLocaleDateString('es-ES', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
+function BlogPost({ post }) {
+  const html = useMemo(() => {
+    if (!post.body) return ''
+    const rawHtml = marked.parse(post.body)
+    if (typeof window !== 'undefined' && DOMPurify?.sanitize) {
+      return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target', 'rel'] })
+    }
+    return rawHtml
+  }, [post.body])
+
+  const edited =
+    Date.parse(post.updated) - Date.parse(post.created) > 60000
+  return (
+    <article>
+      <h3 className="font-display text-2xl">{post.title}</h3>
+      <p className="mt-2 text-sm text-white/60">
+        {formatPostDate(post.created)}
+        {edited ? ` · Actualizado el ${formatPostDate(post.updated)}` : ''}
+      </p>
+      {html ? (
+        <div
+          className="chat-markdown mt-4 text-base leading-relaxed text-white"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      ) : null}
+    </article>
+  )
+}
+
+function BlogPlaceholder() {
+  return (
+    <div>
+      <h2 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">Blog</h2>
+      <p className="mt-4 text-base leading-relaxed text-white">
+        Aquí iré publicando ideas, proyectos y cualquier tema que me parezca
+        interesante o me ronde por la cabeza: sistemas, inteligencia
+        artificial, automatización y todo lo que vaya aprendiendo por el camino.
+      </p>
+      {POSTS.length > 0 ? (
+        <div className="mt-12 space-y-12">
+          {POSTS.map((post) => (
+            <BlogPost key={post.slug} post={post} />
+          ))}
+        </div>
+      ) : (
+        <p className="mt-12 text-base text-white/60">
+          Aún no hay entradas. Estoy escribiendo las primeras.
+        </p>
+      )}
+      <div className="mt-16 flex items-center gap-4">
+        <div aria-hidden="true" className="h-1 flex-1 bg-white/30" />
+        <p
+          className="font-display text-lg tracking-wider"
+          style={{ color: 'rgba(255,255,255,0.4)' }}
+        >
+          Has llegado al final
+        </p>
+        <div aria-hidden="true" className="h-1 flex-1 bg-white/30" />
+      </div>
     </div>
   )
 }

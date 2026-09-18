@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 tmp-chatdbg
+# Generado por scripts/collect-posts.js en predev/prebuild
+src/lib/posts.json
 
 # Editor directories and files
 .vscode/*
