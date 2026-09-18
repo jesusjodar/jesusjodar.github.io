@@ -10,6 +10,11 @@ import { INTRO_MS } from './lib/portfolio.js'
 // El panel de chat está oculto hasta que se colapsa la carpeta: chunk
 // aparte + prefetch en tiempo libre.
 const ChatPanel = lazy(() => import('./components/ChatPanel.jsx'))
+// La galería vive en una capa fija a sangre completa (fuera del scroll y
+// del filtro de pixelado) para poder desbordar horizontalmente sin recortes.
+const GalleryPlaceholder = lazy(
+  () => import('./components/GalleryPlaceholder.jsx'),
+)
 
 // Orquestador del layout: posee intro + contenedor de scroll y compone
 // los independientes ChatPanel (preguntas), FolderFrame (outline),
@@ -32,10 +37,14 @@ function App() {
     return () => window.clearTimeout(id)
   }, [introDone])
 
-  // Precarga del chunk del chat en tiempo libre: invisible al usuario,
-  // listo para cuando colapse la carpeta.
+  // Precarga de los chunks del chat y la galería en tiempo libre:
+  // invisible al usuario, listos para cuando colapse la carpeta o se
+  // abra la pestaña IMG.
   useEffect(() => {
-    const prefetch = () => import('./components/ChatPanel.jsx')
+    const prefetch = () => {
+      import('./components/ChatPanel.jsx')
+      import('./components/GalleryPlaceholder.jsx')
+    }
     if ('requestIdleCallback' in window) {
       const id = window.requestIdleCallback(prefetch, { timeout: 3000 })
       return () => window.cancelIdleCallback?.(id)
@@ -208,10 +217,27 @@ function App() {
           contentRef={contentWrapRef}
           atMinHeight={atMinHeight}
           insetAnimating={insetAnimating}
+          trackHidden={tab === 'img'}
         >
           <CvContent tab={tab} onTabChange={setTab} />
         </CustomScrollbar>
       </div>
+      {/* Capa a sangre completa para IMG: fuera del scroll y del filtro,
+          el único límite es el viewport. El pt replica el del scroll
+          (ver CustomScrollbar) + pestañas (h-10 + mb-8 = 4.5rem) + aire
+          de la galería (2.5rem). z-20: por encima del contenido (z-10)
+          para que los gestos lleguen a la tira, por debajo del marco,
+          el chat y el footer. El fundido lateral vive en la propia tira
+          (máscara en GalleryPlaceholder), no como overlay. */}
+      {tab === 'img' && (
+        <div className="pointer-events-none fixed inset-x-0 top-0 z-20">
+          <div className="pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+1.5rem+7rem)] sm:pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+3.5rem+7rem)]">
+            <Suspense fallback={null}>
+              <GalleryPlaceholder />
+            </Suspense>
+          </div>
+        </div>
+      )}
       <SiteFooter />
     </main>
   )

@@ -18,6 +18,7 @@ export default function CustomScrollbar({
   contentRef = null,
   atMinHeight,
   insetAnimating,
+  trackHidden = false,
   children,
   id = 'portfolio-scroll',
   containerClassName = PORTFOLIO_CONTAINER_CLASS,
@@ -332,9 +333,9 @@ export default function CustomScrollbar({
       aria-valuemax={100}
       aria-valuenow={0}
       tabIndex={0}
-      aria-hidden={atMinHeight || !hasScroll ? true : undefined}
+      aria-hidden={atMinHeight || trackHidden || !hasScroll ? true : undefined}
       style={
-        atMinHeight || insetAnimating || !hasScroll
+        atMinHeight || insetAnimating || trackHidden || !hasScroll
           ? { opacity: 0, pointerEvents: 'none' }
           : undefined
       }

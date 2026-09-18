@@ -7,7 +7,8 @@ import {
 import { SKILLS } from '../lib/portfolio.js'
 
 // El blog (con marked + DOMPurify) carga en diferido para no engordar el
-// bundle inicial; se precarga en tiempo libre más abajo.
+// bundle inicial; se precarga en tiempo libre más abajo. La galería vive
+// en App (capa fija a sangre completa) y se precarga allí.
 const BlogPlaceholder = lazy(() => import('./BlogPlaceholder.jsx'))
 
 // Código de barras Code 39 "*26*" dibujado a mano como SVG (solo layout
@@ -163,7 +164,13 @@ function CutoutTab({ maskId, label, width, textLength, active, onClick }) {
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      aria-label={label === 'CV' ? 'Ver currículum' : 'Ver blog'}
+      aria-label={
+        label === 'CV'
+          ? 'Ver currículum'
+          : label === 'BLOG'
+            ? 'Ver blog'
+            : 'Ver img'
+      }
       className="cursor-pointer transition-transform duration-150 hover:scale-[1.04] active:scale-95"
     >
       <svg
@@ -248,14 +255,22 @@ function CvContent({ tab, onTabChange }) {
           active={tab === 'blog'}
           onClick={() => switchTab('blog')}
         />
+        <CutoutTab
+          maskId="cutout-img"
+          label="IMG"
+          width={110}
+          textLength={54}
+          active={tab === 'img'}
+          onClick={() => switchTab('img')}
+        />
       </div>
       {tab === 'cv' ? (
         <CvMain />
-      ) : (
+      ) : tab === 'blog' ? (
         <Suspense fallback={null}>
           <BlogPlaceholder />
         </Suspense>
-      )}
+      ) : null}
     </div>
   )
 }
