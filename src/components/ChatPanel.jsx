@@ -114,13 +114,13 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex flex-col justify-end overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
+      className="fixed inset-x-[calc(var(--frame-margin)+1rem)] top-0 z-40 flex flex-col overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
       style={{ opacity: chatOpen ? 1 : 0, pointerEvents: chatOpen ? 'auto' : 'none' }}
       aria-hidden={chatOpen ? undefined : true}
       inert={!chatOpen || !introDone}
     >
       {/* Bloque único de chat anclado al borde del marco, desbordando hacia arriba sin cortarse */}
-      <div className="flex min-h-full flex-col justify-end pt-4 pb-0">
+      <div className="flex min-h-full shrink-0 flex-col justify-end pt-4 pb-0">
         {history.length > 0 ? (
           <div className="mb-4 flex flex-col justify-end">
             <ul aria-live="polite" className="space-y-3 pb-1">

@@ -72,11 +72,7 @@ noscript + #root,
   font-weight: 700;
 }
 
-/* Tipografía de código de barras */
-.font-barcode {
-  font-family: 'Libre Barcode 39', cursive;
-}
-
+/* Tipografía de código de barras con texto inferior */
 .font-barcode-text {
   font-family: 'Libre Barcode 39 Text', cursive;
 }
