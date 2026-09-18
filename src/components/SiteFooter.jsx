@@ -145,14 +145,19 @@ export default function SiteFooter() {
       else cancelAnimationFrame(raf)
     }
     const t0 = performance.now()
+    // Onda lenta: basta con 30fps (la fase sigue el tiempo real, sin deriva).
+    let skip = false
     const render = (t) => {
       if (!visible) return
-      // Onda horneada (cuantizada) + estrella continua: el giro rápido de
-      // la estrella (×14) necesita fase continua para no ir a saltos.
-      const phase = ((t - t0) / 1000) * 2.2
-      const idx = Math.floor((phase / TWO_PI) * FRAMES) % FRAMES
-      path.setAttribute('d', baked[idx])
-      placeStar(phase)
+      skip = !skip
+      if (!skip) {
+        // Onda horneada (cuantizada) + estrella continua: el giro rápido de
+        // la estrella (×14) necesita fase continua para no ir a saltos.
+        const phase = ((t - t0) / 1000) * 2.2
+        const idx = Math.floor((phase / TWO_PI) * FRAMES) % FRAMES
+        path.setAttribute('d', baked[idx])
+        placeStar(phase)
+      }
       raf = requestAnimationFrame(render)
     }
     raf = requestAnimationFrame(render)

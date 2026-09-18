@@ -112,6 +112,17 @@ noscript + #root,
   }
 }
 
+/* Secciones bajo el pliegue: el navegador se salta su render hasta que se
+   acercan, así el filtro de pixelado del ancestro procesa mucha menos
+   entrada en cada repaint del scroll. `auto` recuerda el tamaño real tras
+   el primer pintado, así la scrollbar sigue midiendo bien. */
+.cv-scope > section,
+.cv-scope > article,
+.blog-scope article {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
 /* Tipografía de código de barras con texto inferior */
 .font-barcode-text {
   font-family: 'Libre Barcode 39 Text', cursive;

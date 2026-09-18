@@ -309,7 +309,7 @@ function CvMain() {
   }, [])
 
   return (
-    <>
+    <div className="cv-scope">
       <div className="flex flex-row flex-wrap items-start gap-5 sm:gap-6">
         <div
           ref={photoRef}
@@ -631,7 +631,7 @@ function CvMain() {
           <li className="text-white">Murcia, España</li>
         </ul>
       </section>
-    </>
+    </div>
   )
 }
 

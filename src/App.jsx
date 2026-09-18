@@ -94,7 +94,7 @@ function App() {
           outputBrightness={0.9}
           outputContrast={1.11}
           zoom={0.9}
-          renderScale={0.75}
+          renderScale={0.6}
           frameSkip={2}
         />
         <div aria-hidden="true" className="grain-overlay" />

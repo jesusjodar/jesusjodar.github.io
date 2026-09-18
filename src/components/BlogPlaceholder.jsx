@@ -58,7 +58,7 @@ function BlogPost({ post }) {
 
 export default function BlogPlaceholder() {
   return (
-    <div>
+    <div className="blog-scope">
       <h2 className="font-display text-4xl tracking-tight sm:text-5xl md:text-6xl">
         Blog
       </h2>
