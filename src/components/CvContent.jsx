@@ -362,7 +362,7 @@ function CvMain() {
               <span className="block">Jódar</span>
             </h1>
           )}
-          <div className="mt-4 grid grid-cols-2 gap-2.5 min-[440px]:flex">
+          <div className="hidden mt-4 gap-2.5 sm:flex">
             {SOCIALS.map((s) => (
               <CutoutIcon key={s.maskId} {...s} />
             ))}
@@ -381,6 +381,11 @@ function CvMain() {
           >
             {SUBTITLE}
           </p>
+        </div>
+        <div className="flex w-full gap-2.5 sm:hidden">
+          {SOCIALS.map((s) => (
+            <CutoutIcon key={s.maskId} {...s} maskId={`${s.maskId}-mobile`} />
+          ))}
         </div>
         {subBelow && (
           <p className="w-full text-lg leading-relaxed text-white sm:text-xl">

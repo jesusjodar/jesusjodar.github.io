@@ -89,6 +89,10 @@
   outline-offset: 3px;
 }
 
+input:focus-visible {
+  outline: none;
+}
+
 .cv-scope,
 .chat-markdown {
   overflow-wrap: anywhere;
@@ -177,17 +181,6 @@ noscript + #root,
   }
 }
 
-/* Secciones bajo el pliegue: el navegador se salta su render hasta que se
-   acercan, así el filtro de pixelado del ancestro procesa mucha menos
-   entrada en cada repaint del scroll. `auto` recuerda el tamaño real tras
-   el primer pintado, así la scrollbar sigue midiendo bien. */
-.cv-scope > section,
-.cv-scope > article,
-.blog-scope article {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
-}
-
 /* Tipografía de código de barras con texto inferior */
 .font-barcode-text {
   font-family: 'Libre Barcode 39 Text', cursive;
@@ -269,15 +262,20 @@ body,
   }
 }
 
-/* Filtro de pixelado: aplicado al contenedor del CV. Confecciona el mosaico
-   exterior (pixOut) y deja pasar el contenido nítido dentro del marco (srcIn)
-   usando la máscara calculada en useFolderInset.
-   Aislamiento en capa de hardware dedicada para scroll y animación fluidos. */
+/* Superficie acotada al viewport para que Safari no filtre un lienzo enorme. */
 .pixel-content {
   filter: url(#pixelate);
   isolation: isolate;
-  transform: translateZ(0);
-  will-change: transform;
+}
+
+/* El shell usa el alto dinámico de Safari como referencia de sus capas fijas. */
+.viewport-shell {
+  contain: layout;
+}
+
+.footer-symbols > svg {
+  min-width: 0;
+  flex-shrink: 1;
 }
 
 /* Ondas pixeladas negras desde el borde inferior (lienzo precalculado
@@ -482,3 +480,14 @@ body,
 
 
 /* Foto de perfil: cuadrada, sin bordes adicionales */
+
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    min-height: calc(100lvh + 100px);
+  }
+
+  .site-background {
+    height: calc(100lvh + 200px);
+  }
+}

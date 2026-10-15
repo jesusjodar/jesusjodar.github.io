@@ -1,15 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 
 // Scrollbar custom minimalista.
 // Track con grosor de 7px; el thumb es un pill que durante el scroll (sin interactuar)
 // tiene el mismo grosor que la barra, y al hacer hover o drag tiene un ligero zoom.
 const PORTFOLIO_CONTAINER_CLASS =
-  'content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pl-5 pt-[var(--content-top)] pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+2rem)] sm:pl-16 sm:pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+4rem)]'
+  'content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain'
+const PAPER_CLASS =
+  'pl-5 pt-[var(--content-top)] pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+2rem)] sm:pl-16 sm:pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+4rem)]'
 const PORTFOLIO_TRACK_CLASS =
-  'group scroll-track relative mt-[calc(var(--frame-top)+var(--tab-height)+var(--scroll-pad))] mb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+var(--scroll-pad))] z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 opacity-0 transition-opacity duration-200 select-none hover:opacity-100'
+  'group scroll-track hidden pointer-fine:block relative mt-[calc(var(--frame-top)+var(--tab-height)+var(--scroll-pad))] mb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+var(--scroll-pad))] z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 opacity-0 transition-opacity duration-200 select-none hover:opacity-100'
 
 export default function CustomScrollbar({
   scrollContainerRef,
+  filteredContentRef,
   _contentRef = null,
   atMinHeight,
   insetAnimating,
@@ -21,6 +24,8 @@ export default function CustomScrollbar({
 }) {
   const trackRef = useRef(null)
   const thumbRef = useRef(null)
+  const paperRef = useRef(null)
+  const spacerRef = useRef(null)
   const [hasScroll, setHasScroll] = useState(true)
   const [isDragging, setIsDragging] = useState(false)
   const isDraggingRef = useRef(false)
@@ -33,6 +38,12 @@ export default function CustomScrollbar({
     const track = trackRef.current
     const thumb = thumbRef.current
     if (!container || !track || !thumb) return
+
+    const paper = paperRef.current
+    if (paper && spacerRef.current) {
+      spacerRef.current.style.height = `${Math.max(0, paper.offsetHeight - container.clientHeight)}px`
+      paper.style.transform = `translateY(${-container.scrollTop}px)`
+    }
 
     const scrollHeight = container.scrollHeight
     const clientHeight = container.clientHeight
@@ -82,7 +93,7 @@ export default function CustomScrollbar({
   }, [updateThumb, showScrollbar])
 
   // Sincronizar en scroll, resize y cambios de tamaño del contenedor
-  useEffect(() => {
+  useLayoutEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
@@ -92,6 +103,7 @@ export default function CustomScrollbar({
 
     const ro = new ResizeObserver(updateThumb)
     ro.observe(container)
+    if (paperRef.current) ro.observe(paperRef.current)
 
     return () => {
       container.removeEventListener('scroll', handleScroll)
@@ -214,7 +226,12 @@ export default function CustomScrollbar({
         style={atMinHeight ? { overflowY: 'hidden' } : undefined}
         className={containerClassName}
       >
-        {children}
+        {/* Safari omite filtros sobre capas de scroll nativas. Esta superficie
+            permanece fija y su contenido sigue el desplazamiento nativo. */}
+        <div ref={filteredContentRef} className="pixel-content sticky top-0 h-full overflow-hidden">
+          <div ref={paperRef} className={PAPER_CLASS}>{children}</div>
+        </div>
+        <div ref={spacerRef} aria-hidden="true" />
       </div>
       <div
         ref={trackRef}

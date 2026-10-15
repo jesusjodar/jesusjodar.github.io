@@ -193,7 +193,7 @@ export default function SiteFooter() {
       </svg>
       <div
         aria-hidden="true"
-        className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-5 sm:flex sm:gap-6 lg:gap-8"
+        className="footer-symbols hidden min-w-0 flex-1 items-center justify-center gap-3 sm:flex lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:gap-8"
       >
         {/* 1. Planeta con anillos - Balanceo suave sin vuelta completa */}
         <svg

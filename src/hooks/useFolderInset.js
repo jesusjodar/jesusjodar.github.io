@@ -23,6 +23,8 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
   const topHintRef = useRef(null)
   const chatPanelRef = useRef(null)
   const contentWrapRef = useRef(null)
+  const filteredContentRef = useRef(null)
+  const pixelFilterRef = useRef(null)
   const maskImgRef = useRef(null)
   const blurRef = useRef(null)
   const pixelFadeRef = useRef(null)
@@ -183,7 +185,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     const progress = maxInsetNow > 0 ? Math.min(1, Math.max(0, topInset / maxInsetNow)) : 0
     // Desenfoque del interior del marco: de 0px (expandido) a 22px
     // (colapsado). Topado por coste: el gaussiano a pantalla completa es
-    // el segundo primitivo más caro tras el dilate del mosaico.
+    // el coste dominante durante la animación del marco.
     if (blurRef.current) {
       blurRef.current.setAttribute('stdDeviation', (progress * 22).toFixed(1))
     }
@@ -202,8 +204,18 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     const mX = rect.left
     const mY = rect.top
     const maskEl = maskImgRef.current
-    if (wrap && maskEl) {
-      const box = wrap.getBoundingClientRect()
+    const filtered = filteredContentRef.current
+    const scroller = scrollContainerRef.current
+    if (filtered && scroller && maskEl) {
+      const box = filtered.getBoundingClientRect()
+      const viewport = scroller.getBoundingClientRect()
+      const localX = viewport.left - box.left
+      const localY = viewport.top - box.top
+      const filter = pixelFilterRef.current
+      filter?.setAttribute('x', `${localX - 12}`)
+      filter?.setAttribute('y', `${localY - 12}`)
+      filter?.setAttribute('width', `${viewport.width + 24}`)
+      filter?.setAttribute('height', `${viewport.height + 24}`)
       // El mismo path en dos sistemas de coords: de la caja (máscara del
       // pixelado) y del viewport (máscara del gradiente, a todo el ancho).
       const makePath = (ox, oy) => {
@@ -236,14 +248,14 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       }
       const d = makePath(box.left, box.top)
       const dV = makePath(0, 0)
-      const bw = Math.max(1, Math.round(box.width))
-      const bh = Math.max(1, Math.round(box.height))
-      maskEl.setAttribute('x', '0')
-      maskEl.setAttribute('y', '0')
+      const bw = Math.max(1, Math.round(viewport.width))
+      const bh = Math.max(1, Math.round(viewport.height))
+      maskEl.setAttribute('x', `${localX}`)
+      maskEl.setAttribute('y', `${localY}`)
       maskEl.setAttribute('width', `${bw}`)
       maskEl.setAttribute('height', `${bh}`)
       const svg =
-        `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${bw} ${bh}'>` +
+        `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${localX} ${localY} ${bw} ${bh}'>` +
         `<path d='${d}' fill='#fff'/></svg>`
       maskEl.setAttribute(
         'href',
@@ -274,7 +286,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
         grad.style.setProperty('-webkit-mask-repeat', 'no-repeat')
       }
     }
-  }, [])
+  }, [scrollContainerRef])
 
   const syncUI = useCallback(() => {
     const v = topInsetRef.current
@@ -307,11 +319,12 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     window.addEventListener('resize', onResize)
     const ro = new ResizeObserver(onResize)
     if (frameRef.current) ro.observe(frameRef.current)
+    if (filteredContentRef.current) ro.observe(filteredContentRef.current)
     return () => {
       window.removeEventListener('resize', onResize)
       ro.disconnect()
     }
-  }, [applyFrame, syncUI])
+  }, [applyFrame, syncUI, scrollContainerRef])
 
   useEffect(() => {
     applyFrame(topInsetRef.current)
@@ -382,6 +395,8 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     topHintRef,
     chatPanelRef,
     contentWrapRef,
+    filteredContentRef,
+    pixelFilterRef,
     maskImgRef,
     blurRef,
     pixelFadeRef,

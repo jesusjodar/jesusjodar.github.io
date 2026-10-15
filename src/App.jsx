@@ -35,6 +35,21 @@ function App() {
     return () => window.clearTimeout(id)
   }, [introDone])
 
+  useEffect(() => {
+    if (!CSS.supports('-webkit-touch-callout', 'none')) return
+    // shortcut: Safari iOS recorta fondos fijos bajo su UI; retirar cuando WebKit los extienda.
+    const extendBackground = () => {
+      if (window.scrollY !== 100) window.scrollTo(0, 100)
+    }
+    extendBackground()
+    window.addEventListener('resize', extendBackground)
+    window.addEventListener('scroll', extendBackground, { passive: true })
+    return () => {
+      window.removeEventListener('resize', extendBackground)
+      window.removeEventListener('scroll', extendBackground)
+    }
+  }, [])
+
   // Precarga de los chunks del chat y la galería en tiempo libre:
   // invisible al usuario, listos para cuando colapse la carpeta o se
   // abra la pestaña IMG.
@@ -60,6 +75,8 @@ function App() {
     topHintRef,
     chatPanelRef,
     contentWrapRef,
+    filteredContentRef,
+    pixelFilterRef,
     maskImgRef,
     blurRef,
     pixelFadeRef,
@@ -71,14 +88,14 @@ function App() {
   } = useFolderInset({ introDone, scrollContainerRef })
 
   return (
-    <main className="h-screen supports-[height:100dvh]:h-dvh overflow-hidden bg-[#0e0a38] font-sans text-white antialiased">
+    <>
       {/* Fondo Grainient azul violáceo/magenta. El grado final
           (brightness/contrast) va en uniforms del shader y en
           .grain-overlay: sin filter en el wrapper para no refiltrar el
           canvas animado en cada frame. */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 z-0"
+        className="site-background pointer-events-none absolute inset-x-0 top-0 z-0 h-screen supports-[height:100lvh]:h-lvh"
       >
         <Grainient
           color1="#9f45e3"
@@ -99,13 +116,14 @@ function App() {
           grainAnimated={false}
           contrast={1.45}
           saturation={1.5}
-          outputBrightness={0.9}
+          outputBrightness={0.72}
           outputContrast={1.11}
           zoom={0.9}
           renderScale={1.0}
         />
         <div aria-hidden="true" className="grain-overlay" />
       </div>
+      <main className="viewport-shell fixed inset-x-0 top-0 z-10 h-screen supports-[height:100dvh]:h-dvh overflow-hidden font-sans text-white antialiased">
       {/* Ondas pixeladas negras que nacen del borde inferior: capa trasera
           bajo el contenido (no tapa lo que desborda); useFolderInset la
           recorta del interior del marco con la misma clipshape. */}
@@ -120,20 +138,20 @@ function App() {
       >
         <defs>
           <filter
+            ref={pixelFilterRef}
             id="pixelate"
+            filterUnits="userSpaceOnUse"
             x="-8%"
             y="-8%"
             width="116%"
             height="116%"
             colorInterpolationFilters="sRGB"
           >
-            {/* Mosaico SIN blur: muestrea el original nítido y lo expande a
-                bloques duros contiguos de 12px (radio 6 = sin separación). */}
-            <feFlood x="6" y="6" width="1" height="1" />
-            <feComposite width="12" height="12" />
-            <feTile result="mosaic" />
-            <feComposite in="SourceGraphic" in2="mosaic" operator="in" />
-            <feMorphology operator="dilate" radius="6" result="pix" />
+            {/* El mapa RG dirige cada bloque de 12px a su centro sin dilatar
+                toda la pantalla. La textura a 16× evita bandas en pantallas Retina. */}
+            <feImage href="/pixel-offsets.png" x="0" y="0" width="12" height="12" preserveAspectRatio="none" result="offset-tile" />
+            <feTile in="offset-tile" result="offset-map" />
+            <feDisplacementMap in="SourceGraphic" in2="offset-map" scale="12" xChannelSelector="R" yChannelSelector="G" result="pix" />
             {/* Reducción de opacidad tras pixelar: el mosaico al 50% deja
                 entrever el original nítido al combinarse; al colapsar se
                 desvanece a 0 para no manchar el panel de chat. */}
@@ -209,10 +227,11 @@ function App() {
         ref={contentWrapRef}
         inert={chatOpen}
         style={{ top: 0 }}
-        className="intro-content pixel-content fixed inset-y-0 left-[calc(var(--side)+var(--frame-border))] right-[calc(var(--side)+var(--frame-border))] z-10 flex items-stretch gap-5 pr-3 sm:gap-8 sm:pr-10"
+        className="intro-content fixed inset-y-0 left-[calc(var(--side)+var(--frame-border))] right-[calc(var(--side)+var(--frame-border))] z-10 flex items-stretch gap-5 pr-3 sm:gap-8 sm:pr-10"
       >
         <CustomScrollbar
           scrollContainerRef={scrollContainerRef}
+          filteredContentRef={filteredContentRef}
           contentRef={contentWrapRef}
           atMinHeight={atMinHeight}
           insetAnimating={insetAnimating}
@@ -235,6 +254,7 @@ function App() {
       )}
       <SiteFooter />
     </main>
+    </>
   )
 }
 

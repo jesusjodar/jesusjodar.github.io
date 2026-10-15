@@ -25,12 +25,16 @@ React 19 + Vite 8 + Tailwind CSS 4 · `marked` + `dompurify` para Markdown · Fo
 | `npm run dev` | Servidor local (regenera `src/lib/posts.json` antes) |
 | `npm run build` | Compilación a `dist/` (regenera posts antes) |
 | `npm run lint` | Linter (`oxlint`) |
-| `npm run test:responsive` | Compila y comprueba CV, blog, galería, chat y giro en 12 tamaños con Chromium y WebKit |
+| `npm run test:responsive` | Compila y comprueba CV, blog, galería, chat, giro, pie, SEO y pixelado en Chromium y WebKit; 12 tamaños y pruebas de píxeles a DPR 3 |
 | `node scripts/collect-posts.js` | Recolecta `posts/*.md` → `src/lib/posts.json` (título, cuerpo, fechas, ediciones) |
 | `python3 scripts/prerender-pfp.py <foto> [salida]` | Dithering + tinte neón + derretido de la foto |
 | `python3 scripts/prerender-drip-tile.py [salida]` | Ondas pixeladas del fondo inferior |
 
 Antes de la primera prueba responsive, instala los navegadores de prueba con `npx playwright install chromium webkit`. Playwright solo se usa durante las pruebas; no se incluye en la web.
+
+## Identidad y vista previa al compartir
+
+`public/favicon.svg` y los iconos PNG usan un recorte del fondo con la estrella blanca del footer. `public/og-image.jpg` es la tarjeta de 1200 × 630 para chats y redes. Sus metadatos Open Graph, X y JSON-LD están en `index.html`; `public/robots.txt` y `public/sitemap.xml` indican la URL pública canónica.
 
 ## Añadir un post al blog
 
