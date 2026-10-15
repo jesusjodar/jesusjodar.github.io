@@ -44,6 +44,11 @@ try {
           assert.equal(await page.locator('.scroll-track').isVisible(), width >= 1000, 'Scrollbar visible en pantalla táctil')
           assert.equal(await page.locator('.cv-scope section').first().evaluate(el => getComputedStyle(el).contentVisibility), 'visible', 'El texto se sigue renderizando en diferido')
           await checkOverflow(scroll, 'CV')
+          const mobileClip = await page.locator('.pixel-content').evaluate(el => ({ filter: getComputedStyle(el).filter, clip: el.style.clipPath }))
+          assert.equal(mobileClip.filter === 'none', width < 1000, 'El pixelado móvil sigue activo')
+          assert.equal(mobileClip.clip.startsWith('path('), width < 1000, 'Falta el recorte de la carpeta móvil')
+          assert.equal(await page.locator('#pixelate').count(), width < 1000 ? 0 : 1, 'El filtro SVG no coincide con el dispositivo')
+          if (width < 1000) assert.equal(await page.evaluate(() => performance.getEntriesByType('resource').some(r => r.name.includes('/pixel-offsets.png'))), false, 'Se descarga el mapa de pixelado en móvil')
           assert.equal(await page.locator('canvas').count(), 0, 'El fondo estático sigue usando un canvas')
           assert.equal(await page.locator('.barcode26').count(), 0, 'Sigue apareciendo el código de barras')
           const grayText = await page.locator('.cv-scope p, .cv-scope li').evaluateAll(elements => elements.filter(el => getComputedStyle(el).color !== 'rgb(255, 255, 255)').length)
@@ -82,6 +87,7 @@ try {
             const list = page.locator('.mobile-gallery')
             assert.equal(await list.locator('figure').count(), mediaCount, 'Faltan piezas en la galería vertical')
             assert.equal(await list.locator('button, span').count(), 0, 'Quedan controles de carrusel o hashtags en móvil')
+            assert((await gallery.evaluate(el => el.style.clipPath)).startsWith('path('), 'Galería móvil fuera de la silueta')
             await checkOverflow(gallery, 'Galería vertical')
             const caption = await list.locator('figcaption').first().boundingBox()
             const media = await list.locator('.mobile-gallery-media').first().boundingBox()
@@ -157,19 +163,24 @@ try {
       }
       const pixelPage = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, reducedMotion: 'reduce' })
       try {
+        await checkPixel(pixelPage, url, { mobile: true })
+        console.log(`✓ ${engine}: recorte móvil de pestaña y esquinas, sin filtro ni desbordamiento a DPR 3`)
+        await pixelPage.setViewportSize({ width: 1024, height: 768 })
         await checkPixel(pixelPage, url)
-        console.log(`✓ ${engine}: exterior pixelado, interior nítido y máscara fija a DPR 3`)
+        console.log(`✓ ${engine}: pixelado de escritorio conservado a DPR 3`)
+        await pixelPage.setViewportSize({ width: 390, height: 844 })
         await pixelPage.emulateMedia({ reducedMotion: 'no-preference' })
         await pixelPage.goto(url)
         await pixelPage.waitForTimeout(2000) // Intro antes de comprobar la animación completa.
         for (let cycle = 0; cycle < 2; cycle++) {
           await pixelPage.getByRole('button', { name: 'Colapsar marco', exact: false }).click()
-          await pixelPage.waitForFunction(() => Number(document.querySelector('#pixelate feGaussianBlur').getAttribute('stdDeviation')) >= 22)
-          await pixelPage.waitForTimeout(100) // El blur redondea a 22 antes de terminar el último frame.
+          await pixelPage.waitForTimeout(650)
+          assert.equal(await pixelPage.getByRole('button', { name: 'Expandir marco', exact: false }).count(), 1)
           await pixelPage.setViewportSize(cycle ? { width: 390, height: 844 } : { width: 844, height: 390 })
           await pixelPage.waitForTimeout(100)
           await pixelPage.getByRole('button', { name: 'Expandir marco', exact: false }).click()
-          await pixelPage.waitForFunction(() => Number(document.querySelector('#pixelate feGaussianBlur').getAttribute('stdDeviation')) === 0)
+          await pixelPage.waitForTimeout(650)
+          assert.equal(await pixelPage.getByRole('button', { name: 'Colapsar marco', exact: false }).count(), 1)
           const clip = await pixelPage.locator('.pixel-gradient').evaluate(el => el.style.clipPath)
           assert(clip.startsWith('path('), 'El recorte vectorial se pierde al animar o girar')
         }

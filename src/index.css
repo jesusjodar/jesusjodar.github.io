@@ -236,6 +236,10 @@ body,
   isolation: isolate;
 }
 
+.viewport-shell[data-mobile="true"] .pixel-content {
+  filter: none;
+}
+
 /* El shell usa el alto dinámico de Safari como referencia de sus capas fijas. */
 .viewport-shell {
   contain: layout;

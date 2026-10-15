@@ -14,7 +14,7 @@ import {
 // del efecto pixel y desplazamiento del contenido). Escritura imperativa
 // en refs para no re-renderizar a 60fps; el estado solo refleja umbrales
 // (chat abierto / colapsado / animando / press del chevron).
-export function useFolderInset({ introDone, scrollContainerRef }) {
+export function useFolderInset({ introDone, scrollContainerRef, mobileLayout, tab }) {
   const frameRef = useRef(null)
   const frameLeftRef = useRef(null)
   const frameRightRef = useRef(null)
@@ -30,6 +30,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
   const pixelFadeRef = useRef(null)
   // Capa del gradiente inferior: se recorta con la misma clipshape.
   const gradientRef = useRef(null)
+  const galleryRef = useRef(null)
   const chevTimeoutRef = useRef(0)
   const insetRafRef = useRef(0)
   // Fuente de verdad del inset: ref (sin re-render a 60fps).
@@ -195,30 +196,21 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       pixelFadeRef.current.setAttribute('slope', (0.5 * (1 - progress)).toFixed(2))
     }
 
-    // Máscara del efecto pixel: interior nítido y exterior pixelado,
-    // incluidos pestaña y esquinas. El contenido puede desbordar.
-    // La forma vive en userSpace (px relativos a
-    // la caja del contenedor) y se inyecta como data-URI en el feImage del
-    // filtro. El borde interior es el outline menos medio stroke (s).
+    // Misma silueta: recorte vectorial en móvil y máscara del pixelado en escritorio.
     const rect = el.getBoundingClientRect()
     const mX = rect.left
     const mY = rect.top
     const maskEl = maskImgRef.current
     const filtered = filteredContentRef.current
     const scroller = scrollContainerRef.current
-    if (filtered && scroller && maskEl) {
+    if (filtered && scroller) {
       const box = filtered.getBoundingClientRect()
       const viewport = scroller.getBoundingClientRect()
       const localX = viewport.left - box.left
       const localY = viewport.top - box.top
-      const geometry = [w, h, mX, mY, topInset, box.left, box.top, viewport.width, viewport.height, window.innerWidth, window.innerHeight].join(',')
+      const geometry = [mobileLayout, tab, w, h, mX, mY, topInset, box.left, box.top, viewport.width, viewport.height, window.innerWidth, window.innerHeight].join(',')
       if (maskGeometryRef.current === geometry) return
       maskGeometryRef.current = geometry
-      const filter = pixelFilterRef.current
-      filter?.setAttribute('x', `${localX - 12}`)
-      filter?.setAttribute('y', `${localY - 12}`)
-      filter?.setAttribute('width', `${viewport.width + 24}`)
-      filter?.setAttribute('height', `${viewport.height + 24}`)
       // El mismo path en dos sistemas de coords: de la caja (máscara del
       // pixelado) y del viewport (máscara del gradiente, a todo el ancho).
       const makePath = (ox, oy) => {
@@ -251,19 +243,32 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       }
       const d = makePath(box.left, box.top)
       const dV = makePath(0, 0)
-      const bw = Math.max(1, Math.round(viewport.width))
-      const bh = Math.max(1, Math.round(viewport.height))
-      maskEl.setAttribute('x', `${localX}`)
-      maskEl.setAttribute('y', `${localY}`)
-      maskEl.setAttribute('width', `${bw}`)
-      maskEl.setAttribute('height', `${bh}`)
-      const svg =
-        `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${localX} ${localY} ${bw} ${bh}'>` +
-        `<path d='${d}' fill='#fff'/></svg>`
-      maskEl.setAttribute(
-        'href',
-        `data:image/svg+xml,${encodeURIComponent(svg)}`,
-      )
+      filtered.style.clipPath = mobileLayout ? `path("${d}")` : ''
+      const gallery = galleryRef.current
+      if (gallery) {
+        const galleryBox = gallery.getBoundingClientRect()
+        gallery.style.clipPath = mobileLayout ? `path("${makePath(galleryBox.left, galleryBox.top)}")` : ''
+      }
+      if (maskEl) {
+        const filter = pixelFilterRef.current
+        filter?.setAttribute('x', `${localX - 12}`)
+        filter?.setAttribute('y', `${localY - 12}`)
+        filter?.setAttribute('width', `${viewport.width + 24}`)
+        filter?.setAttribute('height', `${viewport.height + 24}`)
+        const bw = Math.max(1, Math.round(viewport.width))
+        const bh = Math.max(1, Math.round(viewport.height))
+        maskEl.setAttribute('x', `${localX}`)
+        maskEl.setAttribute('y', `${localY}`)
+        maskEl.setAttribute('width', `${bw}`)
+        maskEl.setAttribute('height', `${bh}`)
+        const svg =
+          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='${localX} ${localY} ${bw} ${bh}'>` +
+          `<path d='${d}' fill='#fff'/></svg>`
+        maskEl.setAttribute(
+          'href',
+          `data:image/svg+xml,${encodeURIComponent(svg)}`,
+        )
+      }
       // Un clip vectorial usa la misma forma sin generar otra imagen SVG por frame.
       const grad = gradientRef.current
       if (grad) {
@@ -272,7 +277,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
         grad.style.clipPath = `path(evenodd, "M0 0H${vw}V${vh}H0Z ${dV}")`
       }
     }
-  }, [scrollContainerRef])
+  }, [scrollContainerRef, mobileLayout, tab])
 
   const syncUI = useCallback(() => {
     const v = topInsetRef.current
@@ -390,6 +395,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     blurRef,
     pixelFadeRef,
     gradientRef,
+    galleryRef,
     atMinRef,
     chatOpen,
     atMinHeight,

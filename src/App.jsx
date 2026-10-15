@@ -90,11 +90,12 @@ function App() {
     blurRef,
     pixelFadeRef,
     gradientRef,
+    galleryRef,
     chatOpen,
     atMinHeight,
     insetAnimating,
     handleChevClick,
-  } = useFolderInset({ introDone, scrollContainerRef })
+  } = useFolderInset({ introDone, scrollContainerRef, mobileLayout, tab })
 
   return (
     <>
@@ -104,7 +105,7 @@ function App() {
       >
         <div aria-hidden="true" className="grain-overlay" />
       </div>
-      <main className="viewport-shell fixed inset-x-0 top-0 z-10 h-screen supports-[height:100dvh]:h-dvh overflow-hidden font-sans text-white antialiased">
+      <main data-mobile={mobileLayout} className="viewport-shell fixed inset-x-0 top-0 z-10 h-screen supports-[height:100dvh]:h-dvh overflow-hidden font-sans text-white antialiased">
       {/* Ondas pixeladas negras que nacen del borde inferior: capa trasera
           bajo el contenido (no tapa lo que desborda); useFolderInset la
           recorta del interior del marco con la misma clipshape. */}
@@ -118,6 +119,7 @@ function App() {
         aria-hidden="true"
       >
         <defs>
+          {!mobileLayout && (
           <filter
             ref={pixelFilterRef}
             id="pixelate"
@@ -167,6 +169,7 @@ function App() {
             />
             <feComposite in="pixOut" in2="srcIn" operator="over" />
           </filter>
+          )}
         </defs>
       </svg>
       <Suspense fallback={null}>
@@ -202,6 +205,7 @@ function App() {
       {/* Galería a sangre completa, con scroll vertical en pantallas bajas. */}
       {tab === 'img' && (
         <div
+          ref={galleryRef}
           className="gallery-panel fixed inset-x-0 z-20 overflow-y-auto overscroll-contain"
           style={{ visibility: chatOpen ? 'hidden' : undefined }}
           inert={chatOpen}
