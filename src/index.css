@@ -146,9 +146,17 @@ noscript + #root,
   font-weight: 700;
 }
 
-/* Barcode junto al nombre (solo escritorio): oculto salvo que quepa en
-   línea. Container query sobre la caja real del bloque (no el viewport):
-   umbrales = nombre + gap + barcode según el tamaño del h1 por tramo. */
+/* La foto comparte exactamente las dos líneas de 1.15em del nombre. */
+.profile-heading {
+  --name-size: clamp(2.5rem, 13vw, 3.75rem);
+}
+
+.profile-photo {
+  width: calc(var(--name-size) * 2.3);
+  height: calc(var(--name-size) * 2.3);
+}
+
+/* El código de barras solo aparece si cabe junto al nombre. */
 .nameblock {
   container-type: inline-size;
 }
@@ -157,24 +165,8 @@ noscript + #root,
   display: none;
 }
 
-@media (max-width: 639.98px) {
-  @container (min-width: 256px) {
-    .barcode26 {
-      display: block;
-    }
-  }
-}
-
-@media (min-width: 640px) and (max-width: 767.98px) {
+@media (min-width: 640px) {
   @container (min-width: 338px) {
-    .barcode26 {
-      display: block;
-    }
-  }
-}
-
-@media (min-width: 768px) {
-  @container (min-width: 418px) {
     .barcode26 {
       display: block;
     }

@@ -1,4 +1,4 @@
-import { lazy, memo, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, memo, Suspense, useEffect } from 'react'
 import {
   faLinkedinIn,
   faWhatsapp,
@@ -280,12 +280,6 @@ function CvContent({ tab, onTabChange }) {
 }
 
 // Cuerpo del currículum (foto, titular y secciones).
-// El subtítulo vive junto al nombre salvo que nombre + subtítulo superen
-// el alto de la foto: entonces la fila queda en bloque foto + nombre y el
-// subtítulo baja a todo el ancho debajo. Se decide midiendo de verdad
-// (ResizeObserver): la copia oculta mide el subtítulo SIEMPRE al ancho de
-// la columna (aunque esté abajo), así la decisión no depende del estado
-// actual y no puede oscilar.
 const SUBTITLE = (
   <>
     Tecnología · Inteligencia Artificial · Sistemas · Desarrollo · Diseño 3D
@@ -293,47 +287,10 @@ const SUBTITLE = (
 )
 
 function CvMain() {
-  const photoRef = useRef(null)
-  const rowRef = useRef(null)
-  const measureRef = useRef(null)
-  const [subBelow, setSubBelow] = useState(false)
-  const [isDesktop, setIsDesktop] = useState(
-    () => window.matchMedia?.('(min-width: 640px)').matches ?? false,
-  )
-
-  useLayoutEffect(() => {
-    const mq = window.matchMedia?.('(min-width: 640px)')
-    const onChange = () => setIsDesktop(!!mq?.matches)
-    onChange()
-    const decide = () => {
-      const photo = photoRef.current
-      const row = rowRef.current
-      const measure = measureRef.current
-      if (!photo || !row || !measure) return
-      // mt-3 del subtítulo = 12px.
-      const overflow =
-        row.offsetHeight + 12 + measure.offsetHeight > photo.offsetHeight
-      setSubBelow((prev) => (prev === overflow ? prev : overflow))
-    }
-    decide()
-    const ro = new ResizeObserver(decide)
-    if (photoRef.current) ro.observe(photoRef.current)
-    if (rowRef.current) ro.observe(rowRef.current)
-    if (measureRef.current) ro.observe(measureRef.current)
-    mq?.addEventListener?.('change', onChange)
-    return () => {
-      ro.disconnect()
-      mq?.removeEventListener?.('change', onChange)
-    }
-  }, [])
-
   return (
     <div className="cv-scope">
-      <div className="flex flex-row flex-wrap items-start gap-5 sm:gap-6">
-        <div
-          ref={photoRef}
-          className="relative h-24 w-24 shrink-0 self-start aspect-square sm:h-56 sm:w-auto lg:h-64"
-        >
+      <div className="profile-heading flex flex-row flex-wrap items-start gap-5 sm:gap-6">
+        <div className="profile-photo relative shrink-0 aspect-square">
           <img
             src="/pfp-dither.png"
             alt="Foto de perfil de Jesús Jódar"
@@ -345,53 +302,23 @@ function CvMain() {
             style={{ imageRendering: 'pixelated' }}
           />
         </div>
-        <div className="nameblock relative min-w-0 flex-1 sm:flex sm:flex-col sm:justify-end sm:self-stretch">
-          {isDesktop ? (
-            <div ref={rowRef} className="flex flex-wrap items-baseline gap-x-2">
-              <h1 className="font-display text-5xl tracking-tight md:text-6xl">
-                Jesús Jódar
-              </h1>
-              <Barcode26 />
-            </div>
-          ) : (
-            <h1
-              ref={rowRef}
-              className="font-display text-[clamp(2.5rem,13vw,3.75rem)] leading-[1.15] tracking-tight"
-            >
+        <div className="nameblock min-w-0 flex-1">
+          <div className="flex items-end gap-x-2">
+            <h1 className="font-display text-[length:var(--name-size)] leading-[1.15] tracking-tight shrink-0">
               <span className="block">Jesús</span>
               <span className="block">Jódar</span>
             </h1>
-          )}
-          <div className="hidden mt-4 gap-2.5 sm:flex">
-            {SOCIALS.map((s) => (
-              <CutoutIcon key={s.maskId} {...s} />
-            ))}
+            <Barcode26 />
           </div>
-          {!subBelow && (
-            <p className="mt-3 text-lg leading-relaxed text-white sm:text-xl">
-              {SUBTITLE}
-            </p>
-          )}
-          {/* Medidor invisible al ancho de la columna (sin pintar ni
-              ocupar sitio): permite decidir sin depender del estado. */}
-          <p
-            ref={measureRef}
-            aria-hidden="true"
-            className="pointer-events-none invisible absolute inset-x-0 top-0 text-lg leading-relaxed text-white sm:text-xl"
-          >
-            {SUBTITLE}
-          </p>
         </div>
-        <div className="flex w-full gap-2.5 sm:hidden">
+        <div className="flex w-full gap-2.5">
           {SOCIALS.map((s) => (
-            <CutoutIcon key={s.maskId} {...s} maskId={`${s.maskId}-mobile`} />
+            <CutoutIcon key={s.maskId} {...s} />
           ))}
         </div>
-        {subBelow && (
-          <p className="w-full text-lg leading-relaxed text-white sm:text-xl">
-            {SUBTITLE}
-          </p>
-        )}
+        <p className="w-full text-lg leading-relaxed text-white sm:text-xl">
+          {SUBTITLE}
+        </p>
       </div>
       <article className="mt-12 space-y-6 text-base leading-relaxed text-white">
         <p>

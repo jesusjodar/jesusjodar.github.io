@@ -42,6 +42,11 @@ try {
           assert.equal(await page.locator('.scroll-track').isVisible(), width >= 1000, 'Scrollbar visible en pantalla táctil')
           assert.equal(await page.locator('.cv-scope section').first().evaluate(el => getComputedStyle(el).contentVisibility), 'visible', 'El texto se sigue renderizando en diferido')
           await checkOverflow(scroll, 'CV')
+          const photo = await page.getByRole('img', { name: 'Foto de perfil de Jesús Jódar' }).boundingBox()
+          const name = await page.locator('.nameblock h1').boundingBox()
+          assert(Math.abs(photo.height - name.height) <= 1, 'Foto y nombre tienen distinta altura')
+          assert(Math.abs(photo.y - name.y) <= 1, 'Foto y nombre no están alineados')
+          assert(Math.abs(photo.width - photo.height) <= 1, 'La foto deja de ser cuadrada')
           assert.equal(await page.locator('.cv-scope section').count(), 14)
           for (const label of ['LinkedIn', 'X', 'Correo electrónico', 'WhatsApp']) {
             const box = await page.getByRole('link', { name: label, exact: true }).boundingBox()
