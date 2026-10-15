@@ -25,9 +25,12 @@ React 19 + Vite 8 + Tailwind CSS 4 · `marked` + `dompurify` para Markdown · Fo
 | `npm run dev` | Servidor local (regenera `src/lib/posts.json` antes) |
 | `npm run build` | Compilación a `dist/` (regenera posts antes) |
 | `npm run lint` | Linter (`oxlint`) |
+| `npm run test:responsive` | Compila y comprueba CV, blog, galería, chat y giro en 12 tamaños con Chromium y WebKit |
 | `node scripts/collect-posts.js` | Recolecta `posts/*.md` → `src/lib/posts.json` (título, cuerpo, fechas, ediciones) |
 | `python3 scripts/prerender-pfp.py <foto> [salida]` | Dithering + tinte neón + derretido de la foto |
 | `python3 scripts/prerender-drip-tile.py [salida]` | Ondas pixeladas del fondo inferior |
+
+Antes de la primera prueba responsive, instala los navegadores de prueba con `npx playwright install chromium webkit`. Playwright solo se usa durante las pruebas; no se incluye en la web.
 
 ## Añadir un post al blog
 

@@ -166,7 +166,7 @@ const CarouselItem = memo(function CarouselItem({
     >
       <div
         aria-label={`Grupo ${group.id}: diapositiva ${activeIndex + 1} de ${group.slides.length}`}
-        className={`relative h-60 overflow-hidden border-4 transition-all duration-300 ease-out sm:h-80 ${
+        className={`gallery-media relative overflow-hidden border-4 transition-all duration-300 ease-out ${
           isFocused
             ? 'scale-100 border-white bg-white/10 shadow-[0_0_30px_rgba(255,255,255,0.22)]'
             : 'scale-90 cursor-pointer border-white/30 bg-white/5 hover:border-white/60'
@@ -231,7 +231,7 @@ const CarouselItem = memo(function CarouselItem({
 
       {/* Controles bajo el elemento del carousel (flechas + puntos en bucle) */}
       <div
-        className={`mt-2.5 flex h-5 items-center justify-center gap-2 transition-opacity duration-200 ${
+        className={`mt-2.5 flex min-h-11 items-center justify-center gap-1 transition-opacity duration-200 ${
           isFocused ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >
@@ -246,12 +246,12 @@ const CarouselItem = memo(function CarouselItem({
                 e.stopPropagation()
                 onPrevSlide(group.id, group.slides.length)
               }}
-              className="flex h-5 w-5 cursor-pointer items-center justify-center p-0 text-white transition-opacity duration-150 hover:text-white focus:outline-none"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center p-0 text-white transition-opacity duration-150 hover:text-white"
             >
               <ChevronLeft />
             </button>
 
-            <div className="flex items-center justify-center gap-1.5">
+            <div className="flex items-center justify-center">
               {group.slides.map((slide, i) => {
                 const isActive = i === activeIndex
                 return (
@@ -265,7 +265,7 @@ const CarouselItem = memo(function CarouselItem({
                       e.stopPropagation()
                       onSelectSlide(group.id, i)
                     }}
-                    className="group flex h-4 w-4 cursor-pointer items-center justify-center p-0 focus:outline-none"
+                    className="group flex h-11 w-6 cursor-pointer items-center justify-center p-0"
                   >
                     <span
                       className={`h-2 w-2 rounded-full transition-all duration-200 ${
@@ -288,7 +288,7 @@ const CarouselItem = memo(function CarouselItem({
                 e.stopPropagation()
                 onNextSlide(group.id, group.slides.length)
               }}
-              className="flex h-5 w-5 cursor-pointer items-center justify-center p-0 text-white transition-opacity duration-150 hover:text-white focus:outline-none"
+              className="flex h-11 w-11 cursor-pointer items-center justify-center p-0 text-white transition-opacity duration-150 hover:text-white"
             >
               <ChevronRight />
             </button>
@@ -299,7 +299,7 @@ const CarouselItem = memo(function CarouselItem({
   )
 })
 
-export default function Carousel({ onFocusChange }) {
+export default function Carousel() {
   const stripRef = useRef(null)
   const [bufferSize, setBufferSize] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -359,16 +359,6 @@ export default function Carousel({ onFocusChange }) {
     focusedIndexRef.current = initialIndex
     setFocusedIndex(initialIndex)
   }, [])
-
-  // Notificar al padre el cambio de elemento o diapositiva en foco para sincronizar título y subtítulo
-  useEffect(() => {
-    const activeItem = LOOP_ITEMS[focusedIndex] || GROUPS[0]
-    if (!activeItem) return
-    const curSlideIdx = slideMap[activeItem.id] || 0
-    const curSlide = activeItem.slides[curSlideIdx] || activeItem.slides[0]
-    const slideKey = curSlide ? curSlide.file.replace(/\.[^/.]+$/, "") : String(activeItem.id)
-    onFocusChange?.(slideKey)
-  }, [focusedIndex, onFocusChange, slideMap])
 
   // Desplazar suavemente un elemento al centro
   const scrollToItem = useCallback((index) => {
@@ -496,6 +486,16 @@ export default function Carousel({ onFocusChange }) {
 
   return (
     <div className="relative flex w-full flex-col select-none">
+      <div className="gallery-caption mb-6 text-right [overflow-wrap:anywhere]">
+        <h3 className="font-['Anton',sans-serif] text-base leading-tight uppercase tracking-wider text-white sm:text-lg">
+          {activeMeta.title}
+        </h3>
+        {activeMeta.description && (
+          <p className="mt-0.5 text-[11px] font-semibold leading-snug text-white sm:text-xs">
+            {activeMeta.description}
+          </p>
+        )}
+      </div>
       <div
         ref={stripRef}
         role="region"
@@ -503,7 +503,7 @@ export default function Carousel({ onFocusChange }) {
         tabIndex={0}
         onScroll={handleScroll}
         onKeyDown={handleKeyDown}
-        className="no-scrollbar pointer-events-auto w-full overflow-x-auto snap-x snap-mandatory focus:outline-none [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+        className="no-scrollbar pointer-events-auto w-full overflow-x-auto snap-x snap-mandatory [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
       >
         <div className="gallery-scope mx-auto flex w-max max-w-none items-center gap-3 pb-4 sm:gap-6">
           {LOOP_ITEMS.map((item, index) => {

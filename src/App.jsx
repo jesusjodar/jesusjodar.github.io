@@ -28,7 +28,6 @@ function App() {
   // Pestaña CV/Blog (vive en CvContent, pero App la necesita para mostrar
   // el fondo de ondas del blog tras el contenido).
   const [tab, setTab] = useState('cv')
-  const [activeGalleryId, setActiveGalleryId] = useState('1-1')
 
   useEffect(() => {
     if (introDone) return
@@ -208,6 +207,7 @@ function App() {
       />
       <div
         ref={contentWrapRef}
+        inert={chatOpen}
         style={{ top: 0 }}
         className="intro-content pixel-content fixed inset-y-0 left-[calc(var(--side)+var(--frame-border))] right-[calc(var(--side)+var(--frame-border))] z-10 flex items-stretch gap-5 pr-3 sm:gap-8 sm:pr-10"
       >
@@ -218,23 +218,19 @@ function App() {
           insetAnimating={insetAnimating}
           trackHidden={tab === 'img'}
         >
-          <CvContent tab={tab} onTabChange={setTab} activeGalleryId={activeGalleryId} />
+          <CvContent tab={tab} onTabChange={setTab} />
         </CustomScrollbar>
       </div>
-      {/* Capa a sangre completa para IMG: fuera del scroll y del filtro,
-          el único límite es el viewport. El pt replica el del scroll
-          (ver CustomScrollbar) + pestañas (h-10 + mb-8 = 4.5rem) + aire
-          de la galería (2.5rem). z-20: por encima del contenido (z-10)
-          para que los gestos lleguen a la tira, por debajo del marco,
-          el chat y el footer. El fundido lateral vive en la propia tira
-          (máscara en GalleryPlaceholder), no como overlay. */}
+      {/* Galería a sangre completa, con scroll vertical en pantallas bajas. */}
       {tab === 'img' && (
-        <div className="pointer-events-none fixed inset-x-0 top-0 z-20">
-          <div className="pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+1.5rem+7rem)] sm:pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+3.5rem+7rem)]">
-            <Suspense fallback={null}>
-              <Carousel onFocusChange={setActiveGalleryId} />
-            </Suspense>
-          </div>
+        <div
+          className="gallery-panel fixed inset-x-0 z-20 overflow-y-auto overscroll-contain"
+          style={{ visibility: chatOpen ? 'hidden' : undefined }}
+          inert={chatOpen}
+        >
+          <Suspense fallback={null}>
+            <Carousel />
+          </Suspense>
         </div>
       )}
       <SiteFooter />

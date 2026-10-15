@@ -176,7 +176,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     if (wrap) wrap.style.top = `${topInset}px`
     const panel = chatPanelRef.current
     if (panel) {
-      panel.style.bottom = `calc(100dvh - var(--frame-margin) - ${topInset + 2}px)`
+      panel.style.bottom = `calc(100dvh - var(--frame-top) - ${topInset + 2}px)`
     }
 
     // Progreso de colapso [0..1]
@@ -280,7 +280,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     const v = topInsetRef.current
     const max = maxInsetRef.current
     const atMin = max > 0 && v >= max - 1
-    const open = introDone && v > CHAT_OPEN_PX
+    const open = introDone && v > Math.min(CHAT_OPEN_PX, max / 2)
     if (atMin !== atMinRef.current) {
       atMinRef.current = atMin
       setAtMinHeight(atMin)
@@ -298,7 +298,9 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
     syncUI()
     const onResize = () => {
       const max = getMaxInset(frameRef.current?.clientHeight ?? window.innerHeight)
-      topInsetRef.current = Math.min(Math.max(0, topInsetRef.current), max)
+      topInsetRef.current = atMinRef.current
+        ? max
+        : Math.min(Math.max(0, topInsetRef.current), max)
       applyFrame(topInsetRef.current)
       syncUI()
     }
@@ -349,7 +351,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
         const v = topInsetRef.current
         const max = maxInsetRef.current
         const atMin = max > 0 && v >= max - 1
-        const open = v > CHAT_OPEN_PX
+        const open = v > Math.min(CHAT_OPEN_PX, max / 2)
         if (atMin !== atMinRef.current || open !== chatOpenRef.current) syncUI()
         if (k < 1) insetRafRef.current = requestAnimationFrame(step)
         else {

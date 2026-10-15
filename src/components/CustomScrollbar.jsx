@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 // Track con grosor de 7px; el thumb es un pill que durante el scroll (sin interactuar)
 // tiene el mismo grosor que la barra, y al hacer hover o drag tiene un ligero zoom.
 const PORTFOLIO_CONTAINER_CLASS =
-  'content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pl-5 pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+1.5rem)] pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--frame-border)+2rem)] sm:pl-16 sm:pt-[calc(var(--frame-margin)+var(--tab-height)+var(--frame-border)+3.5rem)] sm:pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--frame-border)+4rem)]'
+  'content-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain pl-5 pt-[var(--content-top)] pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+2rem)] sm:pl-16 sm:pb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+4rem)]'
 const PORTFOLIO_TRACK_CLASS =
-  'group scroll-track relative mt-[calc(var(--frame-margin)+var(--tab-height)+var(--scroll-pad))] mb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--frame-border)+var(--scroll-pad))] z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 opacity-0 transition-opacity duration-200 select-none hover:opacity-100'
+  'group scroll-track relative mt-[calc(var(--frame-top)+var(--tab-height)+var(--scroll-pad))] mb-[calc(var(--footer-h)+var(--frame-footer-gap)+var(--safe-bottom)+var(--frame-border)+var(--scroll-pad))] z-40 w-[7px] shrink-0 cursor-pointer touch-none rounded-full bg-white/25 opacity-0 transition-opacity duration-200 select-none hover:opacity-100'
 
 export default function CustomScrollbar({
   scrollContainerRef,

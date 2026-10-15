@@ -9,7 +9,8 @@
     "build": "vite build",
     "prebuild": "node scripts/collect-posts.js",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:responsive": "npm run build && node scripts/check-responsive.js"
   },
   "dependencies": {
     "@fontsource-variable/space-grotesk": "^5.3.0",
@@ -31,6 +32,7 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "oxlint": "^1.81.0",
+    "playwright": "^1.64.1",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   }

@@ -43,6 +43,27 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   const [suggestionOffset, setSuggestionOffset] = useState(0)
   const nextIdRef = useRef(1)
 
+  useEffect(() => {
+    const panel = panelRef.current
+    const viewport = window.visualViewport
+    if (!chatOpen || !panel || !viewport) return
+    // El teclado de iOS reduce el viewport visible, sin redimensionar el layout.
+    const fit = () => {
+      panel.style.top = `${viewport.offsetTop}px`
+      panel.style.maxHeight = `${viewport.height}px`
+      if (panel.contains(document.activeElement)) panel.scrollTop = panel.scrollHeight
+    }
+    fit()
+    viewport.addEventListener('resize', fit)
+    viewport.addEventListener('scroll', fit)
+    return () => {
+      viewport.removeEventListener('resize', fit)
+      viewport.removeEventListener('scroll', fit)
+      panel.style.top = ''
+      panel.style.maxHeight = ''
+    }
+  }, [chatOpen, panelRef])
+
   // Rotación suave de las sugerencias cada 7 segundos cuando la pantalla de inicio está activa
   useEffect(() => {
     if (!chatOpen || history.length > 0) return
@@ -114,7 +135,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
   return (
     <div
       ref={panelRef}
-      className="fixed inset-x-[calc(var(--side)+1rem)] top-0 z-40 flex flex-col overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300"
+      className="fixed inset-x-[calc(var(--side)+1rem)] top-0 z-40 flex flex-col overflow-y-auto overscroll-contain no-scrollbar transition-opacity duration-300 [overflow-wrap:anywhere]"
       style={{ opacity: chatOpen ? 1 : 0, pointerEvents: chatOpen ? 'auto' : 'none' }}
       aria-hidden={chatOpen ? undefined : true}
       inert={!chatOpen || !introDone}
@@ -150,7 +171,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
                       </svg>
                     </button>
 
-                    <div className="w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
+                    <div className="min-w-0 w-fit max-w-[85%] rounded-2xl rounded-br-md bg-white px-4 py-2.5 text-sm font-medium text-[#0e0a38]">
                       {m.q}
                     </div>
                   </li>
@@ -179,7 +200,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
 
         <div className="shrink-0">
           {history.length === 0 ? (
-            <div className="pt-[calc(var(--frame-margin)+4rem)]">
+            <div className="pt-[calc(var(--frame-top)+1rem)] sm:pt-[calc(var(--frame-top)+4rem)]">
               <div className="mb-8 pr-6">
                 <h2 className="font-display text-4xl leading-[0.92] tracking-tight text-white sm:text-6xl md:text-7xl">
                   Pregunta lo que quieras<br />
@@ -213,7 +234,7 @@ export default function ChatPanel({ chatOpen, introDone, panelRef }) {
               placeholder="Escribe tu pregunta..."
               aria-label="Escribe tu pregunta"
               disabled={isGenerating}
-              className="min-w-0 flex-1 bg-transparent py-1 text-sm text-white placeholder:text-white/40 focus:outline-none disabled:cursor-not-allowed"
+              className="min-w-0 flex-1 bg-transparent py-1 text-base text-white placeholder:text-white/40 focus:outline-none disabled:cursor-not-allowed sm:text-sm pointer-coarse:text-base"
             />
             <button
               type="submit"

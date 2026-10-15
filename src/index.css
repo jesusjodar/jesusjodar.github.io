@@ -14,16 +14,20 @@
 :root {
   --color-text-body: #ffffff;
   --frame-margin: 4vmin;
+  --frame-top: max(var(--frame-margin), env(safe-area-inset-top));
   --content-max: 900px;
   /* Tope centrado del contenido (marco, CV, chat, footer): hasta 900px
      los laterales son el margen del marco; más allá el contenido queda
      centrado y los fondos siguen a sangre. */
-  --side: max(var(--frame-margin), calc((100vw - var(--content-max)) / 2));
+  --side: max(var(--frame-margin), env(safe-area-inset-left), env(safe-area-inset-right), calc((100vw - var(--content-max)) / 2));
   --tab-height: 32px;
   --footer-h: max(2.25rem, 5.5vmin);
   --frame-footer-gap: max(1rem, 2.5vmin);
   --frame-border: 4px;
   --scroll-pad: 2rem;
+  --content-pad: 1.5rem;
+  --content-top: calc(var(--frame-top) + var(--tab-height) + var(--frame-border) + var(--content-pad));
+  --safe-bottom: env(safe-area-inset-bottom);
   color-scheme: dark;
 }
 
@@ -37,7 +41,68 @@
     --footer-h: max(2.5rem, 5.5vmin);
     --frame-footer-gap: max(1.25rem, 3vmin);
     --scroll-pad: 2rem;
+    --content-pad: 3.5rem;
   }
+}
+
+@media (max-height: 500px) {
+  :root {
+    --content-pad: 1rem;
+  }
+}
+
+.gallery-panel {
+  top: calc(var(--content-top) + 4.5rem);
+  bottom: calc(var(--footer-h) + var(--frame-footer-gap) + var(--safe-bottom) + var(--frame-border));
+  padding-bottom: 1rem;
+}
+
+.gallery-caption {
+  margin-left: calc(var(--side) + var(--frame-border) + 1.25rem);
+  margin-right: calc(var(--side) + var(--frame-border) + 2.5rem);
+}
+
+.gallery-media {
+  height: 15rem;
+  max-width: calc(100vw - 2 * var(--side) - 2rem);
+}
+
+@media (min-width: 640px) {
+  .gallery-caption {
+    margin-left: calc(var(--side) + var(--frame-border) + 4rem);
+    margin-right: calc(var(--side) + var(--frame-border) + 5rem);
+  }
+
+  .gallery-media {
+    height: 20rem;
+  }
+}
+
+@media (max-height: 500px) {
+  .gallery-media {
+    height: 8rem;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+
+.cv-scope,
+.chat-markdown {
+  overflow-wrap: anywhere;
+}
+
+.chat-markdown img {
+  max-width: 100%;
+  height: auto;
+}
+
+.chat-markdown table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 html,
