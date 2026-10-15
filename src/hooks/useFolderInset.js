@@ -36,6 +36,7 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
   // El estado solo refleja umbrales (chat abierto / colapsado).
   const topInsetRef = useRef(0)
   const maxInsetRef = useRef(0)
+  const maskGeometryRef = useRef('')
 
   // Aplanado del chevron sin cambiar grosor (morph del path, como el original).
   // Se guarda en ref para usarlo dentro de applyFrame sin re-renders.
@@ -194,10 +195,9 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       pixelFadeRef.current.setAttribute('slope', (0.5 * (1 - progress)).toFixed(2))
     }
 
-    // Máscara del efecto pixel: el mosaico del filtro solo se ve dentro del
-    // marco (pestaña, laterales y esquinas inferiores redondeadas); fuera
-    // pasa el contenido original nítido. El contenido NO se recorta: puede
-    // desbordar con normalidad. La forma vive en userSpace (px relativos a
+    // Máscara del efecto pixel: interior nítido y exterior pixelado,
+    // incluidos pestaña y esquinas. El contenido puede desbordar.
+    // La forma vive en userSpace (px relativos a
     // la caja del contenedor) y se inyecta como data-URI en el feImage del
     // filtro. El borde interior es el outline menos medio stroke (s).
     const rect = el.getBoundingClientRect()
@@ -211,6 +211,9 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       const viewport = scroller.getBoundingClientRect()
       const localX = viewport.left - box.left
       const localY = viewport.top - box.top
+      const geometry = [w, h, mX, mY, topInset, box.left, box.top, viewport.width, viewport.height, window.innerWidth, window.innerHeight].join(',')
+      if (maskGeometryRef.current === geometry) return
+      maskGeometryRef.current = geometry
       const filter = pixelFilterRef.current
       filter?.setAttribute('x', `${localX - 12}`)
       filter?.setAttribute('y', `${localY - 12}`)
@@ -261,29 +264,12 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
         'href',
         `data:image/svg+xml,${encodeURIComponent(svg)}`,
       )
-      // El gradiente inferior se recorta con LA MISMA clipshape del efecto
-      // pixelado (el path `d` tal cual): rectángulo exterior + interior con
-      // fill-rule evenodd, así el interior queda calado en un solo path sin
-      // máscaras anidadas. El alfa codifica el recorte: vale en modo alpha
-      // y en modo luminancia. Se ancla con tamaño/posición exactos en px
-      // (sin estirar) porque el div ocupa todo el viewport y la máscara
-      // vive en coords de la caja del contenido.
+      // Un clip vectorial usa la misma forma sin generar otra imagen SVG por frame.
       const grad = gradientRef.current
       if (grad) {
         const vw = window.innerWidth
         const vh = window.innerHeight
-        const cutSvg =
-          `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${vw} ${vh}'>` +
-          `<path d='M0 0H${vw}V${vh}H0Z ${dV}' fill='#fff' fill-rule='evenodd'/></svg>`
-        const cutUri = `url("data:image/svg+xml,${encodeURIComponent(cutSvg)}")`
-        grad.style.setProperty('mask-image', cutUri)
-        grad.style.setProperty('-webkit-mask-image', cutUri)
-        grad.style.setProperty('mask-size', '100% 100%')
-        grad.style.setProperty('-webkit-mask-size', '100% 100%')
-        grad.style.setProperty('mask-position', '0 0')
-        grad.style.setProperty('-webkit-mask-position', '0 0')
-        grad.style.setProperty('mask-repeat', 'no-repeat')
-        grad.style.setProperty('-webkit-mask-repeat', 'no-repeat')
+        grad.style.clipPath = `path(evenodd, "M0 0H${vw}V${vh}H0Z ${dV}")`
       }
     }
   }, [scrollContainerRef])
@@ -317,7 +303,10 @@ export function useFolderInset({ introDone, scrollContainerRef }) {
       syncUI()
     }
     window.addEventListener('resize', onResize)
-    const ro = new ResizeObserver(onResize)
+    // applyFrame ya sincroniza el recorte al animar; no repetirlo por su propio resize.
+    const ro = new ResizeObserver(() => {
+      if (!pressRef.current.anim) onResize()
+    })
     if (frameRef.current) ro.observe(frameRef.current)
     if (filteredContentRef.current) ro.observe(filteredContentRef.current)
     return () => {

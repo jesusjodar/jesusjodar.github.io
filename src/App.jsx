@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import CvContent from './components/CvContent.jsx'
 import CustomScrollbar from './components/CustomScrollbar.jsx'
 import FolderFrame from './components/FolderFrame.jsx'
-import Grainient from './components/Grainient.jsx'
 import SiteFooter from './components/SiteFooter.jsx'
 import { useFolderInset } from './hooks/useFolderInset.js'
 import { INTRO_MS } from './lib/portfolio.js'
@@ -28,6 +27,16 @@ function App() {
   // Pestaña CV/Blog (vive en CvContent, pero App la necesita para mostrar
   // el fondo de ondas del blog tras el contenido).
   const [tab, setTab] = useState('cv')
+  const [mobileLayout, setMobileLayout] = useState(() =>
+    window.matchMedia('(max-width: 639px), (hover: none) and (pointer: coarse)').matches,
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 639px), (hover: none) and (pointer: coarse)')
+    const update = () => setMobileLayout(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     if (introDone) return
@@ -89,38 +98,10 @@ function App() {
 
   return (
     <>
-      {/* Fondo Grainient azul violáceo/magenta. El grado final
-          (brightness/contrast) va en uniforms del shader y en
-          .grain-overlay: sin filter en el wrapper para no refiltrar el
-          canvas animado en cada frame. */}
       <div
         aria-hidden="true"
         className="site-background pointer-events-none absolute inset-x-0 top-0 z-0 h-screen supports-[height:100lvh]:h-lvh"
       >
-        <Grainient
-          color1="#9f45e3"
-          color2="#3123b8"
-          color3="#0e0a38"
-          colorBalance={-0.15}
-          animated={false}
-          timeSpeed={0}
-          warpStrength={1}
-          warpFrequency={2}
-          warpSpeed={2}
-          warpAmplitude={45}
-          blendSoftness={0.35}
-          rotationAmount={500}
-          noiseScale={3}
-          grainAmount={0.12}
-          grainScale={4}
-          grainAnimated={false}
-          contrast={1.45}
-          saturation={1.5}
-          outputBrightness={0.72}
-          outputContrast={1.11}
-          zoom={0.9}
-          renderScale={1.0}
-        />
         <div aria-hidden="true" className="grain-overlay" />
       </div>
       <main className="viewport-shell fixed inset-x-0 top-0 z-10 h-screen supports-[height:100dvh]:h-dvh overflow-hidden font-sans text-white antialiased">
@@ -152,9 +133,7 @@ function App() {
             <feImage href="/pixel-offsets.png" x="0" y="0" width="12" height="12" preserveAspectRatio="none" result="offset-tile" />
             <feTile in="offset-tile" result="offset-map" />
             <feDisplacementMap in="SourceGraphic" in2="offset-map" scale="12" xChannelSelector="R" yChannelSelector="G" result="pix" />
-            {/* Reducción de opacidad tras pixelar: el mosaico al 50% deja
-                entrever el original nítido al combinarse; al colapsar se
-                desvanece a 0 para no manchar el panel de chat. */}
+            {/* Exterior al 50 % sobre el fondo; se desvanece al abrir el chat. */}
             <feComponentTransfer in="pix" result="pixFade">
               <feFuncA ref={pixelFadeRef} type="linear" slope="0.5" />
             </feComponentTransfer>
@@ -188,25 +167,6 @@ function App() {
             />
             <feComposite in="pixOut" in2="srcIn" operator="over" />
           </filter>
-
-          {/* Borde ondulado para la foto de perfil.
-              clipPathUnits="objectBoundingBox": coords 0-1 relativas al elemento,
-              escala sola a cualquier tamaño. 2 ondas por lado usando cúbicas de
-              Bézier como aproximación de sinusoide, amplitud 12 %. */}
-          <clipPath id="wave-stamp" clipPathUnits="objectBoundingBox">
-            <path d="
-              M 0,0
-              C 0.1667,0.12 0.3333,0.12 0.5,0
-              C 0.6667,0.12 0.8333,0.12 1,0
-              C 0.88,0.1667 0.88,0.3333 1,0.5
-              C 0.88,0.6667 0.88,0.8333 1,1
-              C 0.8333,0.88 0.6667,0.88 0.5,1
-              C 0.3333,0.88 0.1667,0.88 0,1
-              C 0.12,0.8333 0.12,0.6667 0,0.5
-              C 0.12,0.3333 0.12,0.1667 0,0
-              Z
-            " />
-          </clipPath>
         </defs>
       </svg>
       <Suspense fallback={null}>
@@ -232,7 +192,6 @@ function App() {
         <CustomScrollbar
           scrollContainerRef={scrollContainerRef}
           filteredContentRef={filteredContentRef}
-          contentRef={contentWrapRef}
           atMinHeight={atMinHeight}
           insetAnimating={insetAnimating}
           trackHidden={tab === 'img'}
@@ -248,11 +207,11 @@ function App() {
           inert={chatOpen}
         >
           <Suspense fallback={null}>
-            <Carousel />
+            <Carousel active={!chatOpen} mobile={mobileLayout} />
           </Suspense>
         </div>
       )}
-      <SiteFooter />
+      <SiteFooter mobile={mobileLayout} />
     </main>
     </>
   )

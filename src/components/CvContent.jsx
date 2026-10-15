@@ -11,49 +11,6 @@ import { SKILLS } from '../lib/portfolio.js'
 // en App (capa fija a sangre completa) y se precarga allí.
 const BlogPlaceholder = lazy(() => import('./BlogPlaceholder.jsx'))
 
-// Código de barras Code 39 "*26*" dibujado a mano como SVG (solo layout
-// de escritorio): 9 elementos por carácter (1 = fino, 3 = grueso) con
-// proporción 1:3, a la altura de las mayúsculas y alineado a la base.
-const CODE39_PATTERNS = {
-  '*': '131131311',
-  2: '113311113',
-  6: '113331111',
-}
-const CODE39_TEXT = '*26*'
-const CODE39_NARROW = 2.5
-const CODE39_WIDE = 7.5
-const CODE39_GAP = 2.5
-const CODE39_QUIET = 25
-
-function Barcode26() {
-  let x = CODE39_QUIET
-  const bars = []
-  for (const ch of CODE39_TEXT) {
-    const pattern = CODE39_PATTERNS[ch]
-    for (let i = 0; i < pattern.length; i++) {
-      const w = pattern[i] === '3' ? CODE39_WIDE : CODE39_NARROW
-      if (i % 2 === 0) bars.push({ x, w })
-      x += w
-    }
-    x += CODE39_GAP
-  }
-  const width = x - CODE39_GAP + CODE39_QUIET
-  return (
-    <svg
-      aria-hidden="true"
-      focusable="false"
-      viewBox={`0 0 ${width} 100`}
-      className="barcode26 block h-[1em] w-auto text-5xl select-none md:text-6xl"
-      style={{ color: 'var(--color-neon)' }}
-      fill="currentColor"
-    >
-      {bars.map((bar) => (
-        <rect key={bar.x} x={bar.x} y={0} width={bar.w} height={100} />
-      ))}
-    </svg>
-  )
-}
-
 // Botón cuadrado blanco con el icono troquelado (se ve el fondo a través).
 // Las marcas salen de Font Awesome (viewBox propio) y se encajan centradas
 // en la cuadrícula de 24; el sobre es geometría dibujada a mano con la
@@ -308,7 +265,6 @@ function CvMain() {
               <span className="block">Jesús</span>
               <span className="block">Jódar</span>
             </h1>
-            <Barcode26 />
           </div>
         </div>
         <div className="flex w-full gap-2.5">
@@ -360,7 +316,7 @@ function CvMain() {
       <section className="mt-16">
         <h2 className="font-display text-3xl">Experiencia</h2>
         <h3 className="font-display mt-8 text-2xl">Grupo Security</h3>
-        <p className="mt-2 text-base text-white/60">
+        <p className="mt-2 text-base text-white">
           Prácticas profesionales · Lorca · 2026
         </p>
         <p className="mt-4 text-base leading-relaxed text-white">
@@ -383,7 +339,7 @@ function CvMain() {
       <section className="mt-16">
         <h2 className="font-display text-3xl">Formación</h2>
         <h3 className="font-display mt-8 text-2xl">Creative Media</h3>
-        <p className="mt-2 text-base text-white/60">
+        <p className="mt-2 text-base text-white">
           Pearson BTEC International Level 3 · Distinction · Escuela Superior
           Internacional de Diseño de Murcia
         </p>
@@ -392,7 +348,7 @@ function CvMain() {
           contenido, conceptualización y presentación de proyectos.
         </p>
         <h3 className="font-display mt-8 text-2xl">IFCT0108</h3>
-        <p className="mt-2 text-base text-white/60">
+        <p className="mt-2 text-base text-white">
           Operaciones auxiliares de montaje y mantenimiento de sistemas
           microinformáticos · Octubre 2025 – Enero 2026
         </p>
@@ -544,7 +500,7 @@ function CvMain() {
           sistemas, inteligencia artificial, automatización, desarrollo de
           software y diseño 3D, en un entorno donde aportar y seguir creciendo.
         </p>
-        <ul className="mt-4 space-y-2 text-base">
+        <ul className="mt-4 space-y-2 text-base text-white">
           <li>
             <a
               href="mailto:jesusjodarpiernas@gmail.com"

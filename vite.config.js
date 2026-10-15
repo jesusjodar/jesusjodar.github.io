@@ -26,13 +26,12 @@ export default defineConfig({
       output: {
         // Vendors separados: caché diferencial y descargas en paralelo.
         // marked/DOMPurify solo salen en los chunks diferidos que los usan.
-        advancedChunks: {
+        codeSplitting: {
           groups: [
             {
               name: 'react',
               test: /node_modules[\\/](react|react-dom|scheduler)[\\/]/,
             },
-            { name: 'ogl', test: /node_modules[\\/]ogl[\\/]/ },
             {
               name: 'markdown',
               test: /node_modules[\\/](marked|dompurify)[\\/]/,

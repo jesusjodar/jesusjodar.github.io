@@ -107,31 +107,60 @@ function ChevronRight() {
   )
 }
 
-function SlideVideo({ src, active, onLoadedMetadata }) {
+function SlideVideo({ src, active, onLoadedMetadata, lazy = false }) {
   const videoRef = useRef(null)
+  const [ready, setReady] = useState(!lazy)
+  const [visible, setVisible] = useState(!lazy)
+  const shouldPlay = active && ready && visible
+
+  useEffect(() => {
+    if (!lazy || !videoRef.current) return
+    const video = videoRef.current
+    const root = video.closest('.gallery-panel')
+    const preload = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setReady(true)
+        preload.disconnect()
+      }
+    }, { root, rootMargin: '300px' })
+    const visibility = new IntersectionObserver(([entry]) => {
+      setVisible(entry.isIntersecting && entry.intersectionRatio >= 0.2)
+    }, { root, threshold: [0, 0.2] })
+    preload.observe(video)
+    visibility.observe(video)
+    return () => {
+      preload.disconnect()
+      visibility.disconnect()
+    }
+  }, [lazy])
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    if (active) {
-      video.play().catch(() => {})
-    } else {
+    const syncPlayback = () => {
+      if (shouldPlay && !document.hidden) video.play().catch(() => {})
+      else video.pause()
+    }
+    syncPlayback()
+    document.addEventListener('visibilitychange', syncPlayback)
+    return () => {
+      document.removeEventListener('visibilitychange', syncPlayback)
       video.pause()
     }
-  }, [active])
+  }, [shouldPlay])
 
   return (
     <video
       ref={videoRef}
-      src={src}
+      src={ready ? src : undefined}
       aria-hidden="true"
       tabIndex={-1}
       className="block h-full w-full object-contain"
-      autoPlay
+      autoPlay={shouldPlay}
       muted
       loop
       playsInline
-      preload="auto"
+      preload={shouldPlay ? 'auto' : 'metadata'}
       disablePictureInPicture
       onLoadedMetadata={onLoadedMetadata}
     />
@@ -143,6 +172,7 @@ const CarouselItem = memo(function CarouselItem({
   index,
   isFocused,
   isVirtual,
+  mediaActive,
   activeIndex,
   onSelectSlide,
   onPrevSlide,
@@ -187,7 +217,7 @@ const CarouselItem = memo(function CarouselItem({
               {slide.video ? (
                 <SlideVideo
                   src={slide.url}
-                  active={isFocused && i === activeIndex}
+                  active={mediaActive && isFocused && i === activeIndex}
                   onLoadedMetadata={(e) => {
                     if (
                       i === 0 &&
@@ -299,7 +329,7 @@ const CarouselItem = memo(function CarouselItem({
   )
 })
 
-export default function Carousel() {
+function DesktopCarousel({ active }) {
   const stripRef = useRef(null)
   const [bufferSize, setBufferSize] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -515,6 +545,7 @@ export default function Carousel() {
                 index={index}
                 isFocused={index === focusedIndex}
                 isVirtual={isVirtual}
+                mediaActive={active}
               activeIndex={slideMap[item.id] || 0}
               onSelectSlide={handleSelectSlide}
               onPrevSlide={handlePrevSlide}
@@ -544,4 +575,33 @@ export default function Carousel() {
       )}
     </div>
   )
+}
+
+function MobileGallery({ active }) {
+  return (
+    <div className="mobile-gallery flex flex-col gap-10 pb-6" role="region" aria-label="Galería de imágenes">
+      {GROUPS.flatMap(group => group.slides.map(slide => {
+        const meta = getProjectMeta(slide.file.replace(/\.[^/.]+$/, ''))
+        return (
+          <figure key={slide.file}>
+            <figcaption className="mb-3 text-right text-white [overflow-wrap:anywhere]">
+              <h3 className="font-['Anton',sans-serif] text-lg leading-tight uppercase tracking-wider text-white">{meta.title}</h3>
+              {meta.description && <p className="mt-1 text-xs leading-relaxed">{meta.description}</p>}
+            </figcaption>
+            <div className="mobile-gallery-media overflow-hidden border-4 border-white bg-white/10" style={{ aspectRatio: KNOWN_RATIOS[group.id] || '1 / 1' }}>
+              {slide.video ? (
+                <SlideVideo src={slide.url} active={active} lazy />
+              ) : (
+                <img src={slide.url} alt={meta.title} loading="lazy" decoding="async" className="block h-full w-full object-contain" />
+              )}
+            </div>
+          </figure>
+        )
+      }))}
+    </div>
+  )
+}
+
+export default function Gallery({ active = true, mobile = false }) {
+  return mobile ? <MobileGallery active={active} /> : <DesktopCarousel active={active} />
 }

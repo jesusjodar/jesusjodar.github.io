@@ -3,7 +3,7 @@ import { WAVE_STAR_D } from '../lib/portfolio.js'
 
 // Footer: firma en SVG (fill), divisores espaciales + onda animada con estrella.
 // Autocontenido (mide su propio contenedor y respeta prefers-reduced-motion).
-export default function SiteFooter() {
+export default function SiteFooter({ mobile = false }) {
   const waveRef = useRef(null)
   const wavePathRef = useRef(null)
   const waveStarRef = useRef(null)
@@ -28,6 +28,8 @@ export default function SiteFooter() {
       }
     }
     fit()
+    const ro = new ResizeObserver(fit)
+    ro.observe(svg)
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => {
         if (!off) fit()
@@ -35,6 +37,7 @@ export default function SiteFooter() {
     }
     return () => {
       off = true
+      ro.disconnect()
     }
   }, [])
 
@@ -170,7 +173,7 @@ export default function SiteFooter() {
       ro.disconnect()
       document.removeEventListener('visibilitychange', onVis)
     }
-  }, [])
+  }, [mobile])
 
   return (
     <footer className="fixed left-[var(--side)] right-[var(--side)] bottom-[calc(var(--frame-footer-gap)/2+var(--safe-bottom))] z-[60] flex h-[var(--footer-h)] min-w-0 items-center justify-between gap-3 px-2 sm:gap-4 sm:px-3">
@@ -193,11 +196,12 @@ export default function SiteFooter() {
       </svg>
       <div
         aria-hidden="true"
-        className="footer-symbols hidden min-w-0 flex-1 items-center justify-center gap-3 sm:flex lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:gap-8"
+        data-static={mobile}
+        className={`footer-symbols flex min-w-0 flex-1 items-center ${mobile ? 'justify-end gap-2' : 'justify-center gap-3 lg:absolute lg:left-1/2 lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2 lg:gap-8'}`}
       >
         {/* 1. Planeta con anillos - Balanceo suave sin vuelta completa */}
         <svg
-          className="block h-8 w-8 sm:h-9.5 sm:w-9.5 shrink-0 overflow-visible text-white animate-planet-sway drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
+          className="block h-6 w-6 sm:h-9.5 sm:w-9.5 shrink-0 overflow-visible text-white animate-planet-sway drop-shadow-[0_0_1px_rgba(255,255,255,0.3)]"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -250,7 +254,7 @@ export default function SiteFooter() {
 
         {/* 2. Asteroide - Cabeceo orgánico suave sin vuelta completa */}
         <svg
-          className="block h-6 w-6 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-asteroid-sway"
+          className="block h-5 w-5 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-asteroid-sway"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -267,7 +271,7 @@ export default function SiteFooter() {
 
         {/* 3. Cohete - Balanceo suave sobre su trayectoria de vuelo */}
         <svg
-          className="block h-6 w-6 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-rocket-sway"
+          className="block h-5 w-5 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-rocket-sway"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -293,7 +297,7 @@ export default function SiteFooter() {
 
         {/* 4. Estrella - Oscilación cósmica suave sin vuelta completa */}
         <svg
-          className="block h-6 w-6 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-star-sway"
+          className="block h-5 w-5 sm:h-7 sm:w-7 shrink-0 overflow-visible text-white animate-star-sway"
           viewBox="0 0 24 24"
           aria-hidden="true"
         >
@@ -307,6 +311,7 @@ export default function SiteFooter() {
           />
         </svg>
       </div>
+      {!mobile && (
       <div
         aria-hidden="true"
         className="flex h-6 w-24 min-w-0 flex-none justify-end sm:w-40 lg:w-1/4"
@@ -352,6 +357,7 @@ export default function SiteFooter() {
           </svg>
         </div>
       </div>
+      )}
     </footer>
   )
 }

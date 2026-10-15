@@ -13,7 +13,6 @@ const PORTFOLIO_TRACK_CLASS =
 export default function CustomScrollbar({
   scrollContainerRef,
   filteredContentRef,
-  _contentRef = null,
   atMinHeight,
   insetAnimating,
   trackHidden = false,
@@ -31,46 +30,40 @@ export default function CustomScrollbar({
   const isDraggingRef = useRef(false)
   const idleTimeoutRef = useRef(null)
   const rafId = useRef(null)
+  const metricsRef = useRef({ maxScroll: 0, trackH: 0, thumbH: 44 })
 
-  // Actualizar posición del thumb según el scroll del contenedor
+  // El scroll solo mueve capas; las medidas se actualizan al cambiar el tamaño.
   const updateThumb = useCallback(() => {
     const container = scrollContainerRef.current
-    const track = trackRef.current
-    const thumb = thumbRef.current
-    if (!container || !track || !thumb) return
-
-    const paper = paperRef.current
-    if (paper && spacerRef.current) {
-      spacerRef.current.style.height = `${Math.max(0, paper.offsetHeight - container.clientHeight)}px`
-      paper.style.transform = `translateY(${-container.scrollTop}px)`
-    }
-
-    const scrollHeight = container.scrollHeight
-    const clientHeight = container.clientHeight
-    const maxScroll = Math.max(0, scrollHeight - clientHeight)
-    const trackH = track.clientHeight
-    const thumbH = maxScroll <= 0 ? trackH : 44
-
-    const scrollable = maxScroll > 0
-    setHasScroll(scrollable)
-
-    if (maxScroll <= 0) {
-      thumb.style.transform = 'translateY(0px)'
-      thumb.style.height = `${trackH}px`
-      return
-    }
-
-    const ratio = Math.min(1, Math.max(0, container.scrollTop / maxScroll))
-    const y = ratio * (trackH - thumbH)
-    thumb.style.height = `${thumbH}px`
-    thumb.style.transform = `translateY(${y}px)`
-    track.setAttribute('aria-valuenow', String(Math.round(ratio * 100)))
+    if (!container) return
+    const top = container.scrollTop
+    if (paperRef.current) paperRef.current.style.transform = `translateY(${-top}px)`
+    const { maxScroll, trackH, thumbH } = metricsRef.current
+    if (!trackH) return
+    const ratio = maxScroll > 0 ? Math.min(1, Math.max(0, top / maxScroll)) : 0
+    thumbRef.current.style.transform = `translateY(${ratio * (trackH - thumbH)}px)`
+    trackRef.current.setAttribute('aria-valuenow', String(Math.round(ratio * 100)))
   }, [scrollContainerRef])
+
+  const measure = useCallback(() => {
+    const container = scrollContainerRef.current
+    const paper = paperRef.current
+    const track = trackRef.current
+    if (!container || !paper || !track) return
+    const maxScroll = Math.max(0, paper.offsetHeight - container.clientHeight)
+    const trackH = track.clientHeight
+    const thumbH = maxScroll > 0 ? Math.min(44, trackH) : trackH
+    metricsRef.current = { maxScroll, trackH, thumbH }
+    spacerRef.current.style.height = `${maxScroll}px`
+    thumbRef.current.style.height = `${thumbH}px`
+    setHasScroll(maxScroll > 0)
+    updateThumb()
+  }, [scrollContainerRef, updateThumb])
 
   // Mostrar el scrollbar durante el scroll y ocultarlo tras reposo si no se interactúa
   const showScrollbar = useCallback(() => {
     const track = trackRef.current
-    if (!track) return
+    if (!track || !metricsRef.current.trackH) return
     track.classList.remove('opacity-0')
     track.classList.add('opacity-100')
 
@@ -97,22 +90,22 @@ export default function CustomScrollbar({
     const container = scrollContainerRef.current
     if (!container) return
 
-    updateThumb()
+    measure()
     container.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', updateThumb)
+    window.addEventListener('resize', measure)
 
-    const ro = new ResizeObserver(updateThumb)
+    const ro = new ResizeObserver(measure)
     ro.observe(container)
     if (paperRef.current) ro.observe(paperRef.current)
 
     return () => {
       container.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', updateThumb)
+      window.removeEventListener('resize', measure)
       ro.disconnect()
       clearTimeout(idleTimeoutRef.current)
       if (rafId.current) cancelAnimationFrame(rafId.current)
     }
-  }, [scrollContainerRef, handleScroll, updateThumb])
+  }, [scrollContainerRef, handleScroll, measure])
 
   // Lógica de arrastre directo (drag) con ligera ampliación
   const onPointerDown = useCallback(

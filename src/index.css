@@ -7,8 +7,6 @@
   --color-text-body: #ffffff;
   --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif,
     system-ui, sans-serif;
-  --font-barcode: 'Libre Barcode 39', cursive;
-  --font-barcode-text: 'Libre Barcode 39 Text', cursive;
 }
 
 :root {
@@ -156,28 +154,6 @@ noscript + #root,
   height: calc(var(--name-size) * 2.3);
 }
 
-/* El código de barras solo aparece si cabe junto al nombre. */
-.nameblock {
-  container-type: inline-size;
-}
-
-.barcode26 {
-  display: none;
-}
-
-@media (min-width: 640px) {
-  @container (min-width: 338px) {
-    .barcode26 {
-      display: block;
-    }
-  }
-}
-
-/* Tipografía de código de barras con texto inferior */
-.font-barcode-text {
-  font-family: 'Libre Barcode 39 Text', cursive;
-}
-
 /* Cursor propio (mano pixelada) en lugar de todos los punteros */
 html,
 body,
@@ -265,6 +241,10 @@ body,
   contain: layout;
 }
 
+.footer-symbols[data-static="true"] > svg {
+  animation: none;
+}
+
 .footer-symbols > svg {
   min-width: 0;
   flex-shrink: 1;
@@ -286,10 +266,27 @@ body,
   color: var(--color-neon);
 }
 
-/* Grano estático de alta densidad encima del gradiente.
-   Se genera con SVG feTurbulence (grano fino e irregular sin coste GPU
-   continuo, a diferencia de calcularlo en el fragment shader a 60fps).
-   El blend-mode overlay funde el grano con los colores vivos subyacentes. */
+/* Gradiente prerenderizado, sin WebGL. El grano conserva su escala en cada pantalla. */
+.site-background {
+  background: var(--color-base) url('/background-portrait.webp') center / cover no-repeat;
+}
+
+/* Oscurece también el grano un 10 % sin otro filtro de pantalla completa. */
+.site-background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 10%);
+}
+
+@media (aspect-ratio >= 3/4) {
+  .site-background { background-image: url('/background-square.webp'); }
+}
+
+@media (aspect-ratio >= 4/3) {
+  .site-background { background-image: url('/background-landscape.webp'); }
+}
+
 .grain-overlay {
   position: absolute;
   inset: 0;
@@ -482,4 +479,13 @@ body,
   .site-background {
     height: calc(100lvh + 200px);
   }
+}
+
+.mobile-gallery {
+  margin-inline: calc(var(--side) + var(--frame-border) + 1.25rem);
+}
+
+.mobile-gallery-media {
+  width: 100%;
+  max-height: 75svh;
 }
