@@ -1,7 +1,8 @@
 @font-face {
-  font-family: 'Anton';
+  font-family: 'Roboto Flex';
   font-style: normal;
   font-display: swap;
-  font-weight: 400;
-  src: url('@fontsource/anton/files/anton-latin-400-normal.woff2') format('woff2');
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  src: url('@fontsource-variable/roboto-flex/files/roboto-flex-latin-full-normal.woff2') format('woff2');
 }

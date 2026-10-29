@@ -31,9 +31,10 @@ html, body, #root {
 
 .footer-text {
   margin: 0;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Roboto Flex', sans-serif;
   font-size: var(--footer-size);
-  font-weight: 400;
+  font-variation-settings: var(--font-principal);
+  font-optical-sizing: none;
   font-synthesis: none;
   line-height: 1;
   text-box-trim: trim-both;
@@ -42,7 +43,7 @@ html, body, #root {
   letter-spacing: 0.01em;
   white-space: nowrap;
   flex-shrink: 0;
-  -webkit-text-stroke: 0.45px currentColor;
+
   transform: scaleX(1.18);
   transform-origin: left bottom;
 }
@@ -59,7 +60,7 @@ html, body, #root {
   flex-wrap: nowrap;
   align-items: flex-end;
   gap: 10px;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Roboto Flex', sans-serif;
   font-size: var(--footer-size);
 }
 
@@ -112,7 +113,7 @@ html, body, #root {
   width: auto;
   height: calc(100dvh - 1cap * var(--footer-stretch) - 20px);
   max-width: none;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Roboto Flex', sans-serif;
   font-size: var(--footer-size);
   transform: scale(0.98);
   transform-origin: right center;
@@ -158,20 +159,32 @@ html, body, #root {
 }
 
 .construction-message {
+  display: grid;
+  grid-template-rows: minmax(0, 35fr) minmax(0, 65fr);
+  gap: 0;
   position: fixed;
-  top: 10px;
+  top: 0;
   left: calc(20px + 2 * clamp(24px, 4vw, 48px) + 5px);
   right: 10px;
-  height: calc(100dvh - 1cap * var(--footer-stretch) - 40px);
+  height: calc(100dvh - 1cap * var(--footer-stretch) - 20px);
   margin: 0;
-  font-family: 'Anton', sans-serif;
+  font-family: 'Roboto Flex', sans-serif;
   font-size: var(--footer-size);
   pointer-events: none;
 }
 
-.construction-message img {
+.construction-message svg {
   display: block;
+  min-height: 0;
   width: 100%;
   height: 100%;
   user-select: none;
 }
+
+.construction-message svg {
+  fill: #fff;
+  font-variation-settings: var(--font-principal);
+  font-optical-sizing: none;
+}
+
+.construction-message .construction-en { width: 24%; }

@@ -1,0 +1,6 @@
+/* Ajustes de Roboto Flex elegidos en el panel de tipografía. */
+:root {
+  --font-principal: "wght" 677, "wdth" 49, "opsz" 70.4, "slnt" 0, "GRAD" 35, "XOPQ" 100, "YOPQ" 90, "XTRA" 499, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  --font-secundario: "wght" 595, "wdth" 45.1, "opsz" 43.1, "slnt" 0, "GRAD" -68, "XOPQ" 100, "YOPQ" 89, "XTRA" 462, "YTUC" 712, "YTLC" 514, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+  --font-cuerpo: "wght" 424, "wdth" 86.4, "opsz" 30.8, "slnt" 0, "GRAD" 53, "XOPQ" 96, "YOPQ" 76, "XTRA" 492, "YTUC" 693, "YTLC" 476, "YTAS" 750, "YTDE" -203, "YTFI" 738;
+}

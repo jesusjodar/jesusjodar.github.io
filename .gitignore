@@ -23,7 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Banner generado desde la web y publicado junto a ella
-public/profile.svg
 src/data/github-activity.json
-public/construction.svg

@@ -5,4 +5,4 @@
 - GitHub: paquete oficial https://brand.github.com/GitHub_Logos.zip, `GitHub Logos/SVG/GitHub_Invertocat_White.svg`. Guía: https://brand.github.com/foundations/logo
 - WhatsApp: paquete oficial de Meta, `01_Glyph/01_Digital RGB/03_SVG/Digital_Glyph_White_RGB_2026.svg`. Fuente: https://www.meta.com/brand/resources/whatsapp/whatsapp-brand/
 
-Los logotipos pertenecen a sus respectivas marcas. Se sirven como archivos locales y se incrustan en el banner generado del README. Los cuadrados enlazan a los perfiles indicados en `src/data/social-icons.json`. LinkedIn, GitHub y WhatsApp proceden del portfolio publicado; Instagram (`jesujopi`) fue indicado por el propietario.
+Los logotipos pertenecen a sus respectivas marcas. Se sirven como archivos locales. Los cuadrados enlazan a los perfiles indicados en `src/data/social-icons.json`. LinkedIn, GitHub y WhatsApp proceden del portfolio publicado; Instagram (`jesujopi`) fue indicado por el propietario.
