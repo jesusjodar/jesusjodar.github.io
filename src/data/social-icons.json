@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Instagram",
+    "icon": "/icons/instagram.svg",
+    "href": "https://www.instagram.com/jesujopi/"
+  },
+  {
+    "name": "LinkedIn",
+    "icon": "/icons/linkedin.svg",
+    "href": "https://linkedin.com/in/jesujopi/"
+  },
+  {
+    "name": "GitHub",
+    "icon": "/icons/github.svg",
+    "href": "https://github.com/jesusjodar"
+  },
+  {
+    "name": "WhatsApp",
+    "icon": "/icons/whatsapp.svg",
+    "href": "https://wa.me/34623175760"
+  }
+]

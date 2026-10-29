@@ -5,32 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "predev": "node scripts/collect-posts.js",
     "build": "vite build",
-    "prebuild": "node scripts/collect-posts.js",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test:responsive": "npm run build && node scripts/check-responsive.js"
+    "generate:readme": "node scripts/generate-readme.js",
+    "predev": "npm run generate:activity && npm run generate:readme",
+    "prebuild": "npm run generate:activity && npm run generate:readme",
+    "generate:activity": "node scripts/generate-activity.js"
   },
   "dependencies": {
-    "@fontsource-variable/space-grotesk": "^5.3.0",
     "@fontsource/anton": "^5.3.0",
-    "@fontsource/bebas-neue": "^5.3.0",
-    "@fontsource/kalam": "^5.3.0",
-    "@fortawesome/free-brands-svg-icons": "^7.3.1",
-    "dompurify": "^3.4.15",
-    "marked": "^18.0.13",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "opentype.js": "^2.0.0",
     "oxlint": "^1.81.0",
-    "playwright": "^1.64.1",
-    "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   }
 }

@@ -1,495 +1,177 @@
-@import "tailwindcss";
-
-@theme {
-  --color-base: #0e0a38;
-  /* Neón para títulos y acentos (verde neón eléctrico) */
-  --color-neon: #2aff75;
-  --color-text-body: #ffffff;
-  --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif,
-    system-ui, sans-serif;
-}
-
 :root {
-  --color-text-body: #ffffff;
-  --frame-margin: 4vmin;
-  --frame-top: max(var(--frame-margin), env(safe-area-inset-top));
-  --content-max: 900px;
-  /* Tope centrado del contenido (marco, CV, chat, footer): hasta 900px
-     los laterales son el margen del marco; más allá el contenido queda
-     centrado y los fondos siguen a sangre. */
-  --side: max(var(--frame-margin), env(safe-area-inset-left), env(safe-area-inset-right), calc((100vw - var(--content-max)) / 2));
-  --tab-height: 32px;
-  --footer-h: max(2.25rem, 5.5vmin);
-  --frame-footer-gap: max(1rem, 2.5vmin);
-  --frame-border: 4px;
-  --scroll-pad: 2rem;
-  --content-pad: 1.5rem;
-  --content-top: calc(var(--frame-top) + var(--tab-height) + var(--frame-border) + var(--content-pad));
-  --safe-bottom: env(safe-area-inset-bottom);
+  --footer-stretch: 1.45;
+  --footer-size: clamp(1.6rem, 5vw, 4rem);
   color-scheme: dark;
+  background: #82b300 url('/neon-noise.svg') center / cover fixed no-repeat;
+  color: #fff;
 }
 
-.text-white {
-  color: var(--color-text-body, #ffffff);
-}
-
-@media (min-width: 640px) {
-  :root {
-    --tab-height: 38px;
-    --footer-h: max(2.5rem, 5.5vmin);
-    --frame-footer-gap: max(1.25rem, 3vmin);
-    --scroll-pad: 2rem;
-    --content-pad: 3.5rem;
-  }
-}
-
-@media (max-height: 500px) {
-  :root {
-    --content-pad: 1rem;
-  }
-}
-
-.gallery-panel {
-  top: calc(var(--content-top) + 4.5rem);
-  bottom: calc(var(--footer-h) + var(--frame-footer-gap) + var(--safe-bottom) + var(--frame-border));
-  padding-bottom: 1rem;
-}
-
-.gallery-caption {
-  margin-left: calc(var(--side) + var(--frame-border) + 1.25rem);
-  margin-right: calc(var(--side) + var(--frame-border) + 2.5rem);
-}
-
-.gallery-media {
-  height: 15rem;
-  max-width: calc(100vw - 2 * var(--side) - 2rem);
-}
-
-@media (min-width: 640px) {
-  .gallery-caption {
-    margin-left: calc(var(--side) + var(--frame-border) + 4rem);
-    margin-right: calc(var(--side) + var(--frame-border) + 5rem);
-  }
-
-  .gallery-media {
-    height: 20rem;
-  }
-}
-
-@media (max-height: 500px) {
-  .gallery-media {
-    height: 8rem;
-  }
-}
-
-:focus-visible {
-  outline: 2px solid white;
-  outline-offset: 3px;
-}
-
-input:focus-visible {
-  outline: none;
-}
-
-.cv-scope,
-.chat-markdown {
-  overflow-wrap: anywhere;
-}
-
-.chat-markdown img {
-  max-width: 100%;
-  height: auto;
-}
-
-.chat-markdown table {
-  display: block;
-  max-width: 100%;
-  overflow-x: auto;
-}
-
-html,
-body {
-  background-color: var(--color-base);
-  color: var(--color-text-body, #ffffff);
-  font-family: var(--font-sans);
-  font-optical-sizing: auto;
-  font-weight: 500;
-  overflow: hidden;
-  overscroll-behavior: none;
-  /* Texto sin antialiasing (crujiente, acorde al pixelado): Chrome, Edge
-     y Safari vía -webkit-; Firefox solo lo respeta en macOS (font-smooth).
-     Donde no hay soporte se ignora y se rasteriza con suavizado normal. */
-  -webkit-font-smoothing: none;
-  font-smooth: never;
-}
-
-/* Sin JS la página quedaría bloqueada (overflow hidden): permite scroll */
-noscript + #root,
-.no-js body {
-  overflow: auto;
-}
-
-/* Tipografía de display / logos (Anton) */
-.font-display {
-  font-family: 'Anton', 'Space Grotesk Variable', ui-sans-serif, sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-  letter-spacing: 0.015em;
-  color: var(--color-neon);
-}
-
-/* Tipografía manuscrita (Kalam) para anotaciones y firmas */
-.font-hand {
-  font-family: 'Kalam', cursive;
-  font-weight: 700;
-}
-
-/* La foto comparte exactamente las dos líneas de 1.15em del nombre. */
-.profile-heading {
-  --name-size: clamp(2.5rem, 13vw, 3.75rem);
-}
-
-.profile-photo {
-  width: calc(var(--name-size) * 2.3);
-  height: calc(var(--name-size) * 2.3);
-}
-
-/* Cursor propio (mano pixelada) en lugar de todos los punteros */
-html,
-body,
-*,
-*::before,
-*::after {
-  cursor: url(/link-select.cur), pointer;
-}
-
-/* Oculta la scrollbar nativa en toda la web sin perder la funcionalidad de scroll */
-html,
-body,
-*,
-*::before,
-*::after {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
-}
-
-::-webkit-scrollbar,
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none !important;
-  scrollbar-width: none !important;
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Animación de entrada (fade + slide vertical suave) */
-@keyframes intro-rise {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Solo anima en carga inicial; si el usuario prefiere movimiento reducido
-   la intro se omite en JS (introDone arranca en true). */
-@media (prefers-reduced-motion: no-preference) {
-  .intro-content {
-    animation: intro-rise 500ms ease-out both;
-  }
-}
-
-/* Trazo del marco: dibuja el contorno desde cero con dashoffset
-   (animación solo en carga inicial, ver intro-rise). */
-@keyframes intro-draw {
-  from {
-    stroke-dashoffset: 100;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .intro-frame-path {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    animation: intro-draw 650ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-}
-
-/* Superficie acotada al viewport para que Safari no filtre un lienzo enorme. */
-.pixel-content {
-  filter: url(#pixelate);
-  isolation: isolate;
-}
-
-.viewport-shell[data-mobile="true"] .pixel-content {
-  filter: none;
-}
-
-/* El shell usa el alto dinámico de Safari como referencia de sus capas fijas. */
-.viewport-shell {
-  contain: layout;
-}
-
-.footer-symbols[data-static="true"] > svg {
-  animation: none;
-}
-
-.footer-symbols > svg {
-  min-width: 0;
-  flex-shrink: 1;
-}
-
-/* Ondas pixeladas negras desde el borde inferior (lienzo precalculado
-   que se pinta centrado y sin repetir, espejo del derretido de la foto
-   pero hacia arriba): capa trasera bajo el contenido, sin taparlo.
-   useFolderInset lo recorta del interior del marco con la misma clipshape. */
-.pixel-gradient {
-  background-image: url(/drip-tile.png);
-  background-repeat: no-repeat;
-  background-position: bottom center;
-}
-
-/* Tinta inversa a --color-base (texto, fills y strokes vía currentColor),
-   vía variable --color-neon (var() lo soporta todo). */
-.tint-inverse {
-  color: var(--color-neon);
-}
-
-/* Gradiente prerenderizado, sin WebGL. El grano conserva su escala en cada pantalla. */
-.site-background {
-  background: var(--color-base) url('/background-portrait.webp') center / cover no-repeat;
-}
-
-/* Oscurece también el grano un 10 % sin otro filtro de pantalla completa. */
-.site-background::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgb(0 0 0 / 10%);
-}
-
-@media (aspect-ratio >= 3/4) {
-  .site-background { background-image: url('/background-square.webp'); }
-}
-
-@media (aspect-ratio >= 4/3) {
-  .site-background { background-image: url('/background-landscape.webp'); }
-}
-
-.grain-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 1;
-  mix-blend-mode: overlay;
-  /* Su propio contraste más el grado final (antes en el wrapper junto al
-     canvas: aquí se calcula una sola vez al ser capa estática). */
-  filter: contrast(15) brightness(90%) contrast(111%);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 140px 140px;
-}
-
-/* ============================================================
-   Rotación y balanceo suave sin vuelta completa (flotación cósmica)
-   ============================================================ */
-
-/* 1. Planeta: balanceo suave y majestuoso */
-@keyframes planet-sway {
-  0%,
-  100% {
-    transform: rotate(-6deg) translateY(0);
-  }
-  50% {
-    transform: rotate(6deg) translateY(-1px);
-  }
-}
-
-/* 2. Asteroide: cabeceo orgánico suave */
-@keyframes asteroid-sway {
-  0%,
-  100% {
-    transform: rotate(8deg) translateY(0);
-  }
-  50% {
-    transform: rotate(-8deg) translateY(-1px);
-  }
-}
-
-/* 3. Cohete: balanceo suave sobre su eje de vuelo */
-@keyframes rocket-sway {
-  0%,
-  100% {
-    transform: rotate(-6deg) translateY(0);
-  }
-  50% {
-    transform: rotate(6deg) translateY(-1.5px);
-  }
-}
-
-/* 4. Estrella: suave oscilación estelar */
-@keyframes star-sway {
-  0%,
-  100% {
-    transform: rotate(-10deg) scale(0.96);
-  }
-  50% {
-    transform: rotate(10deg) scale(1.04);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-planet-sway {
-    animation: planet-sway 6.5s ease-in-out infinite;
-    transform-origin: center;
-  }
-  .animate-asteroid-sway {
-    animation: asteroid-sway 5.5s ease-in-out infinite;
-    transform-origin: center;
-  }
-  .animate-rocket-sway {
-    animation: rocket-sway 4.2s ease-in-out infinite;
-    transform-origin: center;
-  }
-  .animate-star-sway {
-    animation: star-sway 4.8s ease-in-out infinite;
-    transform-origin: center;
-  }
-}
-
-/* ============================================================
-   Indicador de escritura: salto vertical (jump) y fade secuencial
-   ============================================================ */
-@keyframes dot-jump-fade {
-  0%,
-  100% {
-    opacity: 0.25;
-    transform: translateY(0);
-  }
-  30% {
-    opacity: 1;
-    transform: translateY(-5px);
-  }
-  60% {
-    opacity: 0.35;
-    transform: translateY(0);
-  }
-}
-
-.chat-dot-1 {
-  animation: dot-jump-fade 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  animation-delay: 0ms;
-}
-
-.chat-dot-2 {
-  animation: dot-jump-fade 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  animation-delay: 180ms;
-}
-
-.chat-dot-3 {
-  animation: dot-jump-fade 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  animation-delay: 360ms;
-}
-
-/* ============================================================
-   Renderizado Markdown en respuestas de chat
-   ============================================================ */
-.chat-markdown p:not(:last-child) {
-  margin-bottom: 0.5rem;
-}
-
-.chat-markdown ul {
-  list-style-type: disc;
-  padding-left: 1.25rem;
-  margin: 0.35rem 0;
-}
-
-.chat-markdown ol {
-  list-style-type: decimal;
-  padding-left: 1.25rem;
-  margin: 0.35rem 0;
-}
-
-.chat-markdown li {
-  margin: 0.15rem 0;
-}
-
-.chat-markdown strong {
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.chat-markdown em {
-  font-style: italic;
-}
-
-.chat-markdown code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.85em;
-  background-color: rgba(255, 255, 255, 0.15);
-  padding: 0.15em 0.35em;
-  border-radius: 4px;
-}
-
-.chat-markdown pre {
-  margin: 0.5rem 0;
-  padding: 0.75rem;
-  background-color: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  overflow-x: auto;
-}
-
-.chat-markdown pre code {
+html, body, #root {
+  margin: 0;
+  min-height: 100dvh;
   background: transparent;
-  padding: 0;
 }
 
-.chat-markdown a {
-  color: var(--color-neon);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  transition: color 0.15s ease;
+.site-footer {
+  -webkit-user-select: none;
+  user-select: none;
+  z-index: 1;
+  background: #000;
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: calc(10px / var(--footer-stretch)) 10px;
+  transform: scaleY(var(--footer-stretch));
+  transform-origin: bottom;
 }
 
-.chat-markdown a:hover {
-  color: #ffffff;
+.footer-text {
+  margin: 0;
+  font-family: 'Anton', sans-serif;
+  font-size: var(--footer-size);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  -webkit-text-stroke: 0.45px currentColor;
+  transform: scaleX(1.18);
+  transform-origin: left bottom;
 }
 
-
-/* Foto de perfil: cuadrada, sin bordes adicionales */
-
-
-@supports (-webkit-touch-callout: none) {
-  body {
-    min-height: calc(100lvh + 100px);
-  }
-
-  .site-background {
-    height: calc(100lvh + 200px);
-  }
+.footer-year {
+  margin-left: 0.4em;
+  transform-origin: right bottom;
 }
 
-.mobile-gallery {
-  margin-inline: calc(var(--side) + var(--frame-border) + 1.25rem);
+.footer-brand {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  gap: 10px;
+  font-family: 'Anton', sans-serif;
+  font-size: var(--footer-size);
 }
 
-.mobile-gallery-media {
+.footer-photo {
+  display: block;
+  flex: none;
+  width: calc(1cap * var(--footer-stretch));
+  height: calc(1cap * var(--footer-stretch));
+  margin-top: calc(1cap * (1 - var(--footer-stretch)));
+  object-fit: cover;
+  transform: scaleY(calc(1 / var(--footer-stretch)));
+  transform-origin: bottom;
+}
+
+.footer-brand > .footer-text {
+  margin-right: 0.9em;
+}
+
+.activity-grid {
+  --activity-height: calc(1cap * var(--footer-stretch));
+  --pixel-size: calc(var(--activity-height) / 2);
+  display: grid;
+  grid-template-rows: repeat(2, var(--pixel-size));
+  grid-template-columns: repeat(var(--activity-columns, 1), minmax(0, 1fr));
+  grid-auto-flow: row;
+  gap: 0;
+  flex: 1;
+  min-width: 0;
+  height: var(--activity-height);
+  margin-top: calc(1cap * (1 - var(--footer-stretch)));
+  transform: scaleY(calc(1 / var(--footer-stretch)));
+  transform-origin: bottom;
+}
+
+.activity-pixel {
+  display: block;
+}
+
+@media (max-width: 480px) {
+  :root { --footer-size: 1.3rem; }
+  .site-footer { gap: 8px; }
+  .footer-brand { gap: 6px; }
+
+}
+
+.page-artwork {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: calc(100dvh - 1cap * var(--footer-stretch) - 20px);
+  max-width: none;
+  font-family: 'Anton', sans-serif;
+  font-size: var(--footer-size);
+  transform: scale(0.98);
+  transform-origin: right center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.square-mosaic {
+  z-index: 2;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, clamp(24px, 4vw, 48px));
+  gap: 5px;
+}
+
+.square-mosaic > span {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: #000;
+}
+
+.square-mosaic img {
+  display: block;
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.square-mosaic a {
+  display: grid;
+  place-items: center;
   width: 100%;
-  max-height: 75svh;
+  height: 100%;
+}
+
+.square-mosaic a:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -2px;
+}
+
+.construction-message {
+  position: fixed;
+  top: 10px;
+  left: calc(20px + 2 * clamp(24px, 4vw, 48px) + 5px);
+  right: 10px;
+  height: calc(100dvh - 1cap * var(--footer-stretch) - 40px);
+  margin: 0;
+  font-family: 'Anton', sans-serif;
+  font-size: var(--footer-size);
+  pointer-events: none;
+}
+
+.construction-message img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
 }

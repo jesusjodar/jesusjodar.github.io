@@ -11,9 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-tmp-chatdbg
-# Generado por scripts/collect-posts.js en predev/prebuild
-src/lib/posts.json
 
 # Editor directories and files
 .vscode/*
@@ -25,3 +22,8 @@ src/lib/posts.json
 *.njsproj
 *.sln
 *.sw?
+
+# Banner generado desde la web y publicado junto a ella
+public/profile.svg
+src/data/github-activity.json
+public/construction.svg

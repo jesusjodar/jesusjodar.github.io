@@ -1,59 +1,41 @@
-# Jesús Jódar — Portfolio
+# Jesús Jódar
 
-![Portfolio de Jesús Jódar](assets/banner.jpg)
+Página mínima con fondo de ruido orgánico verde y amarillo neón, y pie negro puro (`#000000`) con firma y año.
 
-Portfolio personal interactivo con estética brutalista, cyberpunk y neón: currículum dentro de una carpeta que se colapsa para abrir un **chat que responde sobre mí**, pestaña de **blog** alimentada con Markdown y fondo animado con grano.
+React + Vite, con CSS propio y fuente Anton.
 
-🌐 **Web en directo:** https://jesusjodar.github.io
+- `npm ci`: instalar las dependencias del archivo de bloqueo.
+- `npm run dev`: iniciar el servidor de desarrollo.
+- `npm run build`: compilar a `dist/`.
+- `npm run preview`: abrir la compilación local.
+- `npm run lint`: comprobar el código.
 
-## Qué incluye
+Los pushes a `main` se publican con GitHub Pages mediante el workflow existente.
 
-- **CV interactivo** — foto con dithering y borde derretido precalculados, titular, barcode Code 39 dibujado a mano, sociales (LinkedIn, X, correo, WhatsApp) y secciones completas.
-- **Chat sobre mí** — preguntas con sugerencias rotatorias y respuestas instantáneas por similitud semántica (TF-IDF + coseno + n-gramas) sobre una base de conocimiento en primera persona. Sin backend.
-- **Blog** — pestañas CV/BLOG con cambio instantáneo; los posts salen de `posts/*.md` (primera línea = título, resto = cuerpo) con fechas de creación y contador de ediciones.
-- **Fondo vivo** — gradiente animado (Grainient) con grano estático, marco-carpeta con outline squircle, pixelado y desenfoque progresivo al colapsar, y ondas pixeladas inferiores.
-- **Tope de contenido** — el contenido se centra hasta 900px; los fondos siguen a sangre.
+## Banner para el perfil de GitHub
 
-## Stack
+La web genera `public/profile.svg` al arrancar y compilar. Usa el mismo nombre y retrato (`src/data/profile.json` y `public/portrait.webp`), fondo (`public/neon-noise.svg`) y fuente Anton. La foto se incrusta dentro del SVG para que no dependa de otra descarga. El SVG convierte las letras en trazados: no depende de fuentes externas, JavaScript ni estilos de GitHub. Su proporción 3:1 permite que nombre y año sigan siendo legibles en móvil.
 
-React 19 + Vite 8 + Tailwind CSS 4 · `marked` + `dompurify` para Markdown · Font Awesome (iconos sociales) · fuentes Anton, Space Grotesk, Kalam, Bebas Neue y Libre Barcode vía Fontsource.
+Vista local: `http://127.0.0.1:5173/profile.svg`.
 
-## Scripts
+Añade este bloque al README del repositorio de perfil `jesusjodar/jesusjodar`:
 
-| Comando | Qué hace |
-|---|---|
-| `npm run dev` | Servidor local (regenera `src/lib/posts.json` antes) |
-| `npm run build` | Compilación a `dist/` (regenera posts antes) |
-| `npm run lint` | Linter (`oxlint`) |
-| `npm run test:responsive` | Compila y comprueba CV, blog, galería, chat, giro, pie, SEO y pixelado en Chromium y WebKit; 12 tamaños y pruebas de píxeles a DPR 3 |
-| `node scripts/collect-posts.js` | Recolecta `posts/*.md` → `src/lib/posts.json` (título, cuerpo, fechas, ediciones) |
-| `python3 scripts/prerender-pfp.py <foto> [salida]` | Dithering + tinte neón + derretido de la foto |
-| `python3 scripts/prerender-drip-tile.py [salida]` | Ondas pixeladas del fondo inferior |
-
-Antes de la primera prueba responsive, instala los navegadores de prueba con `npx playwright install chromium webkit`. Playwright solo se usa durante las pruebas; no se incluye en la web.
-
-## Identidad y vista previa al compartir
-
-`public/favicon.svg` y los iconos PNG usan un recorte del fondo con la estrella blanca del footer. `public/og-image.jpg` es la tarjeta de 1200 × 630 para chats y redes. Sus metadatos Open Graph, X y JSON-LD están en `index.html`; `public/robots.txt` y `public/sitemap.xml` indican la URL pública canónica.
-
-## Añadir un post al blog
-
-1. Crea `posts/mi-post.md`.
-2. Primera línea: el título (vale `# Título`). Resto: cuerpo en Markdown.
-3. Arranca o compila: las fechas salen de la metadata del archivo y las ediciones se detectan solas.
-
-## Estructura
-
-```
-├── posts/              # Entradas del blog en Markdown
-├── public/             # pfp-dither.png, drip-tile.png, favicon
-├── scripts/            # collect-posts, prerender-pfp, prerender-drip-tile
-└── src/
-    ├── components/     # App, ChatPanel, CvContent, FolderFrame, ...
-    ├── hooks/          # useChatAI, useFolderInset
-    └── lib/            # portfolio, knowledgeBase, nlpEngine, posts.json
+```markdown
+[![Jesus Jodar — Portfolio](https://jesusjodar.github.io/profile.svg)](https://jesusjodar.github.io/)
 ```
 
-## Despliegue
+Después de cada push a `main`, GitHub Actions genera y publica el banner junto a la web. También se regenera a diario (02:15 UTC) y manualmente desde Actions para actualizar el año y la actividad. El README usa una URL estable; no necesita nuevos commits cuando cambia el diseño. GitHub puede tardar en refrescar su caché de imágenes.
 
-Cada push a `main` compila y publica en GitHub Pages automáticamente (`.github/workflows/deploy.yml`). Solo hay que tener activado **Settings → Pages → Source: GitHub Actions**.
+- `npm run generate:readme`: regenerar solo el SVG.
+- `public/profile.svg` es un resultado generado y no se versiona.
+- Los cambios de CSS del sitio no se capturan automáticamente: el banner es una composición simplificada con su propio encuadre.
+
+## Actividad de GitHub
+
+El pie y el banner comparten un historial de hasta 365 días del calendario público de `jesusjodar`, incluido el día actual según Europe/Madrid. Se muestran dos filas con tantas columnas como caben entre el nombre y el año, de izquierda a derecha y de arriba abajo. El periodo visible corresponde a los días más recientes y cambia con el ancho disponible. Todos los cuadrados son blancos: opacidad mínima sin contribuciones y cuatro intensidades mayores según los niveles de GitHub. Cada celda muestra fecha y cantidad al pasar el cursor, sin enlaces ni interacción de clic.
+
+`npm run generate:activity` consulta GitHub sin tokens y genera `src/data/github-activity.json` (ignorado por Git). También se ejecuta antes de iniciar y compilar. Si falla la red y existe un resultado anterior válido, se conserva indicando su periodo; sin datos previos, la generación falla en lugar de inventar actividad. El calendario público puede incluir actividad privada anonimizada si el perfil la tiene habilitada. El dato es una instantánea de cada compilación, no una consulta desde el navegador.
+
+`public/side-artwork.svg` contiene el dibujo lateral sin fondo y con trazos negros puros. Su viewBox recorta la mitad derecha; la mitad izquierda queda alineada al borde derecho, ajustada al espacio sobre el pie.
+
+Los cuadrados sociales son enlaces en la web (configurados en `src/data/social-icons.json`). En GitHub el banner se muestra como una imagen: los iconos internos no tienen enlaces individuales.
