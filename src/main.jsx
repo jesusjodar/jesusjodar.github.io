@@ -11,7 +11,10 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <SocialMosaic />
     <ConstructionMessage />
-    <img className="page-artwork" src="/side-artwork.svg" alt="" aria-hidden="true" draggable="false" />
+    <picture>
+      <source media="(max-width: 600px)" srcSet="/side-artwork.svg" />
+      <img className="page-artwork" src="/side-artwork.svg#desktop" alt="" aria-hidden="true" draggable="false" />
+    </picture>
     <SiteFooter />
   </StrictMode>,
 )

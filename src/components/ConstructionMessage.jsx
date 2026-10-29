@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 
-function FittedWord({ children, className }) {
+export function FittedWord({ children, className }) {
   const text = useRef(null)
   const [viewBox, setViewBox] = useState('0 -80 1000 100')
   useLayoutEffect(() => {

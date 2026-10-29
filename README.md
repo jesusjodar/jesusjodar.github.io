@@ -6,6 +6,7 @@ React + Vite, con CSS propio y fuente variable Roboto Flex.
 
 - `npm ci`: instalar las dependencias del archivo de bloqueo.
 - `npm run dev`: iniciar el servidor de desarrollo.
+- `npm run dev:views`: abrir la previsualización doble de desarrollo: desktop 1920 × 1080 a la izquierda e iPhone Air 420 × 912 CSS px a la derecha. Se escalan para caber sin alterar sus dimensiones internas. Esta vista comprueba el diseño responsive; no emula Safari ni el hardware del iPhone.
 - `npm run build`: compilar a `dist/`.
 - `npm run preview`: abrir la compilación local.
 - `npm run lint`: comprobar el código.
