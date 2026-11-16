@@ -1,0 +1,124 @@
+:root {
+  --social-tile-size: 64px;
+  --footer-stretch: 1.45;
+  --footer-size: clamp(1.6rem, 5vw, 4rem);
+  color-scheme: dark;
+  color: #fff;
+}
+html, body { overflow-x: clip; }
+html, body, #root { margin: 0; min-height: 100dvh; background: transparent; }
+body { position: relative; background: url('/neon-noise.svg') center / cover no-repeat; }
+.background-noise { position: absolute; inset: 0; background: url('/neon-noise.svg') center / cover no-repeat; pointer-events: none; }
+.background-noise > canvas { display: block; position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+
+/* The page scroll and Safari's status-bar background use separate surfaces. */
+.content-scroll {
+  position: fixed;
+  inset: 0 0 calc(1cap * var(--footer-stretch) + 20px);
+  z-index: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  font-family: 'Roboto Flex', sans-serif;
+  font-size: var(--footer-size);
+}
+.hero-message {
+  position: relative;
+  height: calc(100svh - 1cap * var(--footer-stretch) - 40px);
+  display: grid;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 10px 10px 0;
+  color: #fff;
+  font-family: 'Roboto Flex', sans-serif;
+  font-size: var(--footer-size);
+  font-variation-settings: var(--font-principal);
+  font-optical-sizing: none;
+  pointer-events: none;
+}
+.hero-message svg, .ai-section svg { display: block; width: 100%; height: 100%; min-height: 0; fill: currentColor; }
+.content-scroll .hero-message, .content-scroll .hero-message svg { overflow: visible; }
+@media (min-width: 601px) {
+  .hero-message { grid-template-columns: calc(2 * var(--social-tile-size) + 5px) minmax(0, 1fr); column-gap: 10px; }
+  .hero-message > svg { grid-column: 1 / -1; }
+  .hero-message > svg:first-of-type { grid-column: 2; grid-row: 1; }
+}
+
+.about-section { margin: 0 0 20px; padding-top: 80px; display: grid; grid-template-columns: minmax(0, 1fr); }
+.about-section .about-text, .about-section .artwork-pair { grid-area: 1 / 1; align-self: start; }
+.about-text {
+  position: relative;
+  z-index: 1;
+  margin: 0 10px 20px;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+  color: #fff;
+  font-family: 'Roboto Flex', sans-serif;
+  font-variation-settings: var(--font-secundario);
+  font-optical-sizing: none;
+  font-size: clamp(32px, 4vw, 72px);
+  line-height: 1.1;
+  text-align: left;
+  overflow-wrap: break-word;
+}
+.text-highlight { background: #000; color: #fff; padding-inline: .08em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.artwork-pair { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+.about-section .artwork-pair { margin-top: 60px; }
+.artwork-pair img { display: block; width: 45%; height: auto; filter: brightness(0) invert(1); user-select: none; mask-image: linear-gradient(to bottom, transparent 0%, #000 35%); mask-repeat: no-repeat; }
+.artwork-edge-right { display: block; width: 45%; flex-shrink: 0; overflow: hidden; mask-image: linear-gradient(to bottom, transparent 0%, #000 35%); aspect-ratio: 180.945 / 181.66; }
+.artwork-pair .artwork-edge-right img { width: 200%; max-width: none; mask-image: none; }
+.story-section { margin: 20px 10px; background: #000; padding: 20px; color: #fff; font-family: 'Roboto Flex', sans-serif; font-optical-sizing: none; }
+.story-section p { margin: 0; color: rgb(255 255 255 / 80%); font-size: clamp(40px, 4.5vw, 80px); font-variation-settings: var(--font-secundario); line-height: 1.1; text-box-trim: trim-both; text-box-edge: cap alphabetic; }
+.story-section .text-highlight { font-variation-settings: var(--font-principal); font-size: inherit; color: #fff; }
+.fade-content { display: flow-root; position: sticky; top: var(--fade-pin-top, 0px); }
+.fade-stage { position: relative; display: flow-root; }
+.fade-runway { height: 200svh; pointer-events: none; }
+.ai-runway { pointer-events: none; }
+
+.ai-section {
+  position: fixed;
+  z-index: 1;
+  inset: 10px 10px calc(1cap * var(--footer-stretch) + 30px);
+  font-family: 'Roboto Flex', sans-serif;
+  font-size: var(--footer-size);
+  font-variation-settings: var(--font-principal);
+  font-optical-sizing: none;
+  color: #fff;
+  visibility: hidden;
+  pointer-events: none;
+}
+.ai-section h2 { display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; height: 100%; margin: 0; font: inherit; }
+.ai-description { margin: 80px 0 0; font-size: clamp(32px, 4vw, 72px); font-variation-settings: var(--font-principal); line-height: 1.1; text-align: left; text-box-trim: trim-both; text-box-edge: cap alphabetic; overflow-wrap: break-word; }
+/* Extra copy flows into additional horizontal columns. */
+.section-horizontal .ai-description { position: absolute; bottom: 0; left: calc(100% + 20px); width: 100%; max-height: 100%; margin: 0; columns: auto 1; column-gap: 20px; column-fill: auto; }
+.section-content { height: 100%; }
+#human-intelligence .ai-description { padding-bottom: clamp(48px, 8svh, 96px); }
+.paper-transition { font-family: 'Roboto Flex', sans-serif; font-size: var(--footer-size); position: fixed; z-index: 2; inset: 0 0 calc(1cap * var(--footer-stretch) + 20px); visibility: hidden; pointer-events: none; }
+.paper-transition canvas { display: block; width: 100% !important; height: 100% !important; }
+
+@media (max-width: 600px) {
+  :root { --mobile-footer-height: 100px; --footer-size: clamp(1rem, 5.6vw, 2rem); }
+  body, .background-noise { background-image: url('/neon-noise-mobile.svg'); }
+  .content-scroll { bottom: var(--mobile-footer-height); }
+  .hero-message {
+    z-index: 1;
+    margin-top: calc(20px + env(safe-area-inset-top, 0px) + (100vw - 50px) / 4);
+    height: calc(100svh - 30px - env(safe-area-inset-top, 0px) - (100vw - 50px) / 4 - var(--mobile-footer-height));
+  }
+  .about-section { display: block; }
+  .about-section .artwork-pair { width: auto; margin: -40px 0 0; }
+  .artwork-pair img, .artwork-edge-right { width: 50%; }
+  .story-section { padding: 16px; }
+  .ai-section { bottom: calc(var(--mobile-footer-height) + 10px); }
+  .paper-transition { bottom: var(--mobile-footer-height); }
+  .about-text, .story-section p, .ai-description { font-size: clamp(32px, 8.8vw, 40px); line-height: 1.12; }
+  .ai-description { margin-top: 40px; }
+  .section-horizontal .ai-description { margin-top: 0; }
+}
+/* Preserve Safari's reveal underneath the Dynamic Island. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 600px) {
+    body { min-height: calc(100lvh + 80px); }
+    html, body { overscroll-behavior-y: none; }
+  }
+}

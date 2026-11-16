@@ -9,15 +9,17 @@ export default function GitHubActivity() {
   useLayoutEffect(() => {
     const grid = gridRef.current
     const measure = () => {
-      const gap = 0
-      const pixel = (grid.getBoundingClientRect().height - gap) / 2
-      const count = Math.min(Math.floor(activity.days.length / 2), Math.max(1, Math.floor((grid.clientWidth + gap) / (pixel + gap))))
+      if (grid.clientWidth <= 0 || grid.clientHeight <= 0) return
+      const pixel = grid.clientHeight / 2
+      const count = Math.min(Math.floor(activity.days.length / 2), Math.max(1, Math.floor(grid.clientWidth / pixel)))
       setColumns(count)
     }
     const observer = new ResizeObserver(measure)
     observer.observe(grid)
     measure()
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+    }
   }, [])
 
   const days = activity.days.slice(-columns * 2)
