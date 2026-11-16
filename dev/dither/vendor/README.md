@@ -1,0 +1,1 @@
+Lygia sources from https://github.com/patriciogonzalezvivo/lygia (2026-10-30). Includes expanded for GLSL compilation. Original license notices retained. Local evaluation only; review Prosperity / Patron terms before production use.
