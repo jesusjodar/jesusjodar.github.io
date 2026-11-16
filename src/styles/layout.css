@@ -9,6 +9,7 @@ html, body { overflow-x: clip; }
 html, body, #root { margin: 0; min-height: 100dvh; background: transparent; }
 body { position: relative; background: url('/neon-noise.svg') center / cover no-repeat; }
 .background-noise { position: absolute; inset: 0; background: url('/neon-noise.svg') center / cover no-repeat; pointer-events: none; }
+.background-noise, .paper-transition { filter: brightness(.9); }
 .background-noise > canvas { display: block; position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
 
 /* The page scroll and Safari's status-bar background use separate surfaces. */
@@ -21,6 +22,13 @@ body { position: relative; background: url('/neon-noise.svg') center / cover no-
   overscroll-behavior-y: contain;
   font-family: 'Roboto Flex', sans-serif;
   font-size: var(--footer-size);
+}
+/* Keep the scroll track transparent and the thumb square. */
+.content-scroll::-webkit-scrollbar { width: 6px; }
+.content-scroll::-webkit-scrollbar-track { background: transparent; }
+.content-scroll::-webkit-scrollbar-thumb { background: #fff; border-radius: 0; }
+@supports not selector(::-webkit-scrollbar) {
+  .content-scroll { scrollbar-width: thin; scrollbar-color: #fff transparent; }
 }
 .hero-message {
   position: relative;
@@ -97,6 +105,8 @@ body { position: relative; background: url('/neon-noise.svg') center / cover no-
 .paper-transition canvas { display: block; width: 100% !important; height: 100% !important; }
 
 @media (max-width: 600px) {
+  .content-scroll { scrollbar-width: none; }
+  .content-scroll::-webkit-scrollbar { display: none; }
   :root { --mobile-footer-height: 100px; --footer-size: clamp(1rem, 5.6vw, 2rem); }
   body, .background-noise { background-image: url('/neon-noise-mobile.svg'); }
   .content-scroll { bottom: var(--mobile-footer-height); }
