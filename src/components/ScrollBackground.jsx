@@ -52,7 +52,7 @@ export default function ScrollBackground() {
           const readStart = start + viewportHeight * TITLE_HOLD_VIEWPORTS
           const description = section.querySelector('.ai-description')
           const travel = section.dataset.axis === 'horizontal'
-            ? Math.max(0, description.offsetLeft + description.scrollWidth - section.clientWidth)
+            ? Math.max(0, (section.querySelector('.visual-copy')?.offsetLeft ?? description.offsetLeft) + description.scrollWidth - section.clientWidth)
             : Math.max(0, description.offsetTop + description.offsetHeight - section.clientHeight) + 10
           cursor = readStart + travel
           if (index < sections.length - 1) cursor += hold
