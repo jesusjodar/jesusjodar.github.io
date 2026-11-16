@@ -3,28 +3,26 @@ export const portfolioSections = [
   {
     id: 'artificial-intelligence', title: ['ARTIFICIAL', 'INTELLIGENCE'],
     description: [
-      'LA ', { highlight: 'INTELIGENCIA ARTIFICIAL' }, ' APLICADA A TU NEGOCIO ', { highlight: 'A MEDIDA' },
-      ', YA SEA COMO ', { highlight: 'PRODUCTO PRINCIPAL' }, ', PARTE DEL ', { highlight: 'FLUJO DE TRABAJO' },
-      ' O COMO ', { highlight: 'GUÍA PARA TUS CLIENTES' }, '.',
+      'I EXPLORE ', { highlight: 'LLMS, LOCAL AI AND EMERGING TECHNOLOGIES' },
+      ', CONNECTING MODELS WITH APPLICATIONS, APIS AND EVERYDAY WORKFLOWS. WHAT INTERESTS ME MOST IS UNDERSTANDING THEIR POSSIBILITIES AND FINDING ',
+      { highlight: 'PRACTICAL, CREATIVE WAYS TO USE THEM' }, '.',
     ],
   },
   {
-    id: 'visual-identity', axis: 'horizontal', title: ['VISUAL', 'IDENTITY'],
+    id: 'visual-identity', axis: 'horizontal', title: ['VISUAL', 'DESIGN'],
     description: [
-      'MI ESPECIALIDAD ES EL ', { highlight: 'DISEÑO VISUAL' }, ', EN ', { highlight: '2D Y 3D' },
-      '. CREO IDENTIDADES CON CARÁCTER, PENSADAS PARA ', { highlight: 'DIFERENCIARSE Y SER RECORDADAS' },
-      '. BUSCO LA ', { highlight: 'ORIGINALIDAD' }, ' Y EL ', { highlight: 'CONTRASTE CON GUSTO' },
-      ': QUE CADA DECISIÓN VISUAL TENGA UNA INTENCIÓN Y CADA MARCA UNA VOZ PROPIA.',
+      'I WORK ACROSS ', { highlight: '3D MODELING, MATERIALS, RENDERING AND INTERFACE DESIGN' },
+      '. FROM EXPLORING FORMS IN BLENDER TO PROTOTYPING DIGITAL EXPERIENCES, I COMBINE ',
+      { highlight: 'VISUAL CURIOSITY AND ATTENTION TO DETAIL' }, ' TO CREATE THINGS WITH CHARACTER AND PURPOSE.',
     ],
   },
   {
-    id: 'human-intelligence', title: ['HUMAN', 'INTELLIGENCE'],
+    id: 'human-intelligence', title: ['SOFTWARE', 'DEVELOPMENT'],
     description: [
-      'ME MOTIVA EXPLORAR NUEVAS FORMAS DE USAR LA IA Y MEJORAR SUS ARQUITECTURAS PARA QUE SEA MÁS ',
-      { highlight: 'HUMANA, INTELIGENTE, CERCANA Y PROACTIVA' },
-      '. UNA IA CUYO POTENCIAL NO DEPENDA SOLO DE LO QUE SEPAS PEDIRLE. QUE ',
-      { highlight: 'AMPLÍE TU CAPACIDAD' }, ', APORTE NUEVAS POSIBILIDADES Y MEJORE LA FORMA EN QUE ',
-      { highlight: 'PERSONAS Y EMPRESAS TRABAJAMOS' }, '.',
+      'I TURN IDEAS INTO ', { highlight: 'SOFTWARE, APPLICATIONS AND INTERACTIVE EXPERIENCES' },
+      '. MY INTERESTS SPAN GAME DEVELOPMENT WITH ', { highlight: 'UNITY AND UNREAL ENGINE' },
+      ', AUTOMATION, AND SYSTEMS INTEGRATION. I APPROACH EACH CHALLENGE THROUGH ',
+      { highlight: 'RESEARCH, EXPERIMENTATION AND INDEPENDENT LEARNING' }, '.',
     ],
   },
 ]

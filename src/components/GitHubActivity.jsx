@@ -31,8 +31,8 @@ export default function GitHubActivity() {
       role="img"
       className="activity-grid"
       style={{ '--activity-columns': columns }}
-      aria-label={`Actividad de GitHub del ${from} al ${activity.to}. ${days.map(activityLabel).join('. ')}`}
-      title={`GitHub · ${days.length} días · ${from} — ${activity.to}`}
+      aria-label={`GitHub activity from ${from} to ${activity.to}. ${days.map(activityLabel).join('. ')}`}
+      title={`GitHub · ${days.length} days · ${from} — ${activity.to}`}
     >
       {days.map(day => (
         <span key={day.date} className="activity-pixel" style={{ backgroundColor: activityColor(day.level) }} title={activityLabel(day)} aria-hidden="true" />

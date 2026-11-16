@@ -19,15 +19,15 @@ createRoot(document.getElementById('root')).render(
       <div className="fade-stage">
         <div className="fade-content">
           <HeroMessage />
-          <section className="about-section" aria-label="Inteligencia artificial">
-            <p className="about-text"><span className="text-highlight">ANALIZO</span>, <span className="text-highlight">INVESTIGO</span> Y <span className="text-highlight">DISEÑO</span> SOLUCIONES A MEDIDA PARA TU NEGOCIO. DESDE TU IDENTIDAD VISUAL HASTA LA EXPERIENCIA DE TUS CLIENTES, CADA DECISIÓN TIENE UN OBJETIVO: <span className="text-highlight">QUE TU MARCA DESTAQUE</span>.</p>
+          <section className="about-section" aria-label="About me">
+            <p className="about-text">I’M A <span className="text-highlight">CURIOUS, CREATIVE PERSON</span> EXPLORING TECHNOLOGY, DESIGN AND INNOVATION. I COMBINE <span className="text-highlight">PROGRAMMING, 3D DESIGN AND ARTIFICIAL INTELLIGENCE</span> TO UNDERSTAND HOW THINGS WORK AND TURN IDEAS INTO REAL PROJECTS.</p>
             <div className="artwork-pair" aria-hidden="true">
               <img src="/side-artwork.svg#upper-right-half" alt="" draggable="false" />
               <span className="artwork-edge-right"><img src="/side-artwork.svg" alt="" draggable="false" /></span>
             </div>
           </section>
-          <section className="story-section" aria-label="Mi forma de trabajar">
-            <p>NO SE TRATA SOLO DE <span className="text-highlight">LLAMAR LA ATENCIÓN</span>, SINO DE <span className="text-highlight">DARLE UN SENTIDO</span>: QUE LO QUE VEN EXPRESE <span className="text-highlight">QUIÉN ERES</span> Y LES DÉ <span className="text-highlight">UNA RAZÓN PARA RECORDARTE</span>.</p>
+          <section className="story-section" aria-label="How I work">
+            <p>I LEARN BY <span className="text-highlight">EXPERIMENTING, RESEARCHING AND BUILDING</span>. I ENJOY SOLVING PROBLEMS, QUESTIONING FAMILIAR APPROACHES AND PAYING ATTENTION TO THE DETAILS THAT TURN AN IDEA INTO <span className="text-highlight">SOMETHING WORTH MAKING</span>.</p>
           </section>
         </div>
         <div className="fade-runway" aria-hidden="true" />

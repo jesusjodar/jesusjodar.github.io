@@ -3,5 +3,5 @@ export function activityColor(level) {
 }
 
 export function activityLabel(day) {
-  return `${day.date}: ${day.count} ${day.count === 1 ? 'contribución' : 'contribuciones'}`
+  return `${day.date}: ${day.count} ${day.count === 1 ? 'contribution' : 'contributions'}`
 }
