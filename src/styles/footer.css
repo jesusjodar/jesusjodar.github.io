@@ -65,6 +65,8 @@
   mask-position: center;
   mask-repeat: no-repeat;
 }
+@media (hover: hover) { .square-mosaic a:hover { mask-size: 100% 100%, calc(var(--social-tile-size) * .52) calc(var(--social-tile-size) * .52); } }
+.square-mosaic a:active { mask-size: 100% 100%, calc(var(--social-tile-size) * .42) calc(var(--social-tile-size) * .42); }
 .square-mosaic a:focus-visible { outline: 2px solid #fff; outline-offset: -2px; }
 .content-scroll .square-mosaic { position: absolute; }
 @media (min-width: 601px) {
