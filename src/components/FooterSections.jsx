@@ -3,7 +3,7 @@ import { ShaderMount } from '@paper-design/shaders'
 import { fragment } from '../graphics/noiseShader.js'
 import { portfolioSections } from '../data/portfolio-sections.js'
 
-const sections = [{ id: 'intro', title: ['ANALISIS', 'DESIGN & RESEARCH'] }, ...portfolioSections]
+const sections = [{ id: 'intro', title: ['ANALYSIS', 'DESIGN & RESEARCH'] }, ...portfolioSections]
 const barFragment = fragment
   .replace('* 4.2;', '* 1.0;')
   .replace('uniform float uProgress;', 'uniform float uActive; uniform float uHovered; uniform vec4 uStarts; uniform vec4 uEnds;')
