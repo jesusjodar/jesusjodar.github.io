@@ -44,7 +44,7 @@ body { position: relative; background: url('/neon-noise.svg') center / cover no-
   font-optical-sizing: none;
   pointer-events: none;
 }
-.hero-message svg, .ai-section svg { display: block; width: 100%; height: 100%; min-height: 0; fill: currentColor; }
+.hero-message svg, .ai-section svg { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; fill: currentColor; }
 .content-scroll .hero-message, .content-scroll .hero-message svg { overflow: visible; }
 @media (min-width: 601px) {
   .hero-message { grid-template-columns: calc(2 * var(--social-tile-size) + 5px) minmax(0, 1fr); column-gap: 10px; }
@@ -95,7 +95,7 @@ body { position: relative; background: url('/neon-noise.svg') center / cover no-
   visibility: hidden;
   pointer-events: none;
 }
-.ai-section h2 { display: grid; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; height: 100%; margin: 0; font: inherit; }
+.ai-section h2 { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 10px; height: 100%; margin: 0; font: inherit; }
 .ai-description { margin: 80px 0 0; font-size: clamp(32px, 4vw, 72px); font-variation-settings: var(--font-principal); line-height: 1.1; text-align: left; text-box-trim: trim-both; text-box-edge: cap alphabetic; overflow-wrap: break-word; }
 /* Extra copy flows into additional horizontal columns. */
 .visual-copy { position: absolute; top: 0; bottom: 0; left: calc(100% + 20px); width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 20px; }

@@ -12,16 +12,37 @@ export function FittedWord({ children, className }) {
       const style = getComputedStyle(text.current)
       const family = await measurementFont(style.fontVariationSettings)
       if (!active) return
-      const context = document.createElement('canvas').getContext('2d')
-      context.font = `100px "${family}"`
-      context.fontKerning = style.fontKerning
-      context.letterSpacing = style.letterSpacing === 'normal' ? '0px' : style.letterSpacing
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d', { willReadFrequently: true })
+      const scale = 5
+      const configure = () => {
+        context.font = `${100 * scale}px "${family}"`
+        context.fontKerning = style.fontKerning
+        context.letterSpacing = style.letterSpacing === 'normal' ? '0px' : `${parseFloat(style.letterSpacing) * scale}px`
+      }
+      configure()
       const bounds = context.measureText(children)
-      const x = -bounds.actualBoundingBoxLeft
-      const y = -bounds.actualBoundingBoxAscent
-      const width = bounds.actualBoundingBoxLeft + bounds.actualBoundingBoxRight
-      const height = bounds.actualBoundingBoxAscent + bounds.actualBoundingBoxDescent
-      setViewBox(`${x} ${y} ${width} ${height}`)
+      const x = Math.floor(-bounds.actualBoundingBoxLeft) - 1
+      const y = Math.floor(-bounds.actualBoundingBoxAscent) - 1
+      canvas.width = Math.ceil(bounds.actualBoundingBoxRight - x) + 1
+      canvas.height = Math.ceil(bounds.actualBoundingBoxDescent - y) + 1
+      configure()
+      context.fillText(children, -x, -y)
+      // Font metrics can include empty space around curved glyphs. Fit the ink,
+      // so each stretched line reaches both margins without clipping its letters.
+      const { data } = context.getImageData(0, 0, canvas.width, canvas.height)
+      let left = canvas.width, right = -1, top = canvas.height, bottom = -1
+      for (let row = 0; row < canvas.height; row++) {
+        for (let column = 0; column < canvas.width; column++) {
+          if (!data[(row * canvas.width + column) * 4 + 3]) continue
+          left = Math.min(left, column)
+          right = Math.max(right, column)
+          top = Math.min(top, row)
+          bottom = Math.max(bottom, row)
+        }
+      }
+      if (right < left) return
+      setViewBox(`${(x + left) / scale} ${(y + top) / scale} ${(right - left + 1) / scale} ${(bottom - top + 1) / scale}`)
     }
     measure()
     return () => { active = false }
